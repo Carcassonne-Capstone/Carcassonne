@@ -1,13 +1,7 @@
 import React, { Component } from 'react'
 import * as THREE from 'three'
+import {createCube} from './renderFuncs/createTile'
 const OrbitControls = require('three-orbit-controls')(THREE)
-
-const test = () => {
-    let board = {}
-    board[[0,0]] = 'one'
-    board[[0,1]] = 'two'
-    console.log(board[[0,1]])
-}
 
 class Board extends Component {
   constructor(props) {
@@ -30,23 +24,17 @@ class Board extends Component {
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     const geometry = new THREE.BoxGeometry(1, 1, 0.1)
     const material = new THREE.MeshBasicMaterial({ color: 'green' })
-    const cube = new THREE.Mesh(geometry, material)
-
-    const cube2 = new THREE.Mesh(new THREE.BoxGeometry(1.01, 0.1, 0.11), new THREE.MeshBasicMaterial({ color: 'white' }))
-    cube.add(cube2)
+    
+    const cube = createCube({id: 1})
     cube.position.x = 1;
     cube.position.y = 1;
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.rotateSpeed = 1.0
     controls.zoomSpeed = 1.2;
     controls.panSpeed = 0.8;
     camera.position.z = 4
 
-
-    const tempCube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.1), new THREE.MeshBasicMaterial({ color: 'green' }))
-    tempCube.position.x = 2;
-    tempCube.position.y = 2;
-    scene.add(tempCube)
     renderer.setClearColor('#000000')
     renderer.setSize(width, height)
 
