@@ -230,3 +230,36 @@ class Deck {
     this.Tiles = [];
   }
 }
+
+
+//create tile cube
+// const tile1 = '/public/tile.jpeg';
+// 	const createCube = (tileImgSrc) => {
+// 	const texture = new THREE.TextureLoader().load(tileImgSrc);
+// 	const materials = [
+//        new THREE.MeshBasicMaterial({
+// 		color: 0x00ff00 
+//        }),
+//        new THREE.MeshBasicMaterial({
+// 		color: 0x00ff00 
+//        }),
+//        new THREE.MeshBasicMaterial({
+// 		map: texture
+// 	   }),
+// 	   new THREE.MeshBasicMaterial({
+// 		color: 0x00ff00 
+// 	   }),
+// 	   new THREE.MeshBasicMaterial({
+// 		color: 0x00ff00 
+// 	   }),
+// 	   new THREE.MeshBasicMaterial({
+// 		color: 0x00ff00
+//        })
+//     ];
+// 	var cubeGeo = new THREE.CubeGeometry(1, 0.1, 1);
+// 	let  cube = new THREE.Mesh(cubeGeo, materials);  
+		  
+//     return cube;
+// 	}
+// 	const createdCube = createCube(tile1);
+// 	scene.add(createdCube);
