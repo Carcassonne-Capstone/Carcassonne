@@ -3,13 +3,10 @@ const morgan = require('morgan');
 const PORT = process.env.PORT || 3000;
 const app = express();
 const path = require('path')
-const Deck = require('./GameObjects/Deck')
 
 const server = app.listen(PORT, () => {
     console.log(`Now connected on port ${PORT}`)
 });
-
-// const deck = new Deck(require('./GameObjects/startTiles'));
 
 const io = require('socket.io')(server);
 

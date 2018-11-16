@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import socket from '../socket'
+import { Redirect } from 'react-router-dom'
 
 class CreateRoom extends Component {
     constructor(){
@@ -11,6 +12,7 @@ class CreateRoom extends Component {
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.startGame = this.startGame.bind(this)
     }
 
     handleChange(event){
@@ -21,6 +23,10 @@ class CreateRoom extends Component {
         event.preventDefault()
         this.setState({waitingRoom: true})
         socket.emit('createRoom', this.state.name)
+    }
+
+    startGame() {
+        socket.emit('startGame', this.props.roomId, this.props.players)
     }
 
     render(){
@@ -45,12 +51,11 @@ class CreateRoom extends Component {
                 :
                 <div>
                     <div>Room id: {this.props.roomId}</div>
-                    {console.log('player', this.props.players)}
                     <div>Players in Room:{this.props.players.map(player=>(
-                        <div key={player}>{player}</div>
+                        <div key={player.name}>{player.name}</div>
                     ))}
                     </div>
-                    <button type='button'>Start Game</button>
+                    <button type='button' onClick={this.startGame}>Start Game</button>
                 </div>
                 }
             </div>
