@@ -29,44 +29,18 @@ class Board extends Component {
     this.initializeCamera();
     this.addCube(createCube({ id: 0 }, 0, 0));
 
-    let tile1 = createBlankTile({ id: 4 }, 0, 1);
-    let tile2 = createBlankTile({ id: 6 }, 1, 0);
-    let tile3 = createBlankTile({ id: 8 }, -1, 0);
-    let tile4 = createBlankTile({ id: 10 }, 0, -1);
-    // let objects = [tile2, tile1, tile4, tile3];
+    let tile1 = createBlankTile(null, 0, 1);
+    let tile2 = createBlankTile(null, 1, 0);
+    let tile3 = createBlankTile(null, -1, 0);
+    let tile4 = createBlankTile(null, 0, -1);
 
+    this.tiles = [tile2, tile1, tile4, tile3];
+    
     this.addCube(tile1);
     this.addCube(tile2);
     this.addCube(tile3);
     this.addCube(tile4);
     this.animate();
-
-    // const onDocMouseDown = e => {
-    //   e.preventDefault();
-    //   const mouse3D = new THREE.Vector3(
-    //     (event.clientX / window.innerWidth) * 2 - 1,
-    //     -(event.clientY / window.innerHeight) * 2 + 1,
-    //     0.5
-    //   );
-    //   const raycaster = new THREE.Raycaster();
-
-    //   raycaster.setFromCamera(mouse3D, this.camera);
-    //   //var intersects = raycaster.intersectObjects(this.objects);
-    //   var intersects = raycaster.intersectObjects(this.scene.children);
-    //   console.log("SCENE CHILDREN", this.scene.children);
-    //   console.log("intersects:", intersects);
-    //   console.log("objects***", objects);
-
-    //   if (intersects.length > 0) {
-    //     console.log("im here");
-    //     //const createdCube1 = createCube(tile1);
-    //     console.log("TILE 1", tile1);
-    //     // this.scene.add(createdCube1);
-    //     // this.scene.remove(this.createdCube);
-    //   }
-    // };
-
-    // document.addEventListener("mousedown", onDocMouseDown, false);
   }
 
   componentWillUnmount() {
@@ -95,43 +69,32 @@ class Board extends Component {
     this.scene.add(cube);
   }
 
+  onDocMouseDown (event, tiles) {
+    const windowArea = event.target.getBoundingClientRect()
+    const mouse3D = new THREE.Vector3(
+      (event.clientX / windowArea.right) * 2 - 1,
+      -(event.clientY / windowArea.bottom) * 2 + 1,
+      0.5
+    );
+    const raycaster = new THREE.Raycaster();
+
+    raycaster.setFromCamera(mouse3D, this.camera);
+    var intersects = raycaster.intersectObjects(tiles);
+
+    if (intersects.length > 0) {
+      let x = intersects[0].object.position.x;
+      let y = intersects[0].object.position.y;
+       // hardcoding tile we’ll eventually get from store
+      const created = createCube({ id: 1 }, x, y);
+      this.addCube(created);
+    }
+  }
+
   render() {
-    const onDocMouseDown = e => {
-      e.preventDefault();
-
-      let tile1 = createBlankTile({ id: 4 }, 0, 1);
-      let tile2 = createBlankTile({ id: 6 }, 1, 0);
-      let tile3 = createBlankTile({ id: 8 }, -1, 0);
-      let tile4 = createBlankTile({ id: 10 }, 0, -1);
-      let objects = [tile1, tile2, tile3, tile4];
-      const mouse3D = new THREE.Vector3(
-        (event.clientX / window.innerWidth) * 2 - 1,
-        -(event.clientY / window.innerHeight) * 2 + 1,
-        0.5
-      );
-      const raycaster = new THREE.Raycaster();
-
-      raycaster.setFromCamera(mouse3D, this.camera);
-      var intersects = raycaster.intersectObjects(...objects);
-      //var intersects = raycaster.intersectObjects(this.scene.children);
-      console.log("SCENE CHILDREN", this.scene.children);
-      console.log("intersects:", intersects);
-      console.log("objects***", objects);
-
-      if (intersects.length > 0) {
-        console.log("im here");
-        //const createdCube1 = createCube(tile1);
-        console.log("TILE 1", tile1);
-        // this.scene.add(createdCube1);
-        // this.scene.remove(this.createdCube);
-      }
-    };
-
-    document.addEventListener("mousedown", onDocMouseDown, false);
-
     return (
       <div>
         <div
+          onClick={(e) => this.onDocMouseDown(e, this.tiles)}
           id="boardCanvas"
           style={{ width: "80vw", height: "40vw" }}
           ref={mount => {
