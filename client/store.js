@@ -4,14 +4,18 @@ import axios from 'axios'
 
 //initial state
 const initialState = {
-    speed: 0.02
+    deck: [],
+    curTile: {},
+    board: {}
 }
 
 //action types
-const GOT_NEW_SPEED = 'GOT_NEW_SPEED'
+const GOT_NEW_TILE = 'GOT_NEW_TILE'
+const ADD_TO_BOARD = 'ADD_TO_BOARD'
 
 //action creators
-export const gotNewSpeed = (speed) => ({type: GOT_NEW_SPEED, speed})
+export const getNewTile = (tile) => ({type: GOT_NEW_TILE, tile})
+export const addToBoard = (key, value) => ({type: ADD_TO_BOARD, key, value})
 
 // thunk creators
 // export const getCard = (idx) => {
@@ -26,8 +30,10 @@ export const gotNewSpeed = (speed) => ({type: GOT_NEW_SPEED, speed})
 //reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case GOT_NEW_SPEED:
-            return {...state, allPlayers: action.speed}
+        case GOT_NEW_TILE:
+            return {...state, curTile: action.tile}
+        case ADD_TO_BOARD:
+            return {...state, board: {...state.board, [action.key]: action.value}}
         default:
             return state;
     }
