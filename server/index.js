@@ -11,10 +11,13 @@ const server = app.listen(PORT, () => {
 
 // const deck = new Deck(require('./GameObjects/startTiles'));
 
-// const io = require('socket.io')(server);
+const io = require('socket.io')(server);
 
-// // handle sockets
-// require('./socket')(io);
+// handle sockets
+require('./socket')(io);
+// io.on('connection', socket =>{
+//     console.log('HELLO');
+// });
 
 // logging middleware
 app.use(morgan('dev'));

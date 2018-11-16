@@ -6,16 +6,22 @@ import axios from 'axios'
 const initialState = {
     deck: [],
     curTile: {},
-    board: {}
+    board: {},
+    roomId: '',
+    players: []
 }
 
 //action types
 const GOT_NEW_TILE = 'GOT_NEW_TILE'
 const ADD_TO_BOARD = 'ADD_TO_BOARD'
+const CREATE_ROOM = 'CREATE_ROOM'
+const JOIN_ROOM = 'JOIN_ROOM'
 
 //action creators
 export const getNewTile = (tile) => ({type: GOT_NEW_TILE, tile})
 export const addToBoard = (key, value) => ({type: ADD_TO_BOARD, key, value})
+export const createRoom = (roomId, playerName) => ({type: CREATE_ROOM, roomId, playerName})
+export const joinRoom = (playerName) => ({type: JOIN_ROOM, playerName})
 
 // thunk creators
 // export const getCard = (idx) => {
@@ -34,6 +40,10 @@ const reducer = (state = initialState, action) => {
             return {...state, curTile: action.tile}
         case ADD_TO_BOARD:
             return {...state, board: {...state.board, [action.key]: action.value}}
+        case CREATE_ROOM:
+            return {...state, roomId: action.roomId, players: [action.playerName]}
+        case JOIN_ROOM:
+            return {...state, players: [...state.players, action.playerName]}
         default:
             return state;
     }
