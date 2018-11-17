@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
 import CurrentTile from "./CurrentTile";
+import { tileLogic } from "./tileLogic";
 
 class Board extends Component {
   constructor(props) {
@@ -27,19 +28,21 @@ class Board extends Component {
 
     this.initializeOrbits();
     this.initializeCamera();
-    this.addCube(createCube({ id: 0 }, 0, 0));
+    const initialCube = createCube({ id: 0 }, 0, 0);
+    this.addCube(initialCube);
+    console.log("initial cube", initialCube);
 
-    let tile1 = createBlankTile(null, 0, 1);
-    let tile2 = createBlankTile(null, 1, 0);
-    let tile3 = createBlankTile(null, -1, 0);
-    let tile4 = createBlankTile(null, 0, -1);
+    // let tile1 = createBlankTile(null, 0, 1);
+    // let tile2 = createBlankTile(null, 1, 0);
+    // let tile3 = createBlankTile(null, -1, 0);
+    // let tile4 = createBlankTile(null, 0, -1);
+    const validTiles = tileLogic(initialCube);
+    this.tiles = [validTiles];
 
-    this.tiles = [tile2, tile1, tile4, tile3];
-    
-    this.addCube(tile1);
-    this.addCube(tile2);
-    this.addCube(tile3);
-    this.addCube(tile4);
+    this.addCube(validTiles);
+    // this.addCube(tile2);
+    // this.addCube(tile3);
+    // this.addCube(tile4);
     this.animate();
   }
 
@@ -69,8 +72,8 @@ class Board extends Component {
     this.scene.add(cube);
   }
 
-  onDocMouseDown (event, tiles) {
-    const windowArea = event.target.getBoundingClientRect()
+  onDocMouseDown(event, tiles) {
+    const windowArea = event.target.getBoundingClientRect();
     const mouse3D = new THREE.Vector3(
       (event.clientX / windowArea.right) * 2 - 1,
       -(event.clientY / windowArea.bottom) * 2 + 1,
@@ -84,7 +87,7 @@ class Board extends Component {
     if (intersects.length > 0) {
       let x = intersects[0].object.position.x;
       let y = intersects[0].object.position.y;
-       // hardcoding tile we’ll eventually get from store
+      // hardcoding tile we’ll eventually get from store
       const created = createCube({ id: 1 }, x, y);
       this.addCube(created);
     }
@@ -94,7 +97,7 @@ class Board extends Component {
     return (
       <div>
         <div
-          onClick={(e) => this.onDocMouseDown(e, this.tiles)}
+          onClick={e => this.onDocMouseDown(e, this.tiles)}
           id="boardCanvas"
           style={{ width: "80vw", height: "40vw" }}
           ref={mount => {
