@@ -34,7 +34,9 @@ class CurrentTile extends Component {
   componentDidUpdate(prevProps) {
     console.log(this.props.currentPlayer)
     if (prevProps.curTile !== this.props.curTile) {
-      console.log('should update')
+      this.scene.remove(this.cube)
+      this.cube = createCube(this.props.curTile, 0, 0)
+      this.scene.add(this.cube)
     }
   }
 
@@ -51,7 +53,9 @@ class CurrentTile extends Component {
 
   addCube() {
     if (this.props.player.name === this.props.currentPlayer.name) {
-      this.scene.add(createCube(this.props.curTile[0], 0, 0))
+      console.log('player tile', this.props.curTile)
+      this.cube = createCube(this.props.curTile, 0, 0)
+      this.scene.add(this.cube)
     } else {
       this.scene.remove.apply(this.scene, this.scene.children)
     }

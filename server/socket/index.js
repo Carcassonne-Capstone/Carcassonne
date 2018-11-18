@@ -1,5 +1,6 @@
 const Player = require('../GameObjects/Player')
 const Deck = require('../GameObjects/Deck')
+const {Tile, Region} = require('../GameObjects/Tiles')
 
 let deck = [];
 
@@ -19,7 +20,7 @@ module.exports = io => {
     })
     socket.on('startGame', (roomId, players) => {
         deck = new Deck(require('../GameObjects/startTiles'));
-        const startTile = deck.getCard();
+        const startTile = new Tile([new Region("road", [1, 3], false), new Region("city", [0], false)], 0);
         deck.shuffle();
         const firstTile = deck.getCard();
         players.forEach((player, i) => {
@@ -30,6 +31,12 @@ module.exports = io => {
         const firstPlayer = players[0];
         socket.broadcast.to(roomId).emit('initGame', players, roomId, startTile, firstTile, firstPlayer)
         socket.emit('initGame', players, roomId, startTile, firstTile, firstPlayer)
+    })
+
+    socket.on('tilePlaced', (roomId) => {
+      const tile = deck.getCard();
+      socket.broadcast.to(roomId).emit('newTile', tile)
+      socket.emit('newTile', tile)
     })
   });
 };
