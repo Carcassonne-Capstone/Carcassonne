@@ -21,8 +21,8 @@ class CurrentTile extends Component {
     this.renderer.setSize(width, height)
     this.mount.appendChild(this.renderer.domElement)
     this.initializeCamera();
-    this.addCube(createCube({id: 1}, 0, 0))
-    this.animate()
+    this.addCube(createCube({id: 1}, 0, 0));
+    this.animate();
   }
 
   componentWillUnmount() {

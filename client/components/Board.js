@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
 import CurrentTile from "./CurrentTile";
-import { tileLogic } from "./tileLogic";
+import tileLogic from "./tileLogic";
 
 class Board extends Component {
   constructor(props) {
@@ -30,19 +30,19 @@ class Board extends Component {
     this.initializeCamera();
     const initialCube = createCube({ id: 0 }, 0, 0);
     this.addCube(initialCube);
-    console.log("initial cube", initialCube);
 
-    // let tile1 = createBlankTile(null, 0, 1);
-    // let tile2 = createBlankTile(null, 1, 0);
-    // let tile3 = createBlankTile(null, -1, 0);
-    // let tile4 = createBlankTile(null, 0, -1);
-    const validTiles = tileLogic(initialCube);
-    this.tiles = [validTiles];
+    //valid tile should be called comparing board tile and tile to place
+    this.validTiles = [];
+    const validCoords = tileLogic();
+    validCoords.map(coord => {
+      const x = coord[0];
+      const y = coord[1];
 
-    this.addCube(validTiles);
-    // this.addCube(tile2);
-    // this.addCube(tile3);
-    // this.addCube(tile4);
+      const validSpot = createBlankTile(null, x, y);
+      this.validTiles.push(validSpot);
+      this.addCube(validSpot);
+    })
+   
     this.animate();
   }
 
@@ -88,7 +88,7 @@ class Board extends Component {
       let x = intersects[0].object.position.x;
       let y = intersects[0].object.position.y;
       // hardcoding tile we’ll eventually get from store
-      const created = createCube({ id: 1 }, x, y);
+      const created = createCube({ id: 0 }, x, y);
       this.addCube(created);
     }
   }
@@ -97,7 +97,7 @@ class Board extends Component {
     return (
       <div>
         <div
-          onClick={e => this.onDocMouseDown(e, this.tiles)}
+          onClick={e => this.onDocMouseDown(e, this.validTiles)}
           id="boardCanvas"
           style={{ width: "80vw", height: "40vw" }}
           ref={mount => {
