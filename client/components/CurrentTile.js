@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as THREE from 'three'
 import {createCube} from './renderFuncs/createTile'
+import {connect} from 'react-redux'
 
 class CurrentTile extends Component {
   constructor(props) {
@@ -21,13 +22,20 @@ class CurrentTile extends Component {
     this.renderer.setSize(width, height)
     this.mount.appendChild(this.renderer.domElement)
     this.initializeCamera();
-    this.addCube(createCube({id: 1}, 0, 0))
+    this.addCube()
     this.animate()
   }
 
   componentWillUnmount() {
     cancelAnimationFrame(this.frameId)
     this.mount.removeChild(this.renderer.domElement)
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log(this.props.currentPlayer)
+    if (prevProps.curTile !== this.props.curTile) {
+      console.log('should update')
+    }
   }
 
   initializeCamera() {
@@ -41,13 +49,17 @@ class CurrentTile extends Component {
     this.renderer.render(this.scene, this.camera)
   }
 
-  addCube(cube) {
-    this.scene.add(cube)
+  addCube() {
+    if (this.props.player.name === this.props.currentPlayer.name) {
+      this.scene.add(createCube(this.props.curTile[0], 0, 0))
+    } else {
+      this.scene.remove.apply(this.scene, this.scene.children)
+    }
   }
 
   render() {
     return (
-        <div>
+        <div id="playerTile">
             <div
                 style={{ width: '10vw', height: '10vw' }}
                 ref={(mount) => { this.mount = mount }}
@@ -57,4 +69,11 @@ class CurrentTile extends Component {
   }
 }
 
-export default CurrentTile
+const mapStateToProps = state => {
+  return {
+    curTile: state.curTile,
+    currentPlayer: state.currentPlayer
+  }
+}
+
+export default connect(mapStateToProps)(CurrentTile)

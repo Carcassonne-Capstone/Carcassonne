@@ -9,7 +9,7 @@ export const tileLogic = initialCube => {
     hasShield: false,
     meeple: []
   };
-  road, [right, left], false), new Region(city, [top], false)], 0)
+  // road, [right, left], false), new Region(city, [top], false)], 0)
 
   let startTile = [{
     region: "road",
