@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
-export const createCube = (tile, x, y) => {
+export const createCube = (tileNode, x, y) => {
+  const tile = tileNode.tile
   const tileImgSrc = `/images/${tile.id}.png`;
   const texture = new THREE.TextureLoader().load(tileImgSrc);
   const back = new THREE.TextureLoader().load("/images/back.jpg");

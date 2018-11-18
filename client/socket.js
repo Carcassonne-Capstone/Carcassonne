@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import store, { createRoom, joinRoom, initGame } from './store'
+import store, { createRoom, joinRoom, initGame, getNewTile } from './store'
 
 const socket = io(window.location.origin)
 
@@ -17,6 +17,10 @@ socket.on('playerJoined', (player) => {
 
 socket.on('initGame', (players, roomId, startTile, firstTile, firstPlayer) => {
     store.dispatch(initGame(players, roomId, startTile, firstTile, firstPlayer))
+})
+
+socket.on('newTile', (tile) => {
+    store.dispatch(getNewTile(tile))
 })
 
 export default socket

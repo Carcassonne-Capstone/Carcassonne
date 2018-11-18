@@ -9,7 +9,7 @@ const bottom = 2;
 const left = 3;
 
 module.exports = [
-    new Tile([new Region(road, [right, left], false), new Region(city, [top], false)], 0),
+    // new Tile([new Region(road, [right, left], false), new Region(city, [top], false)], 0),
     new Tile([new Region(road, [right, left], false), new Region(city, [top], false)], 0),
     new Tile([new Region(road, [right, left], false), new Region(city, [top], false)], 0),
     new Tile([new Region(road, [right, left], false), new Region(city, [top], false)], 0),

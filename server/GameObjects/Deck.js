@@ -12,7 +12,7 @@ class Deck {
     }
 
     getCard() {
-        return this.tiles.splice(0, 1);
+        return this.tiles.shift();
     }
 }
 

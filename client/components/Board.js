@@ -3,8 +3,10 @@ import * as THREE from "three";
 import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
 import CurrentTile from "./CurrentTile";
-import tileLogic from "./tileLogic";
+import checkValid from "./renderFuncs/checkValid";
 import {connect} from 'react-redux'
+import {updateUnfilled} from '../store'
+import socket from '../socket'
 
 class Board extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ class Board extends Component {
     this.addCube = this.addCube.bind(this);
     this.initializeCamera = this.initializeCamera.bind(this);
     this.initializeOrbits = this.initializeOrbits.bind(this);
+    this.updateValidTiles = this.updateValidTiles.bind(this);
   }
 
   componentDidMount() {
@@ -29,27 +32,49 @@ class Board extends Component {
 
     this.initializeOrbits();
     this.initializeCamera();
-    const initialCube = createCube({ id: 0 }, 0, 0);
+    const initialCube = createCube(this.props.startTile, 0, 0);
     this.addCube(initialCube);
 
     //valid tile should be called comparing board tile and tile to place
-    this.validTiles = [];
-    const validCoords = tileLogic();
-    validCoords.map(coord => {
-      const x = coord[0];
-      const y = coord[1];
+    // this.validTiles = [];
+    // const validCoords = tileLogic();
+    // validCoords.map(coord => {
+    //   const x = coord[0];
+    //   const y = coord[1];
 
-      const validSpot = createBlankTile(null, x, y);
-      this.validTiles.push(validSpot);
-      this.addCube(validSpot);
-    })
-   
+    //   const validSpot = createBlankTile(null, x, y);
+    //   this.validTiles.push(validSpot);
+    //   this.addCube(validSpot);
+    // })
+    this.validTiles = [];
+    this.updateValidTiles();
     this.animate();
   }
 
   componentWillUnmount() {
     cancelAnimationFrame(this.frameId);
     this.mount.removeChild(this.renderer.domElement);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.unfilledTiles !== this.props.unfilledTiles) {
+      this.updateValidTiles();
+    }
+  }
+
+  updateValidTiles() {
+    this.validTiles.forEach(tile => this.scene.remove(tile))
+    const validLocations = checkValid(this.props.unfilledTiles, this.props.currentTile);
+    for (let key in validLocations) {
+      if (validLocations.hasOwnProperty(key)) {
+        const coords = key.split(',')
+        const x = parseInt(coords[0], 10);
+        const y = parseInt(coords[1], 10);
+        const validSpot = createBlankTile(null, x, y);
+        this.validTiles.push(validSpot);
+        this.addCube(validSpot);
+      }
+    }
   }
 
   initializeOrbits() {
@@ -89,8 +114,10 @@ class Board extends Component {
       let x = intersects[0].object.position.x;
       let y = intersects[0].object.position.y;
       // hardcoding tile we’ll eventually get from store
-      const created = createCube({ id: 0 }, x, y);
+      const created = createCube(this.props.currentTile, x, y);
       this.addCube(created);
+      // socket.emit('tilePlaced', state.roomId)
+      this.props.updateUnfilled(x, y)
     }
   }
 
@@ -115,8 +142,17 @@ class Board extends Component {
 
 const mapStateToProps = state => {
   return {
-    players: state.players
+    players: state.players,
+    unfilledTiles: state.unfilledTiles,
+    currentTile: state.curTile,
+    startTile: state.startTile
   }
 }
 
-export default connect(mapStateToProps)(Board);
+const mapDispatchToProps = dispatch => {
+  return {
+    updateUnfilled: (x,y) => dispatch(updateUnfilled(x,y))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

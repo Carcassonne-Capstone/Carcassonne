@@ -59,10 +59,10 @@ const boardTile = {
 }
 
 const findOppEdge = {
-    0: 2,
-    1: 3,
-    2: 0,
-    3: 1
+  [top]: bottom,
+  [right]: left,
+  [bottom]: top,
+  [left]: right
 }
 
 const matchEdge = (tileToPlace2, boardTile) => {
