@@ -4,6 +4,7 @@ import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
 import CurrentTile from "./CurrentTile";
 import tileLogic from "./tileLogic";
+import {connect} from 'react-redux'
 
 class Board extends Component {
   constructor(props) {
@@ -104,10 +105,18 @@ class Board extends Component {
             this.mount = mount;
           }}
         />
-        <CurrentTile />
+        <div id="currentTiles">
+          {this.props.players.map(player => <CurrentTile key={player.name} player={player}/>)}
+        </div>
       </div>
     );
   }
 }
 
-export default Board;
+const mapStateToProps = state => {
+  return {
+    players: state.players
+  }
+}
+
+export default connect(mapStateToProps)(Board);

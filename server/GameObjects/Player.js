@@ -4,7 +4,7 @@ class Player {
         this.room = roomId
     }
 
-    isTurn(name) {
+    isUp(name) {
         return this.name === name
     }
 }
