@@ -7,18 +7,18 @@ const road = 'road';
 const monastery = 'monastery';
 const city = 'city';
 
-// const tileToPlace = {
-//     id: 0,
-//     regions: [
-//               {type: city,
-//                   edges: [top],
-//                 hasShield:false
-//               },
-//               {type: road,
-//                 edges: [right, left],
-//               hasShield:false
-//             }]
-//     }
+const tileToPlace = {
+    id: 0,
+    regions: [
+              {type: city,
+                  edges: [top],
+                hasShield:false
+              },
+              {type: road,
+                edges: [right, left],
+              hasShield:false
+            }]
+    }
 
     const tileToPlace2 = {
     id: 0,
