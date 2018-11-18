@@ -56,7 +56,8 @@ const reducer = (state = initialState, action) => {
                 curTile: action.curTile,
                 currentPlayer: action.currentPlayer,
                 board: {[[0,0]]: action.startTile},
-                gameState: 'playing'
+                gameState: 'playing',
+                unfilledTiles: [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}]
             }
         default:
             return state;
