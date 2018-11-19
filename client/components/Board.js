@@ -54,6 +54,7 @@ class Board extends Component {
 
   updateValidTiles() {
     this.validTiles.forEach(tile => this.scene.remove(tile))
+    this.validTiles = []
     const validLocations = checkValid(this.props.unfilledTiles, this.props.currentTile);
     for (let key in validLocations) {
       if (validLocations.hasOwnProperty(key)) {
@@ -103,10 +104,9 @@ class Board extends Component {
     if (intersects.length > 0) {
       let x = intersects[0].object.position.x;
       let y = intersects[0].object.position.y;
-      // hardcoding tile we’ll eventually get from store
       const created = createCube(this.props.currentTile, x, y);
+      this.scene.remove(intersects[0].object);
       this.addCube(created);
-      // socket.emit('tilePlaced', state.roomId)
       this.props.updateBoard(x, y)
     }
   }
