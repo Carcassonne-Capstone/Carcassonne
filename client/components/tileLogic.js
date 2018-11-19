@@ -116,7 +116,6 @@ const coordinates = (edgeArr) => {
   const y = 0;
   const edges = []
   edgeArr.map(edge => {
-    console.log(edge);
     switch (edge) {
       case 0: 
        edges.push([x, y+1]);

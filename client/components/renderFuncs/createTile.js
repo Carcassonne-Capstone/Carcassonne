@@ -30,6 +30,7 @@ export const createCube = (tileNode, x, y) => {
   cube.position.x = x;
   cube.position.y = y;
   cube.position.z = 0;
+  cube.rotation.z = -Math.PI/2 * tileNode.rotation;
   return cube;
 };
 

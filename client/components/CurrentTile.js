@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import * as THREE from 'three'
 import {createCube} from './renderFuncs/createTile'
 import {connect} from 'react-redux'
+import {rotate} from '../store'
 
 class CurrentTile extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class CurrentTile extends Component {
     this.animate = this.animate.bind(this)
     this.addCube = this.addCube.bind(this)
     this.initializeCamera = this.initializeCamera.bind(this)
+    this.rotate = this.rotate.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +34,6 @@ class CurrentTile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.currentPlayer)
     if (prevProps.curTile !== this.props.curTile) {
       this.scene.remove(this.cube)
       this.cube = createCube(this.props.curTile, 0, 0)
@@ -53,12 +54,16 @@ class CurrentTile extends Component {
 
   addCube() {
     if (this.props.player.name === this.props.currentPlayer.name) {
-      console.log('player tile', this.props.curTile)
       this.cube = createCube(this.props.curTile, 0, 0)
       this.scene.add(this.cube)
     } else {
       this.scene.remove.apply(this.scene, this.scene.children)
     }
+  }
+
+  rotate() {
+    //this.cube.rotation.z -= Math.PI /2;
+    this.props.rotate();
   }
 
   render() {
@@ -68,6 +73,7 @@ class CurrentTile extends Component {
                 style={{ width: '10vw', height: '10vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
+            <button onClick={this.rotate}> Rotate </button>
         </div>
     )
   }
@@ -80,4 +86,10 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(CurrentTile)
+const mapDispatchToProps = dispatch => {
+  return {
+    rotate: () => dispatch(rotate())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CurrentTile)

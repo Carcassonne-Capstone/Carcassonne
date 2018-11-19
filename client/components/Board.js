@@ -56,9 +56,10 @@ class Board extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.unfilledTiles !== this.props.unfilledTiles) {
+    if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation ) {
       this.updateValidTiles();
     }
+    
   }
 
   updateValidTiles() {
@@ -123,6 +124,7 @@ class Board extends Component {
   render() {
     return (
       <div>
+      
         <div
           onClick={e => this.onDocMouseDown(e, this.validTiles)}
           id="boardCanvas"

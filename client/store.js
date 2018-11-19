@@ -27,6 +27,7 @@ const CREATE_ROOM = 'CREATE_ROOM'
 const JOIN_ROOM = 'JOIN_ROOM'
 const INIT_GAME = 'INIT_GAME'
 const UPDATE_BOARD = 'UPDATE_BOARD'
+const ROTATE_TILE = 'ROTATE_TILE'
 
 //action creators
 export const getNewTile = (tile, x, y) => ({type: GOT_NEW_TILE, tile, x, y})
@@ -34,6 +35,7 @@ export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, playe
 export const joinRoom = (player) => ({type: JOIN_ROOM, player})
 export const initGame = (players, roomId, startTile, curTile, currentPlayer) => ({type: INIT_GAME, players, roomId, startTile, curTile, currentPlayer})
 export const updateBoard = (x, y) => ({type: UPDATE_BOARD, x, y})
+export const rotate = () => ({type: ROTATE_TILE})
 // thunk creators
 // export const tilePlaced = (x, y) => {
 //     return (dispatch) => {
@@ -87,6 +89,7 @@ const reducer = (state = initialState, action) => {
         case INIT_GAME:
             const startNode = new TileNode(action.startTile)
             const curTileNode = new TileNode(action.curTile)
+            console.log("current tile node", curTileNode);
             const neighb0 = new TileNode(null)
             neighb0.setNeighbor(bottom, startNode)
             const neighb1 = new TileNode(null)
@@ -111,6 +114,11 @@ const reducer = (state = initialState, action) => {
                     [[-1,0]]: neighb3
                 }
             }
+        case ROTATE_TILE:
+            const newTile = Object.assign(Object.create(Object.getPrototypeOf(state.curTile)), state.curTile);
+            newTile.rotate();
+            console.log("rotated tile in reducer", newTile);
+            return {...state, curTile: newTile};
         default:
             return state;
     }
