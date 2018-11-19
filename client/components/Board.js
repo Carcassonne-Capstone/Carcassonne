@@ -66,7 +66,6 @@ class Board extends Component {
         this.addCube(validSpot);
       }
     }
-    console.log('valid tiles', this.validTiles);
   }
 
   initializeOrbits() {
