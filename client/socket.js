@@ -19,8 +19,8 @@ socket.on('initGame', (players, roomId, startTile, firstTile, firstPlayer) => {
     store.dispatch(initGame(players, roomId, startTile, firstTile, firstPlayer))
 })
 
-socket.on('newTile', (tile) => {
-    store.dispatch(getNewTile(tile))
+socket.on('newTile', (tile, x, y) => {
+    store.dispatch(getNewTile(tile, x, y))
 })
 
 export default socket
