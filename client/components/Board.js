@@ -5,8 +5,7 @@ const OrbitControls = require("three-orbit-controls")(THREE);
 import CurrentTile from "./CurrentTile";
 import checkValid from "./renderFuncs/checkValid";
 import {connect} from 'react-redux'
-import {updateUnfilled} from '../store'
-import socket from '../socket'
+import {updateBoard} from '../store'
 
 class Board extends Component {
   constructor(props) {
@@ -117,7 +116,7 @@ class Board extends Component {
       const created = createCube(this.props.currentTile, x, y);
       this.addCube(created);
       // socket.emit('tilePlaced', state.roomId)
-      this.props.updateUnfilled(x, y)
+      this.props.updateBoard(x, y)
     }
   }
 
@@ -151,7 +150,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateUnfilled: (x,y) => dispatch(updateUnfilled(x,y))
+    updateBoard: (x,y) => dispatch(updateBoard(x,y))
   }
 }
 

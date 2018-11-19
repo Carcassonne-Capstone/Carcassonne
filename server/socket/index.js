@@ -33,10 +33,10 @@ module.exports = io => {
         socket.emit('initGame', players, roomId, startTile, firstTile, firstPlayer)
     })
 
-    socket.on('tilePlaced', (roomId) => {
+    socket.on('tilePlaced', (roomId, x, y) => {
       const tile = deck.getCard();
       socket.broadcast.to(roomId).emit('newTile', tile)
-      socket.emit('newTile', tile)
+      socket.emit('newTile', tile, x, y)
     })
   });
 };
