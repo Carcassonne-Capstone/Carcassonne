@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import {createCube} from './renderFuncs/createTile'
 import {connect} from 'react-redux'
 import {rotate} from '../store'
+import socket from '../socket';
 
 class CurrentTile extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class CurrentTile extends Component {
     this.animate = this.animate.bind(this)
     this.addCube = this.addCube.bind(this)
     this.initializeCamera = this.initializeCamera.bind(this)
-    this.rotate = this.rotate.bind(this);
+    this.nextPlayer = this.nextPlayer.bind(this)
   }
 
   componentDidMount() {
@@ -34,10 +35,8 @@ class CurrentTile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.curTile !== this.props.curTile) {
-      this.scene.remove(this.cube)
-      this.cube = createCube(this.props.curTile, 0, 0)
-      this.scene.add(this.cube)
+    if (prevProps.curTile !== this.props.curTile || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
+      this.addCube()
     }
   }
 
@@ -53,27 +52,26 @@ class CurrentTile extends Component {
   }
 
   addCube() {
+    this.scene.remove(this.cube)
     if (this.props.player.name === this.props.currentPlayer.name) {
       this.cube = createCube(this.props.curTile, 0, 0)
       this.scene.add(this.cube)
-    } else {
-      this.scene.remove.apply(this.scene, this.scene.children)
     }
   }
-
-  rotate() {
-    //this.cube.rotation.z -= Math.PI /2;
-    this.props.rotate();
+  
+  nextPlayer() {
+    socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId)
   }
 
   render() {
     return (
         <div id="playerTile">
             <div
-                style={{ width: '10vw', height: '10vw' }}
+                style={{ width: '15vw', height: '15vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
-            <button onClick={this.rotate}> Rotate </button>
+            <button onClick={this.props.rotate}> Rotate </button>
+            <button onClick={this.nextPlayer}>End Turn</button>
         </div>
     )
   }
@@ -82,7 +80,9 @@ class CurrentTile extends Component {
 const mapStateToProps = state => {
   return {
     curTile: state.curTile,
-    currentPlayer: state.currentPlayer
+    currentPlayer: state.currentPlayer,
+    players: state.players,
+    roomId: state.roomId
   }
 }
 

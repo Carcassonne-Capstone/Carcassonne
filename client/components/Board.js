@@ -46,10 +46,17 @@ class Board extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.curLocation !== this.props.curLocation) {
+      this.updateCurTile()
+    }
     if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation ) {
       this.updateValidTiles();
     }
     
+  }
+
+  updateCurTile() {
+    this.addCube(createCube(this.props.currentTile, this.props.curLocation[0], this.props.curLocation[1]))
   }
 
   updateValidTiles() {

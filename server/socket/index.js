@@ -32,10 +32,20 @@ module.exports = io => {
         socket.emit('initGame', players, roomId, startTile, firstTile, firstPlayer)
     })
 
-    socket.on('tilePlaced', (roomId, x, y) => {
-      const tile = deck.getCard();
-      socket.broadcast.to(roomId).emit('newTile', tile)
+    socket.on('tilePlaced', (roomId, tile, x, y) => {
+      socket.broadcast.to(roomId).emit('newTile', tile, x, y)
       socket.emit('newTile', tile, x, y)
+    })
+
+    socket.on('turnEnded', (curPlayer, allPlayers, roomId) => {
+      let playerIdx = allPlayers.findIndex(player => curPlayer.name === player.name)
+      playerIdx++;
+      if (playerIdx >= allPlayers.length) {
+        playerIdx = 0;
+      }
+      socket.broadcast.to(roomId).emit('newPlayer', allPlayers[playerIdx])
+      const tile = deck.getCard();
+      socket.emit('newPlayer', allPlayers[playerIdx], tile)
     })
   });
 };
