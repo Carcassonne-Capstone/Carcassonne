@@ -15,6 +15,7 @@ class Board extends Component {
     this.initializeCamera = this.initializeCamera.bind(this);
     this.initializeOrbits = this.initializeOrbits.bind(this);
     this.updateValidTiles = this.updateValidTiles.bind(this);
+    this.resetCamera = this.resetCamera.bind(this);
   }
 
   componentDidMount() {
@@ -34,17 +35,6 @@ class Board extends Component {
     const initialCube = createCube(this.props.startTile, 0, 0);
     this.addCube(initialCube);
 
-    //valid tile should be called comparing board tile and tile to place
-    // this.validTiles = [];
-    // const validCoords = tileLogic();
-    // validCoords.map(coord => {
-    //   const x = coord[0];
-    //   const y = coord[1];
-
-    //   const validSpot = createBlankTile(null, x, y);
-    //   this.validTiles.push(validSpot);
-    //   this.addCube(validSpot);
-    // })
     this.validTiles = [];
     this.updateValidTiles();
     this.animate();
@@ -101,9 +91,9 @@ class Board extends Component {
   onDocMouseDown(event, tiles) {
     const windowArea = event.target.getBoundingClientRect();
     const mouse3D = new THREE.Vector3(
-      (event.clientX / windowArea.right) * 2 - 1,
-      -(event.clientY / windowArea.bottom) * 2 + 1,
-      0.5
+      ( ( event.clientX - windowArea.left ) / ( windowArea.right - windowArea.left ) ) * 2 - 1,
+      -( ( event.clientY - windowArea.top ) / ( windowArea.bottom - windowArea.top) ) * 2 + 1,
+      0
     );
     const raycaster = new THREE.Raycaster();
 
@@ -120,11 +110,16 @@ class Board extends Component {
       this.props.updateBoard(x, y)
     }
   }
-
+  resetCamera () {
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 4;
+    this.camera.lookAt(new THREE.Vector3(0,0, 0))
+  }
   render() {
     return (
       <div>
-      
+        <button onClick={this.resetCamera}> Move Camera </button>
         <div
           onClick={e => this.onDocMouseDown(e, this.validTiles)}
           id="boardCanvas"
