@@ -6,7 +6,6 @@ let deck = [];
 
 module.exports = io => {
   io.on("connection", socket => {
-    console.log("HELLO");
     socket.on('createRoom', (playerName)=>{
         const roomId = makeid()
         const player = new Player(playerName, roomId)

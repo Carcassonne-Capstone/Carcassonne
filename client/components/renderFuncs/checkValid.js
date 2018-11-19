@@ -8,7 +8,6 @@ const city = 'city';
 
 const checkEdgeForField = (tile) => {
   const results = [];
-  console.log('tile',tile)
   for (let i=0; i< 4; i++) {
     let result = false;
     tile.regions.map(region => {
@@ -48,13 +47,11 @@ const findEdgeType = (tile, direction) => {
 
 const isValid = (tileNode, tileToPlace) => {
     const neighbors = tileNode.neighbors;
-    console.log('newTile', tileToPlace);
     checkEdgeForField(tileToPlace.tile);
     let validTile = true;
     for (let direction in neighbors) {
         if (neighbors.hasOwnProperty(direction)) {
             if (neighbors[direction]) {
-                console.log('newNeigh', neighbors[direction]);
                 const curNeighbor = neighbors[direction].tile;
                 checkEdgeForField(curNeighbor)
                 const oppEdge = tileNode.findOppEdge(direction);

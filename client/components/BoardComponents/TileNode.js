@@ -31,6 +31,17 @@ class TileNode {
                 return right;
         }
     }
+
+    rotate() {
+        if (this.rotation === 3) this.rotation = 0;
+        else this.rotation++;
+        for (let i=0; i<this.tile.regions.length; i++) {
+            for (let j=0; j<this.tile.regions[i].edges.length; j++) {
+                if (this.tile.regions[i].edges[j] === 3) this.tile.regions[i].edges[j] = 0;
+                else this.tile.regions[i].edges[j]++;
+            }
+        }
+    }
 }
 
 export default TileNode;

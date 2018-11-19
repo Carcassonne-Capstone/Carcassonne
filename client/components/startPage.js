@@ -17,7 +17,6 @@ class StartPage extends Component {
 
     handleSubmit(joinOrCreate){
         this.setState({[joinOrCreate]: true})
-        console.log('STATE',this.state)
     }
 
     goToMainPage(){
