@@ -11,6 +11,7 @@ const left = 3;
 
 //initial state
 const initialState = {
+    player: {},
     curTile: {},
     curLocation: null,
     board: {},
@@ -30,6 +31,7 @@ const UPDATE_BOARD = 'UPDATE_BOARD'
 const ROTATE_TILE = 'ROTATE_TILE'
 const NEXT_TURN = 'NEXT_TURN'
 const ADD_TO_BOARD = 'ADD_TO_BOARD'
+const SET_PLAYER = 'SET_PLAYER'
 
 //action creators
 // export const getNewTile = (tile, x, y) => ({type: GOT_NEW_TILE, tile, x, y})
@@ -40,6 +42,7 @@ export const updateBoard = (x, y) => ({type: UPDATE_BOARD, x, y})
 export const rotate = () => ({type: ROTATE_TILE})
 export const nextTurn = (player, tile) => ({type: NEXT_TURN, player, tile})
 export const addToBoard = (coords) => ({type: ADD_TO_BOARD, coords})
+export const setPlayer = (player) => ({type: SET_PLAYER, player})
 // thunk creators
 // export const tilePlaced = (x, y) => {
 //     return (dispatch) => {
@@ -78,10 +81,12 @@ const createNewUnfilled = (curUnfilled, x, y, board) => {
 //reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case SET_PLAYER:
+            return {...state, player: action.player}
         case ADD_TO_BOARD:
             return {...state, curLocation: action.coords}
         case CREATE_ROOM:
-            return {...state, roomId: action.roomId, players: [action.player]}
+            return {...state, roomId: action.roomId, players: [action.player], player: action.player}
         case JOIN_ROOM:
             return {...state, players: [...state.players, action.player]}
         case NEXT_TURN:

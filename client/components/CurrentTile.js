@@ -54,7 +54,6 @@ class CurrentTile extends Component {
 
   addCube() {
     this.scene.remove(this.cube)
-    console.log(this.props.curLocation)
     if ((this.props.player.name === this.props.currentPlayer.name) && (this.props.curLocation === null)) {
       this.cube = createCube(this.props.curTile, 0, 0)
       this.scene.add(this.cube)
@@ -68,16 +67,26 @@ class CurrentTile extends Component {
   render() {
     return (
         <div id="playerTile">
+            <div>{this.props.player.name}</div>
             <div
                 style={{ width: '15vw', height: '15vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
-            {
-              this.props.curLocation ?
-              <button type="button" onClick={() => socket.emit('tilePlaced', null)}> Back </button> :
-              <button type="button" onClick={this.props.rotate}>Rotate</button>
+            {this.props.me.name === this.props.currentPlayer.name ?
+              this.props.currentPlayer.name === this.props.player.name ?
+                <div>
+                  {
+                    this.props.curLocation ?
+                    <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
+                    // <button type="button" onClick={this.props.rotate}>Rotate</button>
+                    <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
+                  }
+                  <button type="button" onClick={this.nextPlayer} disabled={this.props.curLocation === null}>End Turn</button>
+                </div>
+                :
+                <div /> :
+                <div />
             }
-            <button type="button" onClick={this.nextPlayer} disabled={this.props.curLocation === null}>End Turn</button>
         </div>
     )
   }
@@ -89,7 +98,8 @@ const mapStateToProps = state => {
     currentPlayer: state.currentPlayer,
     players: state.players,
     roomId: state.roomId,
-    curLocation: state.curLocation
+    curLocation: state.curLocation,
+    me: state.player
   }
 }
 

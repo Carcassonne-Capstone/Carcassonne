@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import store, { createRoom, joinRoom, initGame, nextTurn, addToBoard } from './store'
+import store, { createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer } from './store'
 
 const socket = io(window.location.origin)
 
@@ -23,8 +23,16 @@ socket.on('newTile', (coords) => {
     store.dispatch(addToBoard(coords))
 })
 
+socket.on('rotate', () => {
+    store.dispatch(rotate())
+})
+
 socket.on('newPlayer', (player, newTile) => {
     store.dispatch(nextTurn(player, newTile))
+})
+
+socket.on('me', (player) => {
+    store.dispatch(setPlayer(player));
 })
 
 export default socket

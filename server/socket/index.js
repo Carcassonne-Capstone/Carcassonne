@@ -16,6 +16,7 @@ module.exports = io => {
         socket.join(roomId)
         const player = new Player(playerName, roomId)
         socket.broadcast.to(roomId).emit('playerJoined', player)
+        socket.emit('me', player)
     })
     socket.on('startGame', (roomId, players) => {
         deck = new Deck(require('../GameObjects/startTiles'));
@@ -43,9 +44,14 @@ module.exports = io => {
       if (playerIdx >= allPlayers.length) {
         playerIdx = 0;
       }
-      socket.broadcast.to(roomId).emit('newPlayer', allPlayers[playerIdx])
       const tile = deck.getCard();
+      socket.broadcast.to(roomId).emit('newPlayer', allPlayers[playerIdx], tile)
       socket.emit('newPlayer', allPlayers[playerIdx], tile)
+    })
+
+    socket.on('rotateTile', roomId => {
+      socket.broadcast.to(roomId).emit('rotate');
+      socket.emit('rotate')
     })
   });
 };

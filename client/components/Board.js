@@ -102,21 +102,23 @@ class Board extends Component {
   }
 
   onDocMouseDown(event, tiles) {
-    const windowArea = event.target.getBoundingClientRect();
-    const mouse3D = new THREE.Vector3(
-      ( ( event.clientX - windowArea.left ) / ( windowArea.right - windowArea.left ) ) * 2 - 1,
-      -( ( event.clientY - windowArea.top ) / ( windowArea.bottom - windowArea.top) ) * 2 + 1,
-      0
-    );
-    const raycaster = new THREE.Raycaster();
+    if (this.props.currentPlayer.name === this.props.player.name) {
+      const windowArea = event.target.getBoundingClientRect();
+      const mouse3D = new THREE.Vector3(
+        ( ( event.clientX - windowArea.left ) / ( windowArea.right - windowArea.left ) ) * 2 - 1,
+        -( ( event.clientY - windowArea.top ) / ( windowArea.bottom - windowArea.top) ) * 2 + 1,
+        0
+      );
+      const raycaster = new THREE.Raycaster();
 
-    raycaster.setFromCamera(mouse3D, this.camera);
-    var intersects = raycaster.intersectObjects(tiles);
+      raycaster.setFromCamera(mouse3D, this.camera);
+      var intersects = raycaster.intersectObjects(tiles);
 
-    if (intersects.length > 0) {
-      let x = intersects[0].object.position.x;
-      let y = intersects[0].object.position.y;
-      socket.emit('tilePlaced', this.props.roomId, [x, y])
+      if (intersects.length > 0) {
+        let x = intersects[0].object.position.x;
+        let y = intersects[0].object.position.y;
+        socket.emit('tilePlaced', this.props.roomId, [x, y])
+      }
     }
   }
   resetCamera () {
@@ -152,7 +154,9 @@ const mapStateToProps = state => {
     currentTile: state.curTile,
     startTile: state.startTile,
     curLocation: state.curLocation,
-    roomId: state.roomId
+    roomId: state.roomId,
+    currentPlayer: state.currentPlayer,
+    player: state.player
   }
 }
 
