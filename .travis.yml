@@ -1,10 +1,6 @@
 language: node_js
 node_js:
   - node # uses most recent stable node version
-services:
-  - postgresql # starts up postgres
-addons:
-  postgresql: '9.6' # highest available postgres version on Travis
 dist: trusty # uses trusty environment
 sudo: false # when on trusty, uses Docker containers for speed
 notifications:
