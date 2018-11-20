@@ -8,6 +8,7 @@
     "start-dev": "NODE_ENV='development' npm run build-watch & npm run start-server",
     "build-watch": "webpack -w",
     "deploy": "script/deploy",
+    "heroku-token": "script/encrypt-heroku-auth-token",
     "start-server": "nodemon server --ignore public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
