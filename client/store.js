@@ -11,7 +11,9 @@ const left = 3;
 
 //initial state
 const initialState = {
+    player: {},
     curTile: {},
+    curLocation: null,
     board: {},
     roomId: '',
     players: [],
@@ -22,20 +24,25 @@ const initialState = {
 }
 
 //action types
-const GOT_NEW_TILE = 'GOT_NEW_TILE'
 const CREATE_ROOM = 'CREATE_ROOM'
 const JOIN_ROOM = 'JOIN_ROOM'
 const INIT_GAME = 'INIT_GAME'
 const UPDATE_BOARD = 'UPDATE_BOARD'
 const ROTATE_TILE = 'ROTATE_TILE'
+const NEXT_TURN = 'NEXT_TURN'
+const ADD_TO_BOARD = 'ADD_TO_BOARD'
+const SET_PLAYER = 'SET_PLAYER'
 
 //action creators
-export const getNewTile = (tile, x, y) => ({type: GOT_NEW_TILE, tile, x, y})
+// export const getNewTile = (tile, x, y) => ({type: GOT_NEW_TILE, tile, x, y})
 export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, player})
 export const joinRoom = (player) => ({type: JOIN_ROOM, player})
 export const initGame = (players, roomId, startTile, curTile, currentPlayer) => ({type: INIT_GAME, players, roomId, startTile, curTile, currentPlayer})
 export const updateBoard = (x, y) => ({type: UPDATE_BOARD, x, y})
 export const rotate = () => ({type: ROTATE_TILE})
+export const nextTurn = (player, tile) => ({type: NEXT_TURN, player, tile})
+export const addToBoard = (coords) => ({type: ADD_TO_BOARD, coords})
+export const setPlayer = (player) => ({type: SET_PLAYER, player})
 // thunk creators
 // export const tilePlaced = (x, y) => {
 //     return (dispatch) => {
@@ -74,22 +81,33 @@ const createNewUnfilled = (curUnfilled, x, y, board) => {
 //reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case GOT_NEW_TILE:
-            return {...state, curTile: new TileNode(action.tile), unfilledTiles: createNewUnfilled(state.unfilledTiles, action.x, action.y, state.board)}
+        case SET_PLAYER:
+            return {...state, player: action.player}
+        case ADD_TO_BOARD:
+            return {...state, curLocation: action.coords}
         case CREATE_ROOM:
-            return {...state, roomId: action.roomId, players: [action.player]}
+            return {...state, roomId: action.roomId, players: [action.player], player: action.player}
         case JOIN_ROOM:
             return {...state, players: [...state.players, action.player]}
-        case UPDATE_BOARD:
+        case NEXT_TURN:
             const board = {...state.board}
-            updateNeighbors(action.x, action.y, state.curTile, board)
-            board[`${action.x},${action.y}`] = state.curTile
-            socket.emit('tilePlaced', state.roomId, action.x, action.y)
-            return {...state, board: board}
+            updateNeighbors(state.curLocation[0], state.curLocation[1], state.curTile, board)
+            board[`${state.curLocation[0]},${state.curLocation[1]}`] = state.curTile
+            return {...state, 
+                currentPlayer: action.player,
+                curTile: new TileNode(action.tile),
+                unfilledTiles: createNewUnfilled(state.unfilledTiles, state.curLocation[0], state.curLocation[1], board),
+                board: board,
+                curLocation: null
+            }
+        // case UPDATE_BOARD:
+        //     const board = {...state.board}
+        //     updateNeighbors(action.x, action.y, state.curTile, board)
+        //     board[`${action.x},${action.y}`] = state.curTile
+        //     return {...state, board: board, curLocation: [action.x, action.y]}
         case INIT_GAME:
             const startNode = new TileNode(action.startTile)
             const curTileNode = new TileNode(action.curTile)
-            console.log("current tile node", curTileNode);
             const neighb0 = new TileNode(null)
             neighb0.setNeighbor(bottom, startNode)
             const neighb1 = new TileNode(null)
@@ -117,7 +135,6 @@ const reducer = (state = initialState, action) => {
         case ROTATE_TILE:
             const newTile = Object.assign(Object.create(Object.getPrototypeOf(state.curTile)), state.curTile);
             newTile.rotate();
-            console.log("rotated tile in reducer", newTile);
             return {...state, curTile: newTile};
         default:
             return state;
