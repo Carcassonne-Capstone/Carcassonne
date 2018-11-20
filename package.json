@@ -10,7 +10,7 @@
     "deploy": "script/deploy",
     "heroku-token": "script/encrypt-heroku-auth-token",
     "start-server": "nodemon server --ignore public",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register"
   },
   "keywords": [],
   "author": "",
