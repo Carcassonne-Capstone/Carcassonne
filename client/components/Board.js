@@ -6,12 +6,13 @@ import CurrentTile from "./CurrentTile";
 import checkValid from "./renderFuncs/checkValid";
 import {connect} from 'react-redux'
 import {updateBoard} from '../store'
+import socket from '../socket';
 
 class Board extends Component {
   constructor(props) {
     super(props);
     this.animate = this.animate.bind(this);
-    this.addCube = this.addCube.bind(this);
+    this.changeCurTile = this.changeCurTile.bind(this);
     this.initializeCamera = this.initializeCamera.bind(this);
     this.initializeOrbits = this.initializeOrbits.bind(this);
     this.updateValidTiles = this.updateValidTiles.bind(this);
@@ -33,7 +34,8 @@ class Board extends Component {
     this.initializeOrbits();
     this.initializeCamera();
     const initialCube = createCube(this.props.startTile, 0, 0);
-    this.addCube(initialCube);
+    this.scene.add(initialCube);
+    this.curTile = null;
 
     this.validTiles = [];
     this.updateValidTiles();
@@ -46,8 +48,9 @@ class Board extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.currentTile.tile !== this.props.currentTile.tile) this.curTile = null
     if (prevProps.curLocation !== this.props.curLocation) {
-      this.updateCurTile()
+      this.changeCurTile()
     }
     if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation ) {
       this.updateValidTiles();
@@ -55,8 +58,14 @@ class Board extends Component {
     
   }
 
-  updateCurTile() {
-    this.addCube(createCube(this.props.currentTile, this.props.curLocation[0], this.props.curLocation[1]))
+  changeCurTile() {
+    if (this.curTile) {
+      this.scene.remove(this.curTile)
+    }
+    if (this.props.curLocation) {
+      this.curTile = createCube(this.props.currentTile, this.props.curLocation[0], this.props.curLocation[1])
+      this.scene.add(this.curTile);
+    }
   }
 
   updateValidTiles() {
@@ -70,7 +79,7 @@ class Board extends Component {
         const y = parseInt(coords[1], 10);
         const validSpot = createBlankTile(null, x, y);
         this.validTiles.push(validSpot);
-        this.addCube(validSpot);
+        this.scene.add(validSpot);
       }
     }
   }
@@ -92,10 +101,6 @@ class Board extends Component {
     this.renderer.render(this.scene, this.camera);
   }
 
-  addCube(cube) {
-    this.scene.add(cube);
-  }
-
   onDocMouseDown(event, tiles) {
     const windowArea = event.target.getBoundingClientRect();
     const mouse3D = new THREE.Vector3(
@@ -111,10 +116,7 @@ class Board extends Component {
     if (intersects.length > 0) {
       let x = intersects[0].object.position.x;
       let y = intersects[0].object.position.y;
-      const created = createCube(this.props.currentTile, x, y);
-      this.scene.remove(intersects[0].object);
-      this.addCube(created);
-      this.props.updateBoard(x, y)
+      socket.emit('tilePlaced', this.props.roomId, [x, y])
     }
   }
   resetCamera () {
@@ -126,7 +128,7 @@ class Board extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.resetCamera}> Move Camera </button>
+        <button type="button" onClick={this.resetCamera}> Move Camera </button>
         <div
           onClick={e => this.onDocMouseDown(e, this.validTiles)}
           id="boardCanvas"
@@ -148,7 +150,9 @@ const mapStateToProps = state => {
     players: state.players,
     unfilledTiles: state.unfilledTiles,
     currentTile: state.curTile,
-    startTile: state.startTile
+    startTile: state.startTile,
+    curLocation: state.curLocation,
+    roomId: state.roomId
   }
 }
 

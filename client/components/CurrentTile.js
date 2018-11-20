@@ -4,6 +4,7 @@ import {createCube} from './renderFuncs/createTile'
 import {connect} from 'react-redux'
 import {rotate} from '../store'
 import socket from '../socket';
+import { isNullOrUndefined } from 'util';
 
 class CurrentTile extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class CurrentTile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.curTile !== this.props.curTile || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
+    if (prevProps.curTile !== this.props.curTile || prevProps.currentPlayer.name !== this.props.currentPlayer.name || prevProps.curLocation !== this.props.curLocation) {
       this.addCube()
     }
   }
@@ -53,7 +54,8 @@ class CurrentTile extends Component {
 
   addCube() {
     this.scene.remove(this.cube)
-    if (this.props.player.name === this.props.currentPlayer.name) {
+    console.log(this.props.curLocation)
+    if ((this.props.player.name === this.props.currentPlayer.name) && (this.props.curLocation === null)) {
       this.cube = createCube(this.props.curTile, 0, 0)
       this.scene.add(this.cube)
     }
@@ -70,8 +72,12 @@ class CurrentTile extends Component {
                 style={{ width: '15vw', height: '15vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
-            <button onClick={this.props.rotate}> Rotate </button>
-            <button onClick={this.nextPlayer}>End Turn</button>
+            {
+              this.props.curLocation ?
+              <button type="button" onClick={() => socket.emit('tilePlaced', null)}> Back </button> :
+              <button type="button" onClick={this.props.rotate}>Rotate</button>
+            }
+            <button type="button" onClick={this.nextPlayer} disabled={this.props.curLocation === null}>End Turn</button>
         </div>
     )
   }
@@ -82,7 +88,8 @@ const mapStateToProps = state => {
     curTile: state.curTile,
     currentPlayer: state.currentPlayer,
     players: state.players,
-    roomId: state.roomId
+    roomId: state.roomId,
+    curLocation: state.curLocation
   }
 }
 

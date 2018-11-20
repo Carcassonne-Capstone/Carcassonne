@@ -19,9 +19,8 @@ socket.on('initGame', (players, roomId, startTile, firstTile, firstPlayer) => {
     store.dispatch(initGame(players, roomId, startTile, firstTile, firstPlayer))
 })
 
-socket.on('newTile', (tile, x, y) => {
-    store.dispatch(addToBoard(tile, x, y))
-    //store.dispatch(getNewTile(tile, x, y))
+socket.on('newTile', (coords) => {
+    store.dispatch(addToBoard(coords))
 })
 
 socket.on('newPlayer', (player, newTile) => {

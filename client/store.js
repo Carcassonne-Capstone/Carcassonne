@@ -39,7 +39,7 @@ export const initGame = (players, roomId, startTile, curTile, currentPlayer) => 
 export const updateBoard = (x, y) => ({type: UPDATE_BOARD, x, y})
 export const rotate = () => ({type: ROTATE_TILE})
 export const nextTurn = (player, tile) => ({type: NEXT_TURN, player, tile})
-export const addToBoard = (tile, x, y) => ({type: ADD_TO_BOARD, tile, x, y})
+export const addToBoard = (coords) => ({type: ADD_TO_BOARD, coords})
 // thunk creators
 // export const tilePlaced = (x, y) => {
 //     return (dispatch) => {
@@ -79,23 +79,27 @@ const createNewUnfilled = (curUnfilled, x, y, board) => {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_TO_BOARD:
-            return {...state, board: {...state.board, [[action.x, action.y]]: state.curTile, curLocation: [action.x, action.y]}}
+            return {...state, curLocation: action.coords}
         case CREATE_ROOM:
             return {...state, roomId: action.roomId, players: [action.player]}
         case JOIN_ROOM:
             return {...state, players: [...state.players, action.player]}
         case NEXT_TURN:
+            const board = {...state.board}
+            updateNeighbors(state.curLocation[0], state.curLocation[1], state.curTile, board)
+            board[`${state.curLocation[0]},${state.curLocation[1]}`] = state.curTile
             return {...state, 
                 currentPlayer: action.player,
                 curTile: new TileNode(action.tile),
-                unfilledTiles: createNewUnfilled(state.unfilledTiles, state.curLocation[0], state.curLocation[1], state.board)
+                unfilledTiles: createNewUnfilled(state.unfilledTiles, state.curLocation[0], state.curLocation[1], board),
+                board: board,
+                curLocation: null
             }
-        case UPDATE_BOARD:
-            const board = {...state.board}
-            updateNeighbors(action.x, action.y, state.curTile, board)
-            board[`${action.x},${action.y}`] = state.curTile
-            socket.emit('tilePlaced', state.roomId, action.x, action.y)
-            return {...state, board: board, curLocation: [action.x, action.y]}
+        // case UPDATE_BOARD:
+        //     const board = {...state.board}
+        //     updateNeighbors(action.x, action.y, state.curTile, board)
+        //     board[`${action.x},${action.y}`] = state.curTile
+        //     return {...state, board: board, curLocation: [action.x, action.y]}
         case INIT_GAME:
             const startNode = new TileNode(action.startTile)
             const curTileNode = new TileNode(action.curTile)

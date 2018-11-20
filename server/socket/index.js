@@ -32,9 +32,9 @@ module.exports = io => {
         socket.emit('initGame', players, roomId, startTile, firstTile, firstPlayer)
     })
 
-    socket.on('tilePlaced', (roomId, tile, x, y) => {
-      socket.broadcast.to(roomId).emit('newTile', tile, x, y)
-      socket.emit('newTile', tile, x, y)
+    socket.on('tilePlaced', (roomId, coords) => {
+      socket.broadcast.to(roomId).emit('newTile', coords)
+      socket.emit('newTile', coords)
     })
 
     socket.on('turnEnded', (curPlayer, allPlayers, roomId) => {
