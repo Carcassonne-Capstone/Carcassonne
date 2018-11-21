@@ -29,7 +29,6 @@ class JoinRoom extends Component {
                 {this.state.waitingRoom===false
                 ?
                 <div>
-                    <button type="button" onClick={this.props.backButton}>Back to Main Page</button>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                         <div className="form-group">
                             <label htmlFor="name" >Name*</label>
@@ -47,9 +46,10 @@ class JoinRoom extends Component {
                             <button type="submit">Join Game</button>
                         </div>
                     </form>
+                    <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
                 </div>
                 :
-                <div>
+                <div className="waitingRoomJoin">
                     Please wait for your host to begin the game.
                 </div>
                 }

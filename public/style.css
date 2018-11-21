@@ -1,3 +1,10 @@
+body, html {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    font-family: 'Sofadi One', cursive;
+    text-align: center
+}
 
 #currentTiles {
     display: flex;
@@ -10,4 +17,153 @@
 #playerTile img {
     border: solid gray;
     height: 25px;
+}
+
+.startPage{
+    background-image: url("/Background.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.startMenu{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(254, 254, 254, 0.6);
+    /* opacity: .5; */
+    width: 40vw;
+    height: auto;
+    margin-top: 15vw;
+    margin-left: 30%;
+    border-radius: 25px;
+}
+
+.title{
+    font-size: 3vw;
+    font-weight: bold;
+    padding: 5%;
+    /* margin-top: 5% */
+}
+
+.startMenu button{
+    background-color: green;
+    color: white;
+    width: 20vw;
+    height: 3vw;
+    font-size: 2vw;
+    font-weight: bold;
+    margin-bottom: 5%;
+    border-radius: 15px;
+    border: none
+}
+
+#backButton{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5vw;
+    margin-bottom: 2%
+}
+
+#backButton:hover{
+    cursor: pointer;
+    color: green
+}
+
+.startMenu button:hover{
+    opacity:.8;
+    cursor: pointer
+}
+
+.buttons{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    /* width: 80%; */
+    /* margin-left: 10% */
+    padding: 0;
+    margin:0
+}
+
+.startMenu input{
+    width: 20vw;
+    height: 3vw;
+    font-size: 2vw;
+    font-weight: bold;
+    margin-bottom: 5%;
+    border-radius: 15px;
+    border: none;
+    text-align: center;
+    color: green
+}
+
+.startMenu label{
+    text-align: left;
+    font-size: 2vw;
+    font-weight: bold;
+}
+
+.waitingRoom{
+    display: flex;
+    justify-content: stretch;
+    align-content: flex-start; 
+    font-size: 1.5vw;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    width: 80%;
+    margin: 10%;
+    margin-top:2%
+}
+
+#list{
+    text-align: left;
+    padding-right: 2%;
+    width: 50%;
+}
+
+#list ul{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#list li{
+    font-weight: normal
+}
+
+#info{
+    width: 50%;
+    display: flex;
+    flex-direction: column
+}
+
+#info div{
+    width: 100%
+}
+
+#info button{
+    width: 100%;
+    height: auto;
+}
+
+.waitingRoom #backButton{
+    display: hidden
+}
+
+.waitingRoomJoin{
+    font-size: 2.5vw;
+    width: 80%;
+    margin-left: auto;
+    padding:10%;
+    padding-top: 3%;
+    font-weight: bold
+}
+
+button:focus {
+    outline:0;
+}
+
+input:focus {
+    outline:0;
 }
