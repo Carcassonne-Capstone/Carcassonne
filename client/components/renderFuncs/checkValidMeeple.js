@@ -13,7 +13,6 @@ export const validMeepleRegion = (region, currentTile) => {
   while (blocksToCheck.length) {
     const block = blocksToCheck.pop();
     visitedTiles.add(block.tileNode);
-    console.log(block.tileNode);
     const curRegion = findRegion(block.tileNode.tile, block.edge);
     if (curRegion.meeple && curRegion.meeple.length) return false;
     curRegion.edges.forEach(edge => {
@@ -28,35 +27,3 @@ export const validMeepleRegion = (region, currentTile) => {
   }
   return true;
 };
-
-// const xDirs = [0, 1, 0, -1];
-// const yDirs = [1, 0, -1, 0];
-// const validRegions = [];
-
-// for (let i = 0; i < 4; i++) {
-//   if (
-//     board.hasOwnProperty(`${xDirs[i] + coords[0]},${yDirs[i] + coords[1]}`)
-//   ) {
-//     let oppositeDir = currentTile.findOppEdge(i);
-
-//     let meepleType = null;
-//     console.log(
-//       board[`${xDirs[i] + coords[0]},${yDirs[i] + coords[1]}`].tile.regions
-//     );
-
-//     //   board[
-//     //     `${xDirs[i] + coords[0]},${yDirs[i] + coords[1]}`
-//     //   ].tile.regions.forEach(region => {
-//     //     region.edges.forEach(dir => {
-//     //       if (parseInt(dir, 10) === parseInt(oppositeDir, 10)) {
-//     //         meepleType = region.meeple;
-//     //       }
-//     //     });
-//     //   });
-
-//     if (meepleType.length === 0) {
-//       // validRegions.push();
-//       return false;
-//     }
-//   }
-// }

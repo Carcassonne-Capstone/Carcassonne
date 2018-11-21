@@ -75,7 +75,8 @@ class Board extends Component {
       this.curTile.remove(this.meeple);
       this.meeple = createMeeple(
         this.props.meeple.coords[0],
-        this.props.meeple.coords[1]
+        this.props.meeple.coords[1],
+        this.props.meeple.player.color
       );
       this.curTile.add(this.meeple);
     }
@@ -92,12 +93,6 @@ class Board extends Component {
         this.props.curLocation[1]
       );
       this.emptyMeeples = [];
-      // checkValidMeeple(
-      //   this.props.currentTile,
-      //   this.props.curLocation,
-      //   this.props.board
-      // );
-      console.log("current tile", this.props.currentTile);
       this.props.currentTile.tile.regions.forEach((region, idx) => {
         if (validMeepleRegion(region, this.props.currentTile)) {
           if (region.meeplePosition) {

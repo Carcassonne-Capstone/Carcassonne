@@ -105,6 +105,15 @@ const createNewUnfilled = (curUnfilled, x, y, board) => {
   return newUnfilledObj;
 };
 
+const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal) => {
+  let allPlayersCopy = [...allPlayers];
+  const idx = allPlayersCopy.findIndex(
+    player => player.name === curPlayer.name
+  );
+  allPlayersCopy[idx].meeple += addVal;
+  return allPlayersCopy;
+};
+
 //reducer
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -120,7 +129,15 @@ const reducer = (state = initialState, action) => {
           false
         );
       }
-      return { ...state, curLocation: action.coords };
+      const newPlayers = state.curMeeple.coords
+        ? updatePlayerMeepleCnt(state.currentPlayer, state.players, 1)
+        : state.players;
+      return {
+        ...state,
+        curLocation: action.coords,
+        curMeeple: {},
+        players: newPlayers
+      };
     case CREATE_ROOM:
       return {
         ...state,
@@ -143,9 +160,7 @@ const reducer = (state = initialState, action) => {
         Object.create(Object.getPrototypeOf(state.curTile)),
         state.curTile
       );
-      console.log("cur meeple", state.curMeeple);
       if (state.curMeeple.coords) {
-        console.log("PLACING MEEPLE");
         tilePlaced.tile.regions[state.curMeeple.regionIdx].meeple.push(
           state.curMeeple
         );
@@ -205,7 +220,14 @@ const reducer = (state = initialState, action) => {
       newTile.rotate();
       return { ...state, curTile: newTile };
     case SET_MEEPLE:
-      return { ...state, curMeeple: action.meeple };
+      const updatedPlayers = state.curMeeple.coords
+        ? state.players
+        : updatePlayerMeepleCnt(state.currentPlayer, state.players, -1);
+      return {
+        ...state,
+        curMeeple: action.meeple,
+        players: updatedPlayers
+      };
     default:
       return state;
   }

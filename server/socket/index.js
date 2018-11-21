@@ -4,17 +4,22 @@ const { Tile, Region } = require("../GameObjects/Tiles");
 
 let deck = [];
 
+const colorArr = [0xff0000, 0x0000ff, 0x9400d3, 0xffff00, 0xffa500];
+const rooms = {};
+
 module.exports = io => {
   io.on("connection", socket => {
     socket.on("createRoom", playerName => {
       const roomId = makeid();
-      const player = new Player(playerName, roomId);
+      rooms[roomId] = 0;
+      const player = new Player(playerName, roomId, colorArr[0]);
       socket.join(roomId);
       socket.emit("roomCreated", roomId, player);
     });
     socket.on("joinRoom", (roomId, playerName) => {
       socket.join(roomId);
-      const player = new Player(playerName, roomId);
+      rooms[roomId]++;
+      const player = new Player(playerName, roomId, colorArr[rooms[roomId]]);
       socket.broadcast.to(roomId).emit("playerJoined", player);
       socket.emit("me", player);
     });
