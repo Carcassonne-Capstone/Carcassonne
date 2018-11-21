@@ -3,6 +3,7 @@ import CreateRoom from './createRoom'
 import JoinRoom from './joinRoom'
 import Board from './Board'
 import {connect} from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 class StartPage extends Component {
     constructor(){
@@ -27,7 +28,7 @@ class StartPage extends Component {
         return(
             <div className='startMenu'>
             {this.props.gameState === 'playing' ?
-                <Board /> :
+                <Redirect to="/game" /> :
                 <div>
                     {this.state.join===false && this.state.create===false ?
                         <div>
