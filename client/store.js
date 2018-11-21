@@ -23,7 +23,9 @@ const initialState = {
   gameState: "",
   startTile: {},
   curMeeple: {},
-  scores: {}
+  scores: {},
+  meeplesPlaced: [],
+  removeMeeples: []
 };
 
 //action types
@@ -117,15 +119,16 @@ const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal) => {
 };
 
 const updateScores = (tileNodePlaced, curScores) => {
+  let meeplesToRemove = [];
   tileNodePlaced.tile.regions.forEach((region) => {
     if (region.type !== 'monastery' && (region.type !== 'field')) {
       const visitedTiles = new Set();
       const blocksToCheck = [];
       let regionClosed = true;
-      let meeplePlayers = []
+      let meeples = []
       let numTilesInRegion = 1
       if (region.meeple.length) {
-        meeplePlayers.push(region.meeple[0].player.name)
+        meeples.push(region.meeple[0])
       }
       for (let i = 0; i < region.edges.length; i++) {
         let neighbor = tileNodePlaced.neighbors[region.edges[i]];
@@ -142,7 +145,7 @@ const updateScores = (tileNodePlaced, curScores) => {
         visitedTiles.add(block.tileNode);
         const curRegion = findRegion(block.tileNode.tile, block.edge);
         if (curRegion.meeple.length) {
-          meeplePlayers.push(curRegion.meeple[0].player.name)
+          meeples.push(curRegion.meeple[0])
         }
         // eslint-disable-next-line no-loop-func
         curRegion.edges.forEach(edge => {
@@ -161,11 +164,12 @@ const updateScores = (tileNodePlaced, curScores) => {
       }
       if (regionClosed) {
         const scoreVal = region.type === 'city' ? 2 : 1
-        meeplePlayers.forEach(name => curScores[name] += scoreVal*numTilesInRegion)
+        meeples.forEach(meeple => curScores[meeple.player.name] += scoreVal*numTilesInRegion)
+        meeplesToRemove = [...meeplesToRemove, ...meeples]
       }
-      console.log('curScores', curScores);
     }
   })
+  return meeplesToRemove
 }
 
 //reducer
@@ -220,7 +224,7 @@ const reducer = (state = initialState, action) => {
         );
       }
       board[`${state.curLocation[0]},${state.curLocation[1]}`] = tilePlaced;
-      updateScores(tilePlaced, {...state.scores})
+      const meeplesToRemove = updateScores(tilePlaced, {...state.scores})
       return {
         ...state,
         currentPlayer: action.player,
@@ -233,7 +237,8 @@ const reducer = (state = initialState, action) => {
         ),
         board: board,
         curLocation: null,
-        curMeeple: {}
+        curMeeple: {},
+        removeMeeples: meeplesToRemove
       };
     // case UPDATE_BOARD:
     //     const board = {...state.board}
