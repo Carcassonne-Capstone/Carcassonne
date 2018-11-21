@@ -12,6 +12,13 @@ class CurrentTile extends Component {
     this.addCube = this.addCube.bind(this);
     this.initializeCamera = this.initializeCamera.bind(this);
     this.nextPlayer = this.nextPlayer.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this);
+  }
+
+  onWindowResize() {
+    //this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
   }
 
   componentDidMount() {
@@ -19,6 +26,7 @@ class CurrentTile extends Component {
     const height = this.mount.clientHeight;
 
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x003300);
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -27,6 +35,8 @@ class CurrentTile extends Component {
     this.initializeCamera();
     this.addCube();
     this.animate();
+
+    window.addEventListener("resize", this.onWindowResize, false);
   }
 
   componentWillUnmount() {
@@ -87,7 +97,7 @@ class CurrentTile extends Component {
           ))}
         </div>
         <div
-          style={{ width: "15vw", height: "15vw" }}
+          style={{ width: "16vw", height: "12vw" }}
           ref={mount => {
             this.mount = mount;
           }}
