@@ -26,10 +26,10 @@ class StartPage extends Component {
     
     render(){
         return(
-            <div className='startMenu'>
-            {this.props.gameState === 'playing' ?
+            this.props.gameState === 'playing' ?
                 <Redirect to="/game" /> :
-                <div>
+                <div className='startPage'>
+                <div className='startMenu'>
                     {this.state.join===false && this.state.create===false ?
                         <div>
                             <div className='title'>KING OF THE JUNGLE</div>
@@ -48,8 +48,7 @@ class StartPage extends Component {
                         </div>
                     }
                 </div>
-            }
-            </div>
+                </div>
         )
     }
 }
