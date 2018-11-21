@@ -3,6 +3,7 @@ import thunkMiddleware from "redux-thunk";
 import axios from "axios";
 import TileNode from "./components/BoardComponents/TileNode";
 import socket from "./socket";
+import {findRegion} from './components/renderFuncs/checkValid'
 
 const top = 0;
 const right = 1;
@@ -21,7 +22,8 @@ const initialState = {
   unfilledTiles: {},
   gameState: "",
   startTile: {},
-  curMeeple: {}
+  curMeeple: {},
+  scores: {}
 };
 
 //action types
@@ -114,6 +116,58 @@ const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal) => {
   return allPlayersCopy;
 };
 
+const updateScores = (tileNodePlaced, curScores) => {
+  tileNodePlaced.tile.regions.forEach((region) => {
+    if (region.type !== 'monastery' && (region.type !== 'field')) {
+      const visitedTiles = new Set();
+      const blocksToCheck = [];
+      let regionClosed = true;
+      let meeplePlayers = []
+      let numTilesInRegion = 1
+      if (region.meeple.length) {
+        meeplePlayers.push(region.meeple[0].player.name)
+      }
+      for (let i = 0; i < region.edges.length; i++) {
+        let neighbor = tileNodePlaced.neighbors[region.edges[i]];
+        if (neighbor) {
+          let oppEdge = tileNodePlaced.findOppEdge(region.edges[i]);
+          blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+        } else {
+          regionClosed = false;
+        }
+      }
+      while (blocksToCheck.length && regionClosed) {
+        const block = blocksToCheck.shift();
+        numTilesInRegion++;
+        visitedTiles.add(block.tileNode);
+        const curRegion = findRegion(block.tileNode.tile, block.edge);
+        if (curRegion.meeple.length) {
+          meeplePlayers.push(curRegion.meeple[0].player.name)
+        }
+        // eslint-disable-next-line no-loop-func
+        curRegion.edges.forEach(edge => {
+          if (edge !== block.edge) {
+            const neighbor = block.tileNode.neighbors[edge];
+            if (!visitedTiles.has(neighbor)) {
+              if (neighbor) {
+                const oppEdge = block.tileNode.findOppEdge(edge);
+                blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+              } else {
+                regionClosed = false;
+              }
+            }
+          }
+        });
+      }
+      if (regionClosed) {
+        const scoreVal = region.type === 'city' ? 2 : 1
+        meeplePlayers.forEach(name => curScores[name] += scoreVal*numTilesInRegion)
+      }
+      console.log('curScores', curScores);
+    }
+  })
+}
+
 //reducer
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -148,24 +202,25 @@ const reducer = (state = initialState, action) => {
     case JOIN_ROOM:
       return { ...state, players: [...state.players, action.player] };
     case NEXT_TURN:
-      const board = { ...state.board };
-      updateNeighbors(
-        state.curLocation[0],
-        state.curLocation[1],
-        state.curTile,
-        board,
-        true
+    const board = { ...state.board };
+    updateNeighbors(
+      state.curLocation[0],
+      state.curLocation[1],
+      state.curTile,
+      board,
+      true
       );
       const tilePlaced = Object.assign(
-        Object.create(Object.getPrototypeOf(state.curTile)),
-        state.curTile
+      Object.create(Object.getPrototypeOf(state.curTile)),
+      state.curTile
       );
       if (state.curMeeple.coords) {
         tilePlaced.tile.regions[state.curMeeple.regionIdx].meeple.push(
           state.curMeeple
         );
       }
-      board[`${state.curLocation[0]},${state.curLocation[1]}`] = state.curTile;
+      board[`${state.curLocation[0]},${state.curLocation[1]}`] = tilePlaced;
+      updateScores(tilePlaced, {...state.scores})
       return {
         ...state,
         currentPlayer: action.player,
@@ -196,6 +251,8 @@ const reducer = (state = initialState, action) => {
       neighb2.setNeighbor(top, startNode);
       const neighb3 = new TileNode(null);
       neighb3.setNeighbor(right, startNode);
+      const scores = {}
+      action.players.forEach(player => scores[player.name] = 0)
       return {
         ...state,
         players: action.players,
@@ -210,7 +267,8 @@ const reducer = (state = initialState, action) => {
           [[1, 0]]: neighb1,
           [[0, -1]]: neighb2,
           [[-1, 0]]: neighb3
-        }
+        },
+        scores: scores
       };
     case ROTATE_TILE:
       const newTile = Object.assign(
