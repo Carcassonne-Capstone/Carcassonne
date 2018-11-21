@@ -79,7 +79,7 @@ class CurrentTile extends Component {
         <div id="playerTile">
             <div>{this.props.player.name}</div>
             <div
-                style={{ width: '15vw', height: '15vw' }}
+                style={{ width: '16vw', height: '12vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
             {this.props.me.name === this.props.currentPlayer.name ?

@@ -126,6 +126,8 @@ class Board extends Component {
       ZOOM: THREE.MOUSE.MIDDLE,
       PAN: THREE.MOUSE.LEFT
     };
+    this.controls.minDistance = 1;
+    this.controls.maxDistance = 10;
   }
 
 
@@ -184,7 +186,7 @@ class Board extends Component {
         <div
           onClick={e => this.onDocMouseDown(e, this.validTiles)}
           id="boardCanvas"
-          style={{ width: "80vw", height: "40vw" }}
+          style={{ width: "80vw", height: "30vw" }}
           ref={mount => {
             this.mount = mount;
           }}
