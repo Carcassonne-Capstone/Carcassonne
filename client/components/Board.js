@@ -24,6 +24,7 @@ class Board extends Component {
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.removeMeeples = this.removeMeeples.bind(this);
   }
 
   onWindowResize() {
@@ -83,6 +84,9 @@ class Board extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.removeMeeples !== this.props.removeMeeples) {
+      this.removeMeeples();
+    }
     if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
       this.emptyMeeples.forEach(meeple => {
         this.curTile.remove(meeple);
@@ -233,7 +237,8 @@ class Board extends Component {
           this.props.roomId,
           [x, y],
           this.props.player,
-          intersectsMeeple[0].object.regionIdx
+          intersectsMeeple[0].object.regionIdx,
+          intersectsMeeple[0].object.tile
         );
       } else if (intersects.length > 0) {
         let x = intersects[0].object.position.x;

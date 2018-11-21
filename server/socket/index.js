@@ -83,15 +83,12 @@ module.exports = io => {
       socket.emit("rotate");
     });
 
-    socket.on(
-      "meeplePlaced",
-      (roomId, coords, player, regionIdx, tile, uuid) => {
-        socket.broadcast
-          .to(roomId)
-          .emit("meepleOn", { coords, player, regionIdx, tile, uuid });
-        socket.emit("meepleOn", { coords, player, regionIdx, tile, uuid });
-      }
-    );
+    socket.on("meeplePlaced", (roomId, coords, player, regionIdx, tile) => {
+      socket.broadcast
+        .to(roomId)
+        .emit("meepleOn", { coords, player, regionIdx, tile });
+      socket.emit("meepleOn", { coords, player, regionIdx, tile });
+    });
   });
 };
 
