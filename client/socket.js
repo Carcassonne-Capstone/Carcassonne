@@ -7,7 +7,8 @@ import store, {
   addToBoard,
   rotate,
   setPlayer,
-  setMeeple
+  setMeeple,
+  gameOver
 } from "./store";
 
 const socket = io(window.location.origin);
@@ -48,4 +49,7 @@ socket.on("meepleOn", meeple => {
   store.dispatch(setMeeple(meeple));
 });
 
+socket.on("gameOver", () => {
+  store.dispatch(gameOver());
+});
 export default socket;

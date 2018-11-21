@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import * as THREE from 'three'
-import {createCube} from './renderFuncs/createTile'
-import {connect} from 'react-redux'
-import {rotate} from '../store'
-import socket from '../socket';
+import React, { Component } from "react";
+import * as THREE from "three";
+import { createCube } from "./renderFuncs/createTile";
+import { connect } from "react-redux";
+import { rotate } from "../store";
+import socket from "../socket";
 
 class CurrentTile extends Component {
   constructor(props) {
-    super(props)
-    this.animate = this.animate.bind(this)
-    this.addCube = this.addCube.bind(this)
-    this.initializeCamera = this.initializeCamera.bind(this)
-    this.nextPlayer = this.nextPlayer.bind(this)
-    this.onWindowResize = this.onWindowResize.bind(this)
+    super(props);
+    this.animate = this.animate.bind(this);
+    this.addCube = this.addCube.bind(this);
+    this.initializeCamera = this.initializeCamera.bind(this);
+    this.nextPlayer = this.nextPlayer.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this);
   }
 
   onWindowResize() {
@@ -22,31 +22,35 @@ class CurrentTile extends Component {
   }
 
   componentDidMount() {
-    const width = this.mount.clientWidth
-    const height = this.mount.clientHeight
+    const width = this.mount.clientWidth;
+    const height = this.mount.clientHeight;
 
-    this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color( 0x003300 );
-    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    
-    this.renderer.setSize(width, height)
-    this.mount.appendChild(this.renderer.domElement)
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x003300);
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    this.renderer.setSize(width, height);
+    this.mount.appendChild(this.renderer.domElement);
     this.initializeCamera();
-    this.addCube()
-    this.animate()
+    this.addCube();
+    this.animate();
 
-    window.addEventListener( 'resize', this.onWindowResize, false );
+    window.addEventListener("resize", this.onWindowResize, false);
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame(this.frameId)
-    this.mount.removeChild(this.renderer.domElement)
+    cancelAnimationFrame(this.frameId);
+    this.mount.removeChild(this.renderer.domElement);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.curTile !== this.props.curTile || prevProps.currentPlayer.name !== this.props.currentPlayer.name || prevProps.curLocation !== this.props.curLocation) {
-      this.addCube()
+    if (
+      prevProps.curTile !== this.props.curTile ||
+      prevProps.currentPlayer.name !== this.props.currentPlayer.name ||
+      prevProps.curLocation !== this.props.curLocation
+    ) {
+      this.addCube();
     }
   }
 
@@ -57,22 +61,30 @@ class CurrentTile extends Component {
   }
 
   animate() {
-    this.frameId = window.requestAnimationFrame(this.animate)
-    this.renderer.render(this.scene, this.camera)
+    this.frameId = window.requestAnimationFrame(this.animate);
+    this.renderer.render(this.scene, this.camera);
   }
 
   addCube() {
-    this.scene.remove(this.cube)
-    if ((this.props.player.name === this.props.currentPlayer.name) && (this.props.curLocation === null)) {
-      this.cube = createCube(this.props.curTile, 0, 0)
-      this.scene.add(this.cube)
+    this.scene.remove(this.cube);
+    if (
+      this.props.player.name === this.props.currentPlayer.name &&
+      this.props.curLocation === null
+    ) {
+      this.cube = createCube(this.props.curTile, 0, 0);
+      this.scene.add(this.cube);
     }
   }
-  
+
   nextPlayer() {
-    socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId)
+    socket.emit(
+      "turnEnded",
+      this.props.currentPlayer,
+      this.props.players,
+      this.props.roomId
+    );
   }
-  
+
   render() {
     const meepleCount = this.props.player.meeple;
     const meepleArr = new Array(meepleCount).fill("placeholder");
@@ -100,14 +112,22 @@ class CurrentTile extends Component {
                     // <button type="button" onClick={this.props.rotate}>Rotate</button>
                     <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
                   }
-                  <button type="button" onClick={this.nextPlayer} disabled={this.props.curLocation === null}>End Turn</button>
-                </div>
-                :
-                <div /> :
-                <div />
-            }
-        </div>
-    )
+              <button
+                type="button"
+                onClick={this.nextPlayer}
+                disabled={this.props.curLocation === null}
+              >
+                End Turn
+              </button>
+            </div>
+           : (
+            <div />
+          )
+         : (
+          <div />
+        )}
+      </div>
+    );
   }
 }
 
@@ -119,13 +139,16 @@ const mapStateToProps = state => {
     roomId: state.roomId,
     curLocation: state.curLocation,
     me: state.player
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     rotate: () => dispatch(rotate())
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(CurrentTile)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrentTile);
