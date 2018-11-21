@@ -8,6 +8,7 @@ export const createMeeple = (x, y, color) => {
   cylinder.position.y = y;
   cylinder.position.z = 0.15;
   cylinder.rotation.x = Math.PI / 2;
+  cylinder.name = `${x},${y}`
   return cylinder;
 };
 

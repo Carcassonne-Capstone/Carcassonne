@@ -22,6 +22,7 @@ class Board extends Component {
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.removeMeeples = this.removeMeeples.bind(this);
   }
 
   onWindowResize() {
@@ -81,6 +82,9 @@ class Board extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.removeMeeples !== this.props.removeMeeples) {
+      this.removeMeeples();
+    }
     if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
       this.emptyMeeples.forEach(meeple => {
         this.curTile.remove(meeple);
@@ -99,6 +103,14 @@ class Board extends Component {
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
       this.changeMeeple();
     }
+  }
+
+  removeMeeples() {
+    this.props.removeMeeples.forEach(meeple => {
+      const tile = this.scene.getObjectByName(meeple.tile.object.name);
+      const curMeeple = tile.getObjectByName(`${meeple.coords[0]},${meeple.coords[1]}`)
+      tile.remove(curMeeple)
+    })
   }
 
   changeMeeple() {
@@ -132,6 +144,7 @@ class Board extends Component {
               region.meeplePosition[1]
             );
             emptyMeeple.regionIdx = idx;
+            emptyMeeple.tile = this.curTile;
             this.emptyMeeples.push(emptyMeeple);
             this.curTile.add(emptyMeeple);
           }
@@ -215,7 +228,9 @@ class Board extends Component {
           this.props.roomId,
           [x, y],
           this.props.player,
-          intersectsMeeple[0].object.regionIdx
+          intersectsMeeple[0].object.regionIdx,
+          intersectsMeeple[0].object.tile,
+          intersectsMeeple[0].object.uuid
         );
       } else if (intersects.length > 0) {
         let x = intersects[0].object.position.x;
@@ -292,7 +307,8 @@ const mapStateToProps = state => {
     currentPlayer: state.currentPlayer,
     player: state.player,
     meeple: state.curMeeple,
-    board: state.board
+    board: state.board,
+    removeMeeples: state.removeMeeples
   };
 };
 

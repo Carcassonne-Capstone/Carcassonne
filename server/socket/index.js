@@ -78,11 +78,11 @@ module.exports = io => {
       socket.emit("rotate");
     });
 
-    socket.on("meeplePlaced", (roomId, coords, player, regionIdx) => {
+    socket.on("meeplePlaced", (roomId, coords, player, regionIdx, tile, uuid) => {
       socket.broadcast
         .to(roomId)
-        .emit("meepleOn", { coords, player, regionIdx });
-      socket.emit("meepleOn", { coords, player, regionIdx });
+        .emit("meepleOn", { coords, player, regionIdx, tile, uuid });
+      socket.emit("meepleOn", { coords, player, regionIdx, tile, uuid });
     });
   });
 };
