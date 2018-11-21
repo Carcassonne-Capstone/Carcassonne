@@ -1,8 +1,9 @@
-function Region(type, edges, hasShield) {
+function Region(type, edges, hasShield, meeplePosition) {
   this.type = type;
   this.edges = edges;
   this.hasShield = hasShield;
   this.meeple = [];
+  this.meeplePosition = meeplePosition;
 }
 
 class Tile {
@@ -12,4 +13,4 @@ class Tile {
   }
 }
 
-module.exports = {Tile, Region}
+module.exports = { Tile, Region };
