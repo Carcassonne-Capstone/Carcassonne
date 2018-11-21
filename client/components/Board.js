@@ -256,7 +256,9 @@ class Board extends Component {
     return (
       <div className="gameBoard">
         <div className="leftSide">
-          <div>
+          <div className="gameButtons" 
+          //style={{ width: "80vw", height: "5vw" }}
+          >
             <button type="button" onClick={this.resetCamera}>
               {" "}
               Flat Board{" "}
@@ -270,7 +272,7 @@ class Board extends Component {
           <div
             onClick={e => this.onDocMouseDown(e, this.validTiles)}
             id="boardCanvas"
-            style={{ width: "80vw", height: "30vw" }}
+            style={{ width: "80vw", height: "40vw" }}
             ref={mount => {
               this.mount = mount;
             }}
