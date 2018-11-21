@@ -6,3 +6,8 @@
 #playerTile {
     border: solid gray;
 }
+
+#playerTile img {
+    border: solid gray;
+    height: 25px;
+}
