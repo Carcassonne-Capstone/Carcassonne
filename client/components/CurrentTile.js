@@ -89,41 +89,29 @@ class CurrentTile extends Component {
     const meepleCount = this.props.player.meeple;
     const meepleArr = new Array(meepleCount).fill("placeholder");
     return (
-      <div id="playerTile">
-        <div>{this.props.player.name}</div>
-        <div>
-          {meepleArr.map((meeple, i) => (
-            <img key={i} src="/images/meeple.png" />
-          ))}
-        </div>
-        <div
-          style={{ width: "15vw", height: "12vw" }}
-          ref={mount => {
-            this.mount = mount;
-          }}
-        />
-        {this.props.me.name === this.props.currentPlayer.name ? (
-          this.props.currentPlayer.name === this.props.player.name ? (
-            <div>
-              {this.props.curLocation ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    socket.emit("tilePlaced", this.props.roomId, null)
+        <div id="playerTile">
+            <div id="playerTitle">
+              <div id="playerName">{this.props.player.name}</div>
+              {/* {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)} */}
+              <div id="meeple"> 
+                <img src='/images/meeple.png'/>
+                {`x${meepleArr.length}`}
+              </div>
+            </div>
+            <div
+                id="playerCurrentTile"
+                //style={{ width: '15vw', height: '12vw' }}
+                ref={(mount) => { this.mount = mount }}
+            />
+            {this.props.me.name === this.props.currentPlayer.name ?
+              this.props.currentPlayer.name === this.props.player.name ?
+                <div id="playerButtons">
+                  {
+                    this.props.curLocation ?
+                    <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
+                    // <button type="button" onClick={this.props.rotate}>Rotate</button>
+                    <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
                   }
-                >
-                  {" "}
-                  Back{" "}
-                </button>
-              ) : (
-                // <button type="button" onClick={this.props.rotate}>Rotate</button>
-                <button
-                  type="button"
-                  onClick={() => socket.emit("rotateTile", this.props.roomId)}
-                >
-                  Rotate
-                </button>
-              )}
               <button
                 type="button"
                 onClick={this.nextPlayer}
@@ -132,10 +120,10 @@ class CurrentTile extends Component {
                 End Turn
               </button>
             </div>
-          ) : (
+           : (
             <div />
           )
-        ) : (
+         : (
           <div />
         )}
       </div>
