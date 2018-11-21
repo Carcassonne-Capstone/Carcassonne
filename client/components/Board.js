@@ -19,8 +19,15 @@ class Board extends Component {
     this.updateValidTiles = this.updateValidTiles.bind(this);
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this)
   }
 
+  onWindowResize() {
+    //this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+  }
+  
   componentDidMount() {
     const width = this.mount.clientWidth;
     const height = this.mount.clientHeight;
@@ -45,7 +52,28 @@ class Board extends Component {
     this.validTiles = [];
     this.updateValidTiles();
     this.animate();
+
+    window.addEventListener( 'resize', this.onWindowResize, false );
+    
+    // var imagePrefix = "skybox2/";
+    // var directions  = ["1", "2", "3", "4", "5", "6"];
+    // var imageSuffix = ".png";
+      
+    // var materialArray = [];
+    // for (var i = 0; i < 6; i++)
+    //   materialArray.push( new THREE.MeshBasicMaterial({
+    //   map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+    //   side: THREE.BackSide
+    //   }));
+      
+    // var skyGeometry = new THREE.CubeGeometry( 1500, 1500, 1500 );
+    // var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+    // var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+    // skyBox.rotation.x += Math.PI / 2;
+    // this.scene.add( skyBox );
   }
+
+
 
   componentWillUnmount() {
     cancelAnimationFrame(this.frameId);
