@@ -4,7 +4,6 @@ import {createCube} from './renderFuncs/createTile'
 import {connect} from 'react-redux'
 import {rotate} from '../store'
 import socket from '../socket';
-import { isNullOrUndefined } from 'util';
 
 class CurrentTile extends Component {
   constructor(props) {
@@ -63,11 +62,16 @@ class CurrentTile extends Component {
   nextPlayer() {
     socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId)
   }
-
+  
   render() {
+    const meepleCount = this.props.player.meeple;
+    const meepleArr = new Array(meepleCount).fill("placeholder");
     return (
         <div id="playerTile">
             <div>{this.props.player.name}</div>
+            <div>
+              {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)}
+            </div>
             <div
                 style={{ width: '15vw', height: '15vw' }}
                 ref={(mount) => { this.mount = mount }}
