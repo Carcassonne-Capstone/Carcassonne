@@ -67,10 +67,15 @@ module.exports = io => {
         playerIdx = 0;
       }
       const tile = deck.getCard();
-      socket.broadcast
-        .to(roomId)
-        .emit("newPlayer", allPlayers[playerIdx], tile);
-      socket.emit("newPlayer", allPlayers[playerIdx], tile);
+      if (tile) {
+        socket.broadcast
+          .to(roomId)
+          .emit("newPlayer", allPlayers[playerIdx], tile);
+        socket.emit("newPlayer", allPlayers[playerIdx], tile);
+      } else {
+        socket.broadcast.to(roomId).emit("gameOver");
+        socket.emit("gameOver");
+      }
     });
 
     socket.on("rotateTile", roomId => {
@@ -78,12 +83,15 @@ module.exports = io => {
       socket.emit("rotate");
     });
 
-    socket.on("meeplePlaced", (roomId, coords, player, regionIdx, tile, uuid) => {
-      socket.broadcast
-        .to(roomId)
-        .emit("meepleOn", { coords, player, regionIdx, tile, uuid });
-      socket.emit("meepleOn", { coords, player, regionIdx, tile, uuid });
-    });
+    socket.on(
+      "meeplePlaced",
+      (roomId, coords, player, regionIdx, tile, uuid) => {
+        socket.broadcast
+          .to(roomId)
+          .emit("meepleOn", { coords, player, regionIdx, tile, uuid });
+        socket.emit("meepleOn", { coords, player, regionIdx, tile, uuid });
+      }
+    );
   });
 };
 

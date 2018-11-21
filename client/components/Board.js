@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import * as THREE from "three";
 import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
@@ -10,6 +11,7 @@ import { updateBoard } from "../store";
 import socket from "../socket";
 import { createMeeple, createEmptyMeeple } from "./renderFuncs/createMeeple";
 import { validMeepleRegion } from "./renderFuncs/checkValidMeeple";
+import ScoreBoard from "./ScoreBoard";
 
 class Board extends Component {
   constructor(props) {
@@ -78,7 +80,7 @@ class Board extends Component {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.frameId);
-    this.mount.removeChild(this.renderer.domElement);
+    // this.mount.removeChild(this.renderer.domElement);
   }
 
   componentDidUpdate(prevProps) {
@@ -108,9 +110,11 @@ class Board extends Component {
   removeMeeples() {
     this.props.removeMeeples.forEach(meeple => {
       const tile = this.scene.getObjectByName(meeple.tile.object.name);
-      const curMeeple = tile.getObjectByName(`${meeple.coords[0]},${meeple.coords[1]}`)
-      tile.remove(curMeeple)
-    })
+      const curMeeple = tile.getObjectByName(
+        `${meeple.coords[0]},${meeple.coords[1]}`
+      );
+      tile.remove(curMeeple);
+    });
   }
 
   changeMeeple() {
@@ -136,20 +140,25 @@ class Board extends Component {
         this.props.curLocation[1]
       );
       this.emptyMeeples = [];
-      this.props.currentTile.tile.regions.forEach((region, idx) => {
-        if (validMeepleRegion(region, this.props.currentTile)) {
-          if (region.meeplePosition) {
-            let emptyMeeple = createEmptyMeeple(
-              region.meeplePosition[0],
-              region.meeplePosition[1]
-            );
-            emptyMeeple.regionIdx = idx;
-            emptyMeeple.tile = this.curTile;
-            this.emptyMeeples.push(emptyMeeple);
-            this.curTile.add(emptyMeeple);
-          }
-        }
+      const currPlayer = this.props.players.find(player => {
+        return player.name === this.props.currentPlayer.name;
       });
+      if (currPlayer.meeple > 0 || this.props.meeple.coords) {
+        this.props.currentTile.tile.regions.forEach((region, idx) => {
+          if (validMeepleRegion(region, this.props.currentTile)) {
+            if (region.meeplePosition) {
+              let emptyMeeple = createEmptyMeeple(
+                region.meeplePosition[0],
+                region.meeplePosition[1]
+              );
+              emptyMeeple.regionIdx = idx;
+              emptyMeeple.tile = this.curTile;
+              this.emptyMeeples.push(emptyMeeple);
+              this.curTile.add(emptyMeeple);
+            }
+          }
+        });
+      }
 
       this.scene.add(this.curTile);
     }
@@ -268,11 +277,14 @@ class Board extends Component {
     );
   }
   render() {
-    return (
+    return this.props.gameState === "gameOver" ? (
+      <Redirect to="/gameOver" />
+    ) : (
       <div className="gameBoard">
         <div className="leftSide">
-          <div className="gameButtons" 
-          //style={{ width: "80vw", height: "5vw" }}
+          <div
+            className="gameButtons"
+            //style={{ width: "80vw", height: "5vw" }}
           >
             <button type="button" onClick={this.resetCamera}>
               {" "}
@@ -296,14 +308,14 @@ class Board extends Component {
           <div id="currentTiles">
             {this.props.players.map(player => (
               <div>
-              <CurrentTile key={player.name} player={player} />
+                <CurrentTile key={player.name} player={player} />
               </div>
             ))}
           </div>
         </div>
         <div className="rightSide">
-              <div className="scoreBoard">SCORE BOARD</div>
-              <div className="chat">CHAT</div>
+          <ScoreBoard />
+          <div className="chat">CHAT</div>
         </div>
       </div>
     );
@@ -322,7 +334,8 @@ const mapStateToProps = state => {
     player: state.player,
     meeple: state.curMeeple,
     board: state.board,
-    removeMeeples: state.removeMeeples
+    removeMeeples: state.removeMeeples,
+    gameState: state.gameState
   };
 };
 

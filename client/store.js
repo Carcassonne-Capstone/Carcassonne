@@ -3,7 +3,7 @@ import thunkMiddleware from "redux-thunk";
 import axios from "axios";
 import TileNode from "./components/BoardComponents/TileNode";
 import socket from "./socket";
-import {findRegion} from './components/renderFuncs/checkValid'
+import { findRegion } from "./components/renderFuncs/checkValid";
 
 const top = 0;
 const right = 1;
@@ -38,6 +38,7 @@ const NEXT_TURN = "NEXT_TURN";
 const ADD_TO_BOARD = "ADD_TO_BOARD";
 const SET_PLAYER = "SET_PLAYER";
 const SET_MEEPLE = "SET_MEEPLE";
+const GAME_OVER = "GAME_OVER";
 
 //action creators
 // export const getNewTile = (tile, x, y) => ({type: GOT_NEW_TILE, tile, x, y})
@@ -60,15 +61,7 @@ export const nextTurn = (player, tile) => ({ type: NEXT_TURN, player, tile });
 export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
 export const setPlayer = player => ({ type: SET_PLAYER, player });
 export const setMeeple = meeple => ({ type: SET_MEEPLE, meeple });
-// thunk creators
-// export const tilePlaced = (x, y) => {
-//     return (dispatch) => {
-//         try {
-//             const res = await axios.get(`/api/card/${idx}`)
-//             dispatch(gotCard(res.data))
-//         } catch (err) {console.error(err)}
-//     }
-// }
+export const gameOver = () => ({ type: GAME_OVER });
 
 const updateNeighbors = (xVal, yVal, tileNode, board, update) => {
   tileNode.resetNeighbors();
@@ -120,15 +113,15 @@ const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal) => {
 
 const updateScores = (tileNodePlaced, curScores) => {
   let meeplesToRemove = [];
-  tileNodePlaced.tile.regions.forEach((region) => {
-    if (region.type !== 'monastery' && (region.type !== 'field')) {
+  tileNodePlaced.tile.regions.forEach(region => {
+    if (region.type !== "monastery" && region.type !== "field") {
       const visitedTiles = new Set();
       const blocksToCheck = [];
       let regionClosed = true;
-      let meeples = []
-      let numTilesInRegion = 1
+      let meeples = [];
+      let numTilesInRegion = 1;
       if (region.meeple.length) {
-        meeples.push(region.meeple[0])
+        meeples.push(region.meeple[0]);
       }
       for (let i = 0; i < region.edges.length; i++) {
         let neighbor = tileNodePlaced.neighbors[region.edges[i]];
@@ -145,7 +138,7 @@ const updateScores = (tileNodePlaced, curScores) => {
         visitedTiles.add(block.tileNode);
         const curRegion = findRegion(block.tileNode.tile, block.edge);
         if (curRegion.meeple.length) {
-          meeples.push(curRegion.meeple[0])
+          meeples.push(curRegion.meeple[0]);
         }
         // eslint-disable-next-line no-loop-func
         curRegion.edges.forEach(edge => {
@@ -163,14 +156,17 @@ const updateScores = (tileNodePlaced, curScores) => {
         });
       }
       if (regionClosed) {
-        const scoreVal = region.type === 'city' ? 2 : 1
-        meeples.forEach(meeple => curScores[meeple.player.name] += scoreVal*numTilesInRegion)
-        meeplesToRemove = [...meeplesToRemove, ...meeples]
+        const scoreVal = region.type === "city" ? 2 : 1;
+        meeples.forEach(
+          meeple =>
+            (curScores[meeple.player.name] += scoreVal * numTilesInRegion)
+        );
+        meeplesToRemove = [...meeplesToRemove, ...meeples];
       }
     }
-  })
-  return meeplesToRemove
-}
+  });
+  return { meeplesToRemove, curScores };
+};
 
 //reducer
 const reducer = (state = initialState, action) => {
@@ -206,17 +202,17 @@ const reducer = (state = initialState, action) => {
     case JOIN_ROOM:
       return { ...state, players: [...state.players, action.player] };
     case NEXT_TURN:
-    const board = { ...state.board };
-    updateNeighbors(
-      state.curLocation[0],
-      state.curLocation[1],
-      state.curTile,
-      board,
-      true
+      const board = { ...state.board };
+      updateNeighbors(
+        state.curLocation[0],
+        state.curLocation[1],
+        state.curTile,
+        board,
+        true
       );
       const tilePlaced = Object.assign(
-      Object.create(Object.getPrototypeOf(state.curTile)),
-      state.curTile
+        Object.create(Object.getPrototypeOf(state.curTile)),
+        state.curTile
       );
       if (state.curMeeple.coords) {
         tilePlaced.tile.regions[state.curMeeple.regionIdx].meeple.push(
@@ -224,7 +220,16 @@ const reducer = (state = initialState, action) => {
         );
       }
       board[`${state.curLocation[0]},${state.curLocation[1]}`] = tilePlaced;
-      const meeplesToRemove = updateScores(tilePlaced, {...state.scores})
+      const { meeplesToRemove, curScores } = updateScores(tilePlaced, {
+        ...state.scores
+      });
+      const newPlayersState = [...state.players];
+      meeplesToRemove.forEach(meeple => {
+        let idx = newPlayersState.findIndex(
+          player => player.name === meeple.player.name
+        );
+        newPlayersState[idx].meeple++;
+      });
       return {
         ...state,
         currentPlayer: action.player,
@@ -238,7 +243,9 @@ const reducer = (state = initialState, action) => {
         board: board,
         curLocation: null,
         curMeeple: {},
-        removeMeeples: meeplesToRemove
+        removeMeeples: meeplesToRemove,
+        scores: curScores,
+        allPlayers: newPlayersState
       };
     // case UPDATE_BOARD:
     //     const board = {...state.board}
@@ -256,8 +263,8 @@ const reducer = (state = initialState, action) => {
       neighb2.setNeighbor(top, startNode);
       const neighb3 = new TileNode(null);
       neighb3.setNeighbor(right, startNode);
-      const scores = {}
-      action.players.forEach(player => scores[player.name] = 0)
+      const scores = {};
+      action.players.forEach(player => (scores[player.name] = 0));
       return {
         ...state,
         players: action.players,
@@ -291,6 +298,9 @@ const reducer = (state = initialState, action) => {
         curMeeple: action.meeple,
         players: updatedPlayers
       };
+    case GAME_OVER:
+      console.log("in game over rducer");
+      return { ...state, gameState: "gameOver" };
     default:
       return state;
   }
