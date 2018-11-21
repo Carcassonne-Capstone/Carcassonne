@@ -31,7 +31,7 @@ class StartPage extends Component {
                 <div>
                     {this.state.join===false && this.state.create===false ?
                         <div>
-                        <div className='title'>KING OF THE JUNGLE</div>
+                            <div className='title'>KING OF THE JUNGLE</div>
                         <div className='buttons'>
                             <button type='button' onClick={() => this.handleSubmit('create')}>CREATE A GAME</button>
                             <button type='button' onClick={() => this.handleSubmit('join')}>JOIN A GAME</button>
