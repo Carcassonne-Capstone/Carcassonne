@@ -25,20 +25,25 @@ class StartPage extends Component {
     
     render(){
         return(
-            <div>
+            <div className='startMenu'>
             {this.props.gameState === 'playing' ?
                 <Board /> :
                 <div>
-                    <h1>Welcome! Start or join a game of Carcassonne.</h1>
                     {this.state.join===false && this.state.create===false ?
                         <div>
-                            <button type='button' onClick={() => this.handleSubmit('create')}>Create a Game</button>
-                            <button type='button' onClick={() => this.handleSubmit('join')}>Join a Game</button>
+                        <div className='title'>KING OF THE JUNGLE</div>
+                        <div className='buttons'>
+                            <button type='button' onClick={() => this.handleSubmit('create')}>CREATE A GAME</button>
+                            <button type='button' onClick={() => this.handleSubmit('join')}>JOIN A GAME</button>
+                        </div>
                         </div>
                         :
                         <div>
+                        <div className='title'>KING OF THE JUNGLE</div>
+                        <div className='buttons'>
                             {this.state.join && <JoinRoom backButton={this.goToMainPage}/>}
                             {this.state.create && <CreateRoom backButton={this.goToMainPage}/>}
+                        </div>
                         </div>
                     }
                 </div>

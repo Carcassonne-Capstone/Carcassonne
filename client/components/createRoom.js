@@ -31,11 +31,9 @@ class CreateRoom extends Component {
 
     render(){
         return(
-            <div>
-                {this.state.waitingRoom===false
+                this.state.waitingRoom===false
                 ?
                 <div>
-                    <button type="button" onClick={this.props.backButton}>Back to Main Page</button>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                         <div className="form-group">
                             <label htmlFor="name" >Name*</label>
@@ -47,18 +45,22 @@ class CreateRoom extends Component {
                             <button type="submit">Create Game</button>
                         </div>
                     </form>
+                    <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
                 </div>
                 :
-                <div>
-                    <div>Room id: {this.props.roomId}</div>
-                    <div>Players in Room:{this.props.players.map(player=>(
-                        <div key={player.name}>{player.name}</div>
-                    ))}
+                <div className='waitingRoom'>
+                    <div id="list">
+                        <ul>Players in Room:{this.props.players.map(player=>(
+                            <li key={player.name}>{player.name}</li>
+                            ))}
+                        </ul>
                     </div>
-                    <button type='button' onClick={this.startGame}>Start Game</button>
+                    <div id="info">
+                        <div id='roomId'>Room id: {this.props.roomId}</div>
+                        <div><button type='button' onClick={this.startGame}>Start Game</button></div>
+                    </div>
                 </div>
-                }
-            </div>
+        
         )
     }
 }
