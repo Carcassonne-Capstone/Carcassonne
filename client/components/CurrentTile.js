@@ -78,17 +78,22 @@ class CurrentTile extends Component {
     const meepleArr = new Array(meepleCount).fill("placeholder");
     return (
         <div id="playerTile">
-            <div>{this.props.player.name}</div>
-            <div>
-              {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)}
+            <div id="playerTitle">
+              <div id="playerName">{this.props.player.name}</div>
+              {/* {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)} */}
+              <div id="meeple"> 
+                <img src='/images/meeple.png'/>
+                {`x${meepleArr.length}`}
+              </div>
             </div>
             <div
-                style={{ width: '15vw', height: '12vw' }}
+                id="playerCurrentTile"
+                //style={{ width: '15vw', height: '12vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
             {this.props.me.name === this.props.currentPlayer.name ?
               this.props.currentPlayer.name === this.props.player.name ?
-                <div>
+                <div id="playerButtons">
                   {
                     this.props.curLocation ?
                     <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :

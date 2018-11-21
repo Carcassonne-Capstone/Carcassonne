@@ -5,18 +5,6 @@ body, html {
     font-family: 'Sofadi One', cursive;
 }
 
-#currentTiles {
-    display: flex;
-}
-
-#playerTile {
-    border: solid gray;
-}
-
-#playerTile img {
-    border: solid gray;
-    height: 25px;
-}
 
 #StayFocusd-infobar{
     height:0
@@ -220,23 +208,99 @@ input:focus {
 }
 
 .gameButtons{
-    height: 2vw;
+    height: 5%;
 }
 
 #boardCanvas{
-    height: 70vw;
+    height: 70%;
     width: 80vw;
 }
 
 #currentTiles{
-    background-color: forestgreen;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     width: 80vw;
-    height: 25vw;
+    height: 25%;
 }
 
-.playerTile{
-    height: 25vw;
+#playerTile{
+    height: 94%;
+    margin: 3% 0 3% 0;
+    border: solid black;
+    width:20%;
+}
+
+#currentTiles {
+    display: flex;
+}
+
+#playerTile img {
+    height:2vw
+}
+
+#playerCurrentTile{
+    width: 100%;
+    height: 70%;
+    margin-left: auto
+}
+
+#playerCurrentTile canvas{
+    width: 100% !important;
+    margin: 0 !important;
+    height: 100% !important;
+}
+
+#playerTitle{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 1.5vw;
+    margin: 1% 4% 1% 4%;
+    height: 15%;
+}
+
+#meeple{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 30%
+}
+
+#playerName{
+    width: 70%
+}
+
+#playerButtons{
+    height: 15%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    justify-items: center;
+    margin: auto
+}
+
+#playerButtons button{
+    margin: 0;
+    padding: 0;
+    font-size: .75vw;
+    background-color: green;
+    color: white;
+    width: 35%;
+    height: 60%;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 2%
+}
+
+#playerButtons button:hover:enabled{
+    opacity:.8;
+    cursor: pointer
+}
+
+#playerButtons button:disabled{
+    background-color: gray;
+    cursor: default
 }
