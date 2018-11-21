@@ -24,6 +24,19 @@ body, html {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100%;
+    top:0
+}
+
+#app{
+    height:100%;
+    top:0;
+    padding: 0;
+    margin: 0;
+}
+
+.body{
+    height: 100vw;
 }
 
 .startMenu{
@@ -166,4 +179,41 @@ button:focus {
 
 input:focus {
     outline:0;
+}
+
+.gameBoard {
+    display: flex;
+    height: auto;
+}
+
+.leftSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightSide {
+    display: flex;
+    flex-direction: column
+}
+
+.scoreBoard{
+    width: 20vw;
+    height: 50%;
+    background-color: blue;
+}
+
+.chat{
+    width: 20vw;
+    height: 50%;
+    background-color: red;
+}
+
+#currentTiles{
+    background-color: forestgreen;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%
 }

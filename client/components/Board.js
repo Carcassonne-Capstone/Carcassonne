@@ -254,27 +254,39 @@ class Board extends Component {
   }
   render() {
     return (
-      <div>
-        <button type="button" onClick={this.resetCamera}>
-          {" "}
-          Flat Board{" "}
-        </button>
-        <button type="button" onClick={this.threeDcamera}>
-          {" "}
-          3D Board{" "}
-        </button>
-        <div
-          onClick={e => this.onDocMouseDown(e, this.validTiles)}
-          id="boardCanvas"
-          style={{ width: "80vw", height: "30vw" }}
-          ref={mount => {
-            this.mount = mount;
-          }}
-        />
-        <div id="currentTiles">
-          {this.props.players.map(player => (
-            <CurrentTile key={player.name} player={player} />
-          ))}
+      <div className="gameBoard">
+        <div className="leftSide">
+          <div>
+            <button type="button" onClick={this.resetCamera}>
+              {" "}
+              Flat Board{" "}
+            </button>
+            <button type="button" onClick={this.threeDcamera}>
+              {" "}
+              3D Board{" "}
+            </button>
+          </div>
+
+          <div
+            onClick={e => this.onDocMouseDown(e, this.validTiles)}
+            id="boardCanvas"
+            style={{ width: "80vw", height: "30vw" }}
+            ref={mount => {
+              this.mount = mount;
+            }}
+          />
+
+          <div id="currentTiles">
+            {this.props.players.map(player => (
+              <div>
+              <CurrentTile key={player.name} player={player} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rightSide">
+              <div className="scoreBoard">SCORE BOARD</div>
+              <div className="chat">CHAT</div>
         </div>
       </div>
     );

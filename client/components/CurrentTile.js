@@ -83,7 +83,7 @@ class CurrentTile extends Component {
               {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)}
             </div>
             <div
-                style={{ width: '16vw', height: '12vw' }}
+                style={{ width: '15vw', height: '12vw' }}
                 ref={(mount) => { this.mount = mount }}
             />
             {this.props.me.name === this.props.currentPlayer.name ?
