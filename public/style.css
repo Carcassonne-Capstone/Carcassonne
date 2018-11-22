@@ -252,9 +252,13 @@ input:focus {
 }
 
 #playerCurrentTile{
-    width: 98%;
+    width: 50%;
     height: 60%;
-    margin-left: auto
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    margin-left: 24%
 }
 
 #playerCurrentTile canvas{

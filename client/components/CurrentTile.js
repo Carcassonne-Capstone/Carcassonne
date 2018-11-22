@@ -26,7 +26,7 @@ class CurrentTile extends Component {
     const height = this.mount.clientHeight;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xace4fb);
+    this.scene.background = new THREE.Color(0x000000); //ace4fb
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
