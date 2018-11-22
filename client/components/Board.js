@@ -284,15 +284,21 @@ class Board extends Component {
           <div
             className="gameButtons"
             //style={{ width: "80vw", height: "5vw" }}
-          >
-            <button type="button" onClick={this.resetCamera}>
-              {" "}
-              Flat Board{" "}
-            </button>
-            <button type="button" onClick={this.threeDcamera}>
-              {" "}
-              3D Board{" "}
-            </button>
+          > 
+            <div id="cameraButtons">
+              <div className="instructions">Change Camera View:</div>
+              <button type="button" onClick={this.resetCamera}>
+                {" "}
+                Flat Board{" "}
+              </button>
+              <button type="button" onClick={this.threeDcamera}>
+                {" "}
+                3D Board{" "}
+              </button>
+            </div>
+            <div className="instructions">
+              Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out
+            </div>
           </div>
 
           <div

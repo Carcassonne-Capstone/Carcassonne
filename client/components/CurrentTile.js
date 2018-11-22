@@ -26,7 +26,7 @@ class CurrentTile extends Component {
     const height = this.mount.clientHeight;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x003300);
+    this.scene.background = new THREE.Color(0xace4fb);
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -57,7 +57,7 @@ class CurrentTile extends Component {
   initializeCamera() {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
-    this.camera.position.z = 1;
+    this.camera.position.z = .75;
   }
 
   animate() {
