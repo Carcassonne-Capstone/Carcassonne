@@ -281,8 +281,7 @@ class Board extends Component {
     ) : (
       <div className="gameBoard">
         <div className="leftSide">
-          <div
-            className="gameButtons"
+          <div className="gameButtons"
             //style={{ width: "80vw", height: "5vw" }}
           > 
             <div id="cameraButtons">
@@ -309,11 +308,27 @@ class Board extends Component {
               this.mount = mount;
             }}
           />
+          <div className="playerContainer">
+            <div className="currentTiles">
+              {this.props.players.map(player => (
+                player.name === this.props.currentPlayer.name ?
+                <CurrentTile key={player.name} player={player} /> 
+                :
+                <div key={player.name} className="notPlayerTile"></div>
+              ))}
+            </div>
 
-          <div id="currentTiles">
-            {this.props.players.map(player => (
-              <CurrentTile key={player.name} player={player} />
-            ))}
+            <div className="playerMat">
+              {this.props.players.map(player => (
+                <div id="playerTitle" key={player.name}>
+                  <div id="playerName">{player.name}</div>
+                  <div id="meeple"> 
+                    <img src='/images/meeple.png'/>
+                    {`x${player.meeple}`}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="rightSide">

@@ -190,14 +190,14 @@ input:focus {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
 }
 
 .rightSide {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    margin-left: 1%;
+    margin-left: 2%;
     margin-top: 1%;
     margin-right: 1%
 }
@@ -216,49 +216,74 @@ input:focus {
 }
 
 #boardCanvas{
-    height: 69%;
+    height: 85%;
     width: 79vw;
     margin-left:1%;
     margin-bottom: 1%
 }
 
-#currentTiles{
+.playerContainer{
+    height: 10%;
+    z-index: 5;
+    position: absolute;
+    bottom: 0
+}
+
+.playerTile{
+    height: 97%;
+    margin-bottom: 2%;
+    margin-top:-2%;
+    margin-left: 2%;
+    margin-right: 1%;
+    width:18%;
+    background-color: black;
+    text-align: center;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.notPlayerTile{
+    height: 0%;
+    margin-bottom: 5%;
+    margin-top:1%;
+    margin-left: 1%;
+    margin-right: 1%;
+    width:18%;
+    background-color: black;
+    /* border: 1px white; */
+    text-align: center;
+    color: white
+}
+
+#notPlayer{
+    margin-top: 12%
+}
+
+.playerMat img {
+    height:2vw;
+    margin: 1%;
+}
+
+.currentTiles{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 80vw;
-    height: 25%;
-}
-
-#playerTile{
-    height: 97%;
-    margin-bottom: 2%;
-    margin-top:1%;
-    border: solid black;
-    width:19%;
-    background-color: #ace4fb
-}
-
-#currentTiles {
-    display: flex;
     margin-left: 1%;
-    width:80vw;
-    justify-content: space-evenly
-}
-
-#playerTile img {
-    height:2vw;
-    margin: 1%
+    height: 185%;
+    width: 80vw;
+    z-index: 1;
+    position: absolute;
+    bottom: 60%
 }
 
 #playerCurrentTile{
-    width: 50%;
+    width: 48%;
     height: 60%;
     align-content: center;
     align-items: center;
     justify-content: center;
     justify-items: center;
-    margin-left: 24%
+    margin-left: 25%
 }
 
 #playerCurrentTile canvas{
@@ -267,13 +292,33 @@ input:focus {
     height: 100% !important;
 }
 
+.playerMat{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 80vw;
+    height: 50%;
+    margin-left: 1%;
+    margin-right: auto;
+    z-index: 1;
+    position: absolute;
+    bottom:0;
+    left:0
+}
+
 #playerTitle{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     font-size: 1.5vw;
-    margin: 1% 4% 1% 4%;
-    height: 20%;
+    height:100%;
+    width:18%;
+    border: solid black;
+    margin-bottom: 2%;
+    margin-left: 2%;
+    margin-right:1%;
+    color: white;
+    background-color: black
 }
 
 #meeple{
@@ -281,15 +326,17 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    width: 30%
+    width: 29%;
+    margin-right: 2%
 }
 
 #playerName{
-    width: 75%
+    width: 74%;
+    margin-left: 2%
 }
 
-#playerButtons{
-    height: 15%;
+.playerButtons{
+    height: 20%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -297,7 +344,7 @@ input:focus {
     margin-top:2%
 }
 
-#playerButtons button{
+.playerButtons button{
     margin: 0;
     padding: 0;
     font-size: .75vw;
@@ -311,12 +358,12 @@ input:focus {
     margin-bottom: 2%
 }
 
-#playerButtons button:hover:enabled{
+.playerButtons button:hover:enabled{
     opacity:.8;
     cursor: pointer
 }
 
-#playerButtons button:disabled{
+.playerButtons button:disabled{
     background-color: gray;
     cursor: default
 }
@@ -326,17 +373,20 @@ input:focus {
     align-items: center;
     justify-content: space-evenly;
     justify-items: space-evenly;
-    height: 5%;
-    width: 98%;
+    /* height: 5%; */
+    width: 79vw;
     margin: 1% 1% 1% 1%;
-    margin-left:2%;
+    position: absolute;
+    top:0;
+    margin-right: 1%
 }
 
 .instructions{
     /* margin-left: auto; */
     width:50%;
     text-align: right;
-    font-size:1vw
+    font-size:1vw;
+    margin-right: 1%
 }
 
 #cameraButtons{

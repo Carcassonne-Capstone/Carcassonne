@@ -18,7 +18,9 @@ class CurrentTile extends Component {
   onWindowResize() {
     //this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+    if(this.mount!==null){
+      this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+    }
   }
 
   componentDidMount() {
@@ -86,46 +88,44 @@ class CurrentTile extends Component {
   }
 
   render() {
-    const meepleCount = this.props.player.meeple;
-    const meepleArr = new Array(meepleCount).fill("placeholder");
+    // const meepleCount = this.props.player.meeple;
+    // const meepleArr = new Array(meepleCount).fill("placeholder");
     return (
-        <div id="playerTile">
-            <div id="playerTitle">
-              <div id="playerName">{this.props.player.name}</div>
-              {/* {meepleArr.map((meeple, i) => <img key={i} src='/images/meeple.png'/>)} */}
-              <div id="meeple"> 
-                <img src='/images/meeple.png'/>
-                {`x${meepleArr.length}`}
-              </div>
-            </div>
-            <div
-                id="playerCurrentTile"
-                //style={{ width: '15vw', height: '12vw' }}
-                ref={(mount) => { this.mount = mount }}
-            />
-            {this.props.me.name === this.props.currentPlayer.name ?
-              this.props.currentPlayer.name === this.props.player.name ?
-                <div id="playerButtons">
-                  {
-                    this.props.curLocation ?
-                    <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
-                    // <button type="button" onClick={this.props.rotate}>Rotate</button>
-                    <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
-                  }
-              <button
-                type="button"
-                onClick={this.nextPlayer}
-                disabled={this.props.curLocation === null}
-              >
-                End Turn
-              </button>
-            </div>
-           : (
-            <div />
-          )
-         : (
-          <div />
-        )}
+      <div className="playerTile">
+      <div
+          id="playerCurrentTile"
+          //style={{ width: '15vw', height: '12vw' }}
+          ref={(mount) => { this.mount = mount }}
+      />
+        {this.props.me.name === this.props.currentPlayer.name ?
+          this.props.currentPlayer.name === this.props.player.name ?
+            <div className="playerButtons">
+              {
+                this.props.curLocation ?
+                <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
+                // <button type="button" onClick={this.props.rotate}>Rotate</button>
+                <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
+              }
+                <button
+                  type="button"
+                  onClick={this.nextPlayer}
+                  disabled={this.props.curLocation === null}
+                >
+                  End Turn
+                </button>
+                </div>
+              : (
+                <div className="playerButtons" />
+              )
+            : (
+              <div id="notPlayer" />
+            )}
+
+        {this.props.me.name === this.props.currentPlayer.name && this.props.currentPlayer.name === this.props.player.name ?
+        <div>It's your turn!</div>:
+        <div>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
+      }
+        
       </div>
     );
   }
