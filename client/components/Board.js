@@ -50,7 +50,7 @@ class Board extends Component {
 
     this.initializeOrbits();
     this.initializeCamera();
-    const initialCube = createCube(this.props.startTile, 0, 0);
+    const initialCube = createCube(this.props.startTile, 0, 0, false);
     this.scene.add(initialCube);
     this.curTile = null;
 
@@ -88,8 +88,10 @@ class Board extends Component {
       this.removeMeeples();
     }
     if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
-      this.emptyMeeples.forEach(meeple => {
-        this.curTile.remove(meeple);
+      this.curTile.children.forEach(meeple => {
+        if (meeple.name.split('-')[0] === 'emptyMeeple') {
+          this.curTile.remove(meeple);
+        }
       });
       this.curTile = null;
     }
@@ -103,29 +105,28 @@ class Board extends Component {
       this.updateValidTiles();
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      this.changeMeeple();
+      this.changeMeeple(prevProps);
     }
   }
 
   removeMeeples() {
     this.props.removeMeeples.forEach(meeple => {
       const tile = this.scene.getObjectByName(meeple.tile.object.name);
-      const curMeeple = tile.getObjectByName(
-        `${meeple.coords[0]},${meeple.coords[1]}`
-      );
+      const curMeeple = tile.getObjectByName(`meeple-${meeple.coords[0]},${meeple.coords[1]}`);
       tile.remove(curMeeple);
     });
   }
 
-  changeMeeple() {
+  changeMeeple(prevProps) {
     if (this.props.meeple.coords) {
-      this.curTile.remove(this.meeple);
-      this.meeple = createMeeple(
-        this.props.meeple.coords[0],
-        this.props.meeple.coords[1],
-        this.props.meeple.player.color
-      );
-      this.curTile.add(this.meeple);
+      const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
+      if (prevProps.meeple.coords) {
+        const meeple = tile.getObjectByName(`meeple-${prevProps.meeple.coords[0]},${prevProps.meeple.coords[1]}`)
+        tile.remove(meeple);
+        tile.add(createEmptyMeeple(prevProps.meeple.coords[0], prevProps.meeple.coords[1], prevProps.meeple.regionIdx, tile))
+      }
+      tile.remove(tile.getObjectByName(`emptyMeeple-${this.props.meeple.coords[0]},${this.props.meeple.coords[1]}`))
+      tile.add(createMeeple(this.props.meeple.coords[0], this.props.meeple.coords[1], this.props.meeple.player.color));
     }
   }
 
@@ -134,32 +135,10 @@ class Board extends Component {
       this.scene.remove(this.curTile);
     }
     if (this.props.curLocation) {
-      this.curTile = createCube(
-        this.props.currentTile,
-        this.props.curLocation[0],
-        this.props.curLocation[1]
-      );
-      this.emptyMeeples = [];
       const currPlayer = this.props.players.find(player => {
         return player.name === this.props.currentPlayer.name;
       });
-      if (currPlayer.meeple > 0 || this.props.meeple.coords) {
-        this.props.currentTile.tile.regions.forEach((region, idx) => {
-          if (validMeepleRegion(region, this.props.currentTile)) {
-            if (region.meeplePosition) {
-              let emptyMeeple = createEmptyMeeple(
-                region.meeplePosition[0],
-                region.meeplePosition[1]
-              );
-              emptyMeeple.regionIdx = idx;
-              emptyMeeple.tile = this.curTile;
-              this.emptyMeeples.push(emptyMeeple);
-              this.curTile.add(emptyMeeple);
-            }
-          }
-        });
-      }
-
+      this.curTile = createCube(this.props.currentTile, this.props.curLocation[0], this.props.curLocation[1], (currPlayer.meeple > 0 || this.props.meeple.coords));
       this.scene.add(this.curTile);
     }
   }
@@ -167,10 +146,7 @@ class Board extends Component {
   updateValidTiles() {
     this.validTiles.forEach(tile => this.scene.remove(tile));
     this.validTiles = [];
-    const validLocations = checkValid(
-      this.props.unfilledTiles,
-      this.props.currentTile
-    );
+    const validLocations = checkValid(this.props.unfilledTiles, this.props.currentTile);
     for (let key in validLocations) {
       if (validLocations.hasOwnProperty(key)) {
         const coords = key.split(",");
@@ -211,23 +187,20 @@ class Board extends Component {
     if (this.props.currentPlayer.name === this.props.player.name) {
       const windowArea = event.target.getBoundingClientRect();
       const mouse3D = new THREE.Vector3(
-        ((event.clientX - windowArea.left) /
-          (windowArea.right - windowArea.left)) *
-          2 -
-          1,
-        -(
-          (event.clientY - windowArea.top) /
-          (windowArea.bottom - windowArea.top)
-        ) *
-          2 +
-          1,
+        ((event.clientX - windowArea.left) /(windowArea.right - windowArea.left)) * 2 - 1,
+        -((event.clientY - windowArea.top) / (windowArea.bottom - windowArea.top)) * 2 + 1,
         0
       );
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(mouse3D, this.camera);
       const intersects = raycaster.intersectObjects(tiles);
 
-      const intersectsMeeple = raycaster.intersectObjects(this.emptyMeeples);
+
+      let intersectsMeeple = false;
+      if (this.props.curLocation) {
+        const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
+        intersectsMeeple = raycaster.intersectObjects(tile.children);
+      }
 
       if (intersectsMeeple.length) {
         let x = intersectsMeeple[0].object.position.x;
@@ -247,6 +220,7 @@ class Board extends Component {
       }
     }
   }
+
   resetCamera() {
     this.camera.position.x = 0;
     this.camera.position.y = 0;

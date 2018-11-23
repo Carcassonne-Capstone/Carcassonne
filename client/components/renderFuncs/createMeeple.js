@@ -8,11 +8,11 @@ export const createMeeple = (x, y, color) => {
   cylinder.position.y = y;
   cylinder.position.z = 0.15;
   cylinder.rotation.x = Math.PI / 2;
-  cylinder.name = `${x},${y}`
+  cylinder.name = `meeple-${x},${y}`
   return cylinder;
 };
 
-export const createEmptyMeeple = (x, y) => {
+export const createEmptyMeeple = (x, y, regionIdx, tile) => {
   const geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.05, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xa9b6cc });
   const cylinder = new THREE.Mesh(geometry, material);
@@ -20,5 +20,8 @@ export const createEmptyMeeple = (x, y) => {
   cylinder.position.y = y;
   cylinder.position.z = 0.15;
   cylinder.rotation.x = Math.PI / 2;
+  cylinder.name = `emptyMeeple-${x},${y}`
+  cylinder.regionIdx = regionIdx;
+  cylinder.tile = tile;
   return cylinder;
 };
