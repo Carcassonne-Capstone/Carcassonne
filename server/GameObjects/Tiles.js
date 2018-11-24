@@ -1,4 +1,8 @@
 function Region(type, edges, hasShield, meeplePosition) {
+  console.log(type)
+  console.log(edges)
+  console.log(hasShield)
+  console.log(meeplePosition)
   this.type = type;
   this.edges = edges;
   this.hasShield = hasShield;

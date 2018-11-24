@@ -1,8 +1,7 @@
 const Player = require("../GameObjects/Player");
 const Deck = require("../GameObjects/Deck");
 const { Tile, Region } = require("../GameObjects/Tiles");
-
-let deck = [];
+const getDeckTiles = require('../GameObjects/startTiles')
 
 const colorArr = [0xff0000, 0x0000ff, 0x9400d3, 0xffff00, 0xffa500];
 const rooms = {};
@@ -11,20 +10,21 @@ module.exports = io => {
   io.on("connection", socket => {
     socket.on("createRoom", playerName => {
       const roomId = makeid();
-      rooms[roomId] = 0;
+      rooms[roomId] = {colorIdx: 0};
       const player = new Player(playerName, roomId, colorArr[0]);
       socket.join(roomId);
       socket.emit("roomCreated", roomId, player);
     });
     socket.on("joinRoom", (roomId, playerName) => {
       socket.join(roomId);
-      rooms[roomId]++;
-      const player = new Player(playerName, roomId, colorArr[rooms[roomId]]);
+      rooms[roomId].colorIdx++;
+      const player = new Player(playerName, roomId, colorArr[rooms[roomId].colorIdx]);
       socket.broadcast.to(roomId).emit("playerJoined", player);
       socket.emit("me", player);
     });
     socket.on("startGame", (roomId, players) => {
-      deck = new Deck(require("../GameObjects/startTiles"));
+      const deck = new Deck(getDeckTiles());
+      rooms[roomId].deck = deck
       const startTile = new Tile(
         [
           new Region("road", [1, 3], false, [0.5, 0.5]),
@@ -66,7 +66,7 @@ module.exports = io => {
       if (playerIdx >= allPlayers.length) {
         playerIdx = 0;
       }
-      const tile = deck.getCard();
+      const tile = rooms[roomId].deck.getCard();
       if (tile) {
         socket.broadcast
           .to(roomId)

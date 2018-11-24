@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import * as THREE from "three";
 import { createCube } from "./renderFuncs/createTile";
 import { connect } from "react-redux";
-import { rotate } from "../store";
 import socket from "../socket";
 
 class CurrentTile extends Component {
@@ -73,23 +72,16 @@ class CurrentTile extends Component {
       this.props.player.name === this.props.currentPlayer.name &&
       this.props.curLocation === null
     ) {
-      this.cube = createCube(this.props.curTile, 0, 0);
+      this.cube = createCube(this.props.curTile, 0, 0, false);
       this.scene.add(this.cube);
     }
   }
 
   nextPlayer() {
-    socket.emit(
-      "turnEnded",
-      this.props.currentPlayer,
-      this.props.players,
-      this.props.roomId
-    );
+    socket.emit("turnEnded", this.props.currentPlayer, this.props.players, this.props.roomId);
   }
 
   render() {
-    // const meepleCount = this.props.player.meeple;
-    // const meepleArr = new Array(meepleCount).fill("placeholder");
     return (
       <div className="playerTile">
       <div
@@ -103,7 +95,6 @@ class CurrentTile extends Component {
               {
                 this.props.curLocation ?
                 <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
-                // <button type="button" onClick={this.props.rotate}>Rotate</button>
                 <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
               }
                 <button
@@ -142,13 +133,4 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    rotate: () => dispatch(rotate())
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CurrentTile);
+export default connect(mapStateToProps)(CurrentTile);
