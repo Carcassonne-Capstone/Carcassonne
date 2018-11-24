@@ -23,7 +23,7 @@ const initialState = {
   startTile: {},
   curMeeple: {},
   scores: {},
-  meeplesPlaced: [],
+  meeplesOnBoard: [],
   removeMeeples: []
 };
 
@@ -55,6 +55,7 @@ const getNeighbors = (x, y) => {
 
 const initStartNode = (startTile) => {
   const startNode = new TileNode(startTile);
+  startNode.setCoords([0,0])
   const neighb0 = new TileNode(null);
   neighb0.setNeighbor(bottom, startNode);
   const neighb1 = new TileNode(null);
@@ -121,77 +122,136 @@ const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal, returnOriginal) =>
   return allPlayersCopy;
 };
 
+const addInitNeighbors = (tileNode, region, blocksToCheck) => {
+  let regionClosed = true
+  for (let i = 0; i < region.edges.length; i++) {
+    let neighbor = tileNode.neighbors[region.edges[i]];
+    if (neighbor) {
+      let oppEdge = tileNode.findOppEdge(region.edges[i]);
+      blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+    } else {
+      regionClosed = false;
+    }
+  }
+  return regionClosed
+}
+
+const addNewNeighbors = (region, block, blocksToCheck) => {
+  let regionClosed = true
+  region.edges.forEach(edge => {
+    if (edge !== block.edge) {
+      const neighbor = block.tileNode.neighbors[edge];
+      if (neighbor) {
+        const oppEdge = block.tileNode.findOppEdge(edge);
+        blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+      } else {
+        regionClosed = false;
+      }
+    }
+  });
+  return regionClosed
+}
+
 
 const updateScores = (tileNodePlaced, curScores) => {
   let meeplesToRemove = [];
+  // eslint-disable-next-line complexity
   tileNodePlaced.tile.regions.forEach(region => {
     if (region.type !== "monastery" && region.type !== "field") {
       const visitedTiles = new Set();
+      visitedTiles.add('' + tileNodePlaced.coords)
       const blocksToCheck = [];
-      let regionClosed = true;
       let meeples = [];
       let numTilesInRegion = 1;
       if (region.meeple.length) {
         meeples.push(region.meeple[0]);
       }
-      for (let i = 0; i < region.edges.length; i++) {
-        let neighbor = tileNodePlaced.neighbors[region.edges[i]];
-        if (neighbor) {
-          let oppEdge = tileNodePlaced.findOppEdge(region.edges[i]);
-          blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
-        } else {
-          regionClosed = false;
-        }
-      }
+      let regionClosed = addInitNeighbors(tileNodePlaced, region, blocksToCheck)
       while (blocksToCheck.length && regionClosed) {
         const block = blocksToCheck.shift();
-        numTilesInRegion++;
-        visitedTiles.add(block.tileNode);
-        const curRegion = findRegion(block.tileNode.tile, block.edge);
-        if (curRegion.meeple.length) {
-          meeples.push(curRegion.meeple[0]);
-        }
-        // eslint-disable-next-line no-loop-func
-        curRegion.edges.forEach(edge => {
-          if (edge !== block.edge) {
-            const neighbor = block.tileNode.neighbors[edge];
-            if (!visitedTiles.has(neighbor)) {
-              if (neighbor) {
-                const oppEdge = block.tileNode.findOppEdge(edge);
-                blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
-              } else {
-                regionClosed = false;
-              }
-            }
+        if (!visitedTiles.has('' + block.tileNode.coords)) {
+          numTilesInRegion++;
+          visitedTiles.add('' + block.tileNode.coords);
+          const curRegion = findRegion(block.tileNode.tile, block.edge);
+          if (curRegion.meeple.length) {
+            meeples.push(curRegion.meeple[0]);
           }
-        });
+          regionClosed = addNewNeighbors(curRegion, block, blocksToCheck)
+        }
       }
       if (regionClosed) {
-        const scoreVal = region.type === "city" ? 2 : 1;
+        const scoreVal = region.type === 'city' ? 2 : 1;
         meeples.forEach(
           meeple =>
           (curScores[meeple.player.name] += scoreVal * numTilesInRegion)
           );
-          meeplesToRemove = [...meeplesToRemove, ...meeples];
-        }
+        meeplesToRemove = [...meeplesToRemove, ...meeples];
       }
-    });
-    return { meeplesToRemove, curScores };
+    }
+  });
+  return { meeplesToRemove, curScores };
+};
+
+  const addToScores = (scores, players, addPoints, maxMeeples) => {
+    for (let key in players) {
+      if (players.hasOwnProperty(key) && players[key] === maxMeeples) {
+        scores[key] += addPoints;
+      }
+    }
+  }
+
+  const finalScores = (meeplesOnBoard, curScores) => {
+    const meeplesChecked = new Set();
+    meeplesOnBoard.forEach(meepleObj => {
+      if (!meeplesChecked.has(meepleObj.meeple.tile.object.name + meepleObj.meeple.regionIdx)) {
+        let tileNode = meepleObj.tile
+        let curPlayers = {[meepleObj.meeple.player.name]: 1}
+        let addPoints = 1;
+        let region = tileNode.tile.regions[meepleObj.meeple.regionIdx]
+        let maxMeeples = 1;
+        const visitedTiles = new Set();
+        visitedTiles.add(tileNode)
+        const blocksToCheck = [];
+        addInitNeighbors(tileNode, region, blocksToCheck)
+        while (blocksToCheck.length) {
+          addPoints++;
+          const block = blocksToCheck.shift();
+          visitedTiles.add(block.tileNode);
+          const curRegion = findRegion(block.tileNode.tile, block.edge);
+          if (curRegion.meeple && curRegion.meeple.length) {
+            meeplesChecked.add(curRegion.meeple[0].tile.object.name + curRegion.meeple[0].regionIdx);
+            if (curPlayers.hasOwnProperty(curRegion.meeple[0].player.name)) {
+              curPlayers[curRegion.meeple[0].player.name]++;
+              maxMeeples = Math.max(maxMeeples, curPlayers[curRegion.meeple[0].player.name])
+            } else {
+              curPlayers[curRegion.meeple[0].player.name] = 1;
+            }
+          }
+          addNewNeighbors(curRegion, block, blocksToCheck, visitedTiles)
+        }
+        addToScores(curScores, curPlayers, addPoints, maxMeeples);
+      }
+    })  
+    return curScores
   };
   
-  const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlayersState) => {
+  const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlayersState, meeplesOnBoard) => {
     updateNeighbors(curLocation[0], curLocation[1], curTile, board, true);
     const tilePlaced = Object.assign(Object.create(Object.getPrototypeOf(curTile)), curTile);
     if (curMeeple.coords) {
       tilePlaced.tile.regions[curMeeple.regionIdx].meeple.push(curMeeple);
+      meeplesOnBoard.push({tile: tilePlaced, meeple: curMeeple})
     }
     board[`${curLocation[0]},${curLocation[1]}`] = tilePlaced;
     const { meeplesToRemove, curScores } = updateScores(tilePlaced, {...scores});
     meeplesToRemove.forEach(meeple => {
       let idx = newPlayersState.findIndex(player => player.name === meeple.player.name);
+      meeplesOnBoard = meeplesOnBoard.filter(meepleObj => {
+        return meepleObj.meeple.tile.object.name !== meeple.tile.object.name || meepleObj.meeple.regionIdx !== meeple.regionIdx
+      })
       newPlayersState[idx].meeple++;
     });
-    return {board, meeplesToRemove, curScores, newPlayersState}
+    return {board, meeplesToRemove, curScores, newPlayersState, meeplesOnBoard}
   }
   
   //reducer
@@ -209,8 +269,10 @@ const reducer = (state = initialState, action) => {
     case SET_MEEPLE:
       return {...state, curMeeple: action.meeple, players: updatePlayerMeepleCnt(state.currentPlayer, state.players, -1, state.curMeeple.coords)};
     case GAME_OVER:
-      return { ...state, gameState: 'gameOver' };
+      const returnObjects = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players], [...state.meeplesOnBoard]);
+      return { ...state, gameState: 'gameOver', scores: finalScores(returnObjects.meeplesOnBoard, returnObjects.curScores) };
     case ADD_TO_BOARD:
+      state.curTile.setCoords(action.coords)
       if (action.coords) updateNeighbors(action.coords[0], action.coords[1], state.curTile, state.board, false);
       return {
         ...state,
@@ -219,7 +281,7 @@ const reducer = (state = initialState, action) => {
         players: updatePlayerMeepleCnt(state.currentPlayer, state.players, 1, !state.curMeeple.coords)
       };
     case NEXT_TURN:
-      const {board, meeplesToRemove, curScores, newPlayersState} = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players]);
+      const {board, meeplesToRemove, curScores, newPlayersState,meeplesOnBoard} = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players], [...state.meeplesOnBoard]);
       return {
         ...state,
         currentPlayer: action.player,
@@ -230,7 +292,8 @@ const reducer = (state = initialState, action) => {
         curMeeple: {},
         removeMeeples: meeplesToRemove,
         scores: curScores,
-        allPlayers: newPlayersState
+        allPlayers: newPlayersState,
+        meeplesOnBoard: meeplesOnBoard
       };
     case INIT_GAME:
       const {startNode, unfilled} = initStartNode(action.startTile)
