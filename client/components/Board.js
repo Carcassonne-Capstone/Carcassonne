@@ -5,26 +5,21 @@ import { createCube, createBlankTile } from "./renderFuncs/createTile";
 const OrbitControls = require("three-orbit-controls")(THREE);
 //const MapControls = require("three-map-controls")(THREE);
 import CurrentTile from "./CurrentTile";
-import checkValid from "./renderFuncs/checkValid";
 import { connect } from "react-redux";
-import { updateBoard } from "../store";
 import socket from "../socket";
-import { createMeeple, createEmptyMeeple } from "./renderFuncs/createMeeple";
-import { validMeepleRegion } from "./renderFuncs/checkValidMeeple";
+import {changeMeeple, removeMeeples} from './renderFuncs/meepleFuncs'
+import {changeCurTile, updateValidTiles} from './renderFuncs/tileFuncs'
 import ScoreBoard from "./ScoreBoard";
 
 class Board extends Component {
   constructor(props) {
     super(props);
     this.animate = this.animate.bind(this);
-    this.changeCurTile = this.changeCurTile.bind(this);
     this.initializeCamera = this.initializeCamera.bind(this);
     this.initializeOrbits = this.initializeOrbits.bind(this);
-    this.updateValidTiles = this.updateValidTiles.bind(this);
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
-    this.removeMeeples = this.removeMeeples.bind(this);
   }
 
   onWindowResize() {
@@ -50,12 +45,11 @@ class Board extends Component {
 
     this.initializeOrbits();
     this.initializeCamera();
-    const initialCube = createCube(this.props.startTile, 0, 0);
-    this.scene.add(initialCube);
+
+    this.scene.add(createCube(this.props.startTile, 0, 0, false));
     this.curTile = null;
 
-    this.validTiles = [];
-    this.updateValidTiles();
+    this.validTiles = updateValidTiles([], this.scene, this.props.unfilledTiles, this.props.currentTile);
     this.animate();
 
     window.addEventListener("resize", this.onWindowResize, false);
@@ -85,201 +79,103 @@ class Board extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.removeMeeples !== this.props.removeMeeples) {
-      this.removeMeeples();
+      removeMeeples(this.props.removeMeeples, this.scene)
     }
     if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
-      this.emptyMeeples.forEach(meeple => {
-        this.curTile.remove(meeple);
+      [...this.curTile.children].forEach(meeple => {
+        if (meeple.name.split('-')[0] === 'emptyMeeple') {
+          this.curTile.remove(meeple);
+        }
       });
       this.curTile = null;
     }
     if (prevProps.curLocation !== this.props.curLocation) {
-      this.changeCurTile();
+      const currPlayer = this.props.players.find(player => player.name === this.props.currentPlayer.name);
+      this.curTile = changeCurTile(this.scene, this.curTile, this.props.curLocation, this.props.currentTile, this.props.meeple, currPlayer)
     }
-    if (
-      prevProps.unfilledTiles !== this.props.unfilledTiles ||
-      prevProps.currentTile.rotation !== this.props.currentTile.rotation
-    ) {
-      this.updateValidTiles();
+    if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation) {
+      this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      this.changeMeeple();
+      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile)
     }
   }
-
-  removeMeeples() {
-    this.props.removeMeeples.forEach(meeple => {
-      const tile = this.scene.getObjectByName(meeple.tile.object.name);
-      const curMeeple = tile.getObjectByName(
-        `${meeple.coords[0]},${meeple.coords[1]}`
-      );
-      tile.remove(curMeeple);
-    });
-  }
-
-  changeMeeple() {
-    if (this.props.meeple.coords) {
-      this.curTile.remove(this.meeple);
-      this.meeple = createMeeple(
-        this.props.meeple.coords[0],
-        this.props.meeple.coords[1],
-        this.props.meeple.player.color
-      );
-      this.curTile.add(this.meeple);
-    }
-  }
-
-  changeCurTile() {
-    if (this.curTile) {
-      this.scene.remove(this.curTile);
-    }
-    if (this.props.curLocation) {
-      this.curTile = createCube(
-        this.props.currentTile,
-        this.props.curLocation[0],
-        this.props.curLocation[1]
-      );
-      this.emptyMeeples = [];
-      const currPlayer = this.props.players.find(player => {
-        return player.name === this.props.currentPlayer.name;
-      });
-      if (currPlayer.meeple > 0 || this.props.meeple.coords) {
-        this.props.currentTile.tile.regions.forEach((region, idx) => {
-          if (validMeepleRegion(region, this.props.currentTile)) {
-            if (region.meeplePosition) {
-              let emptyMeeple = createEmptyMeeple(
-                region.meeplePosition[0],
-                region.meeplePosition[1]
-              );
-              emptyMeeple.regionIdx = idx;
-              emptyMeeple.tile = this.curTile;
-              this.emptyMeeples.push(emptyMeeple);
-              this.curTile.add(emptyMeeple);
-            }
-          }
-        });
-      }
-
-      this.scene.add(this.curTile);
-    }
-  }
-
-  updateValidTiles() {
-    this.validTiles.forEach(tile => this.scene.remove(tile));
-    this.validTiles = [];
-    const validLocations = checkValid(
-      this.props.unfilledTiles,
-      this.props.currentTile
-    );
-    for (let key in validLocations) {
-      if (validLocations.hasOwnProperty(key)) {
-        const coords = key.split(",");
-        const x = parseInt(coords[0], 10);
-        const y = parseInt(coords[1], 10);
-        const validSpot = createBlankTile(null, x, y);
-        this.validTiles.push(validSpot);
-        this.scene.add(validSpot);
-      }
-    }
+  
+  animate() {
+    this.frameId = window.requestAnimationFrame(this.animate);
+    this.renderer.render(this.scene, this.camera);
   }
 
   initializeOrbits() {
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1.2;
     this.controls.panSpeed = 0.8;
-    this.controls.mouseButtons = {
-      ORBIT: THREE.MOUSE.RIGHT,
-      ZOOM: THREE.MOUSE.MIDDLE,
-      PAN: THREE.MOUSE.LEFT
-    };
+    this.controls.mouseButtons = {ORBIT: THREE.MOUSE.RIGHT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.LEFT};
     this.controls.minDistance = 1;
     this.controls.maxDistance = 10;
   }
 
-  initializeCamera() {
-    this.camera.position.x = 0;
-    this.camera.position.y = 0;
-    this.camera.position.z = 4;
+  setCameraPosition(x, y, z) {
+    this.camera.position.x = x;
+    this.camera.position.y = y;
+    this.camera.position.z = z;
   }
 
-  animate() {
-    this.frameId = window.requestAnimationFrame(this.animate);
-    this.renderer.render(this.scene, this.camera);
+  initializeCamera() {
+    this.setCameraPosition(0, 0, 4)
+  }
+
+  resetCamera() {
+    this.setCameraPosition(0, 0, 4)
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.controls.center.set(this.controlCenter.x, this.controlCenter.y, this.controlCenter.z);
+    this.camera.rotation.set(this.controlRotation.x, this.controlRotation.y,this.controlRotation.z);
+  }
+  
+  threeDcamera() {
+    this.setCameraPosition(0, -6, 2)
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.controls.center.set(this.controlCenter.x, this.controlCenter.y, this.controlCenter.z);
   }
 
   onDocMouseDown(event, tiles) {
     if (this.props.currentPlayer.name === this.props.player.name) {
       const windowArea = event.target.getBoundingClientRect();
       const mouse3D = new THREE.Vector3(
-        ((event.clientX - windowArea.left) /
-          (windowArea.right - windowArea.left)) *
-          2 -
-          1,
-        -(
-          (event.clientY - windowArea.top) /
-          (windowArea.bottom - windowArea.top)
-        ) *
-          2 +
-          1,
+        ((event.clientX - windowArea.left) / (windowArea.right - windowArea.left)) * 2 - 1,
+        -((event.clientY - windowArea.top) / (windowArea.bottom - windowArea.top)) * 2 + 1,
         0
       );
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(mouse3D, this.camera);
       const intersects = raycaster.intersectObjects(tiles);
 
-      const intersectsMeeple = raycaster.intersectObjects(this.emptyMeeples);
+      let intersectsMeeple = false;
+      if (this.props.curLocation) {
+        const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
+        const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
+        intersectsMeeple = raycaster.intersectObjects(filteredChildren);
+      }
 
       if (intersectsMeeple.length) {
         let x = intersectsMeeple[0].object.position.x;
         let y = intersectsMeeple[0].object.position.y;
-        socket.emit(
-          "meeplePlaced",
-          this.props.roomId,
-          [x, y],
-          this.props.player,
-          intersectsMeeple[0].object.regionIdx,
-          intersectsMeeple[0].object.tile
-        );
+        socket.emit('meeplePlaced', this.props.roomId, [x, y], this.props.player, intersectsMeeple[0].object.regionIdx, intersectsMeeple[0].object.tile);
       } else if (intersects.length > 0) {
         let x = intersects[0].object.position.x;
         let y = intersects[0].object.position.y;
-        socket.emit("tilePlaced", this.props.roomId, [x, y]);
+        if (!this.props.curLocation || x !== this.props.curLocation[0] || y !== this.props.curLocation[1]) {
+          socket.emit('tilePlaced', this.props.roomId, [x, y]);
+        }
       }
     }
   }
-  resetCamera() {
-    this.camera.position.x = 0;
-    this.camera.position.y = 0;
-    this.camera.position.z = 4;
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    this.controls.center.set(
-      this.controlCenter.x,
-      this.controlCenter.y,
-      this.controlCenter.z
-    );
-    this.camera.rotation.set(
-      this.controlRotation.x,
-      this.controlRotation.y,
-      this.controlRotation.z
-    );
-  }
-
-  threeDcamera() {
-    this.camera.position.x = 0;
-    this.camera.position.y = -6;
-    this.camera.position.z = 2;
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    this.controls.center.set(
-      this.controlCenter.x,
-      this.controlCenter.y,
-      this.controlCenter.z
-    );
-  }
+  
   render() {
     return this.props.gameState === "gameOver" ? (
       <Redirect to="/gameOver" />
-    ) : (
-      <div className="gameBoard">
+      ) : (
+        <div className="gameBoard">
         <div className="leftSide">
           <div className="gameButtons"
             //style={{ width: "80vw", height: "5vw" }}
@@ -351,19 +247,9 @@ const mapStateToProps = state => {
     currentPlayer: state.currentPlayer,
     player: state.player,
     meeple: state.curMeeple,
-    board: state.board,
     removeMeeples: state.removeMeeples,
     gameState: state.gameState
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    updateBoard: (x, y) => dispatch(updateBoard(x, y))
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Board);
+export default connect(mapStateToProps)(Board);

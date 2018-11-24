@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import CreateRoom from "./createRoom";
 import JoinRoom from "./joinRoom";
-import Board from "./Board";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
