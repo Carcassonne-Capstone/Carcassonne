@@ -236,7 +236,9 @@ input:focus {
     margin-left: 2%;
     margin-right: 1%;
     width:18%;
-    background-color: black;
+    background-color: black 0;
+    /* background-image: url("https://bit.ly/2DFCmo1"); */
+    border: 1px solid white;
     text-align: center;
     color: white;
     font-family: Arial, Helvetica, sans-serif
