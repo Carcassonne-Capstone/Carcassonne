@@ -10,6 +10,7 @@ import socket from "../socket";
 import {changeMeeple, removeMeeples} from './renderFuncs/meepleFuncs'
 import {changeCurTile, updateValidTiles} from './renderFuncs/tileFuncs'
 import ScoreBoard from "./ScoreBoard";
+import Chat from "./Chat"
 
 class Board extends Component {
   constructor(props) {
@@ -229,7 +230,7 @@ class Board extends Component {
         </div>
         <div className="rightSide">
           <ScoreBoard />
-          <div className="chat">CHAT</div>
+          <Chat />
         </div>
       </div>
     );
