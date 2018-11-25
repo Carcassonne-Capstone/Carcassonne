@@ -33,7 +33,7 @@ class Board extends Component {
     const height = this.mount.clientHeight;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     //this.controls = new MapControls(this.camera, this.renderer.domElement);
@@ -54,22 +54,21 @@ class Board extends Component {
 
     window.addEventListener("resize", this.onWindowResize, false);
 
-    // var imagePrefix = "skybox2/";
-    // var directions  = ["1", "2", "3", "4", "5", "6"];
-    // var imageSuffix = ".png";
+    var imagePrefix = "img/";
+    var directions  = ["1", "2", "3", "4", "5", "6"];
+    var imageSuffix = ".png";
 
-    // var materialArray = [];
-    // for (var i = 0; i < 6; i++)
-    //   materialArray.push( new THREE.MeshBasicMaterial({
-    //   map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
-    //   side: THREE.BackSide
-    //   }));
+    var materialArray = [];
+    for (var i = 0; i < 6; i++)
+      materialArray.push( new THREE.MeshBasicMaterial({
+      map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+      side: THREE.BackSide
+      }));
 
-    // var skyGeometry = new THREE.CubeGeometry( 1500, 1500, 1500 );
-    // var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-    // var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-    // skyBox.rotation.x += Math.PI / 2;
-    // this.scene.add( skyBox );
+    var skyGeometry = new THREE.CubeGeometry( 2000, 2000, 2000 );
+    var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+    var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+    this.scene.add( skyBox );
   }
 
   componentWillUnmount() {
@@ -113,6 +112,7 @@ class Board extends Component {
     this.controls.mouseButtons = {ORBIT: THREE.MOUSE.RIGHT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.LEFT};
     this.controls.minDistance = 1;
     this.controls.maxDistance = 10;
+    this.controls.maxPolarAngle = Math.PI * 2;
   }
 
   setCameraPosition(x, y, z) {
@@ -133,7 +133,7 @@ class Board extends Component {
   }
   
   threeDcamera() {
-    this.setCameraPosition(0, -6, 2)
+    this.setCameraPosition(0, -5, 2)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     this.controls.center.set(this.controlCenter.x, this.controlCenter.y, this.controlCenter.z);
   }
