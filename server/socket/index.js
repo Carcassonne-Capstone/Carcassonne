@@ -57,6 +57,10 @@ module.exports = io => {
     socket.on('meeplePlaced', (roomId, coords, player, regionIdx, tile) => {
       broadcastToAll(socket, roomId, 'meepleOn', { coords, player, regionIdx, tile })
     });
+
+    socket.on('newMessage', (roomId, player, message) => {
+      broadcastToAll(socket, roomId, 'postMessage', player, message)
+    })
     
   });
 };
