@@ -23,8 +23,9 @@ const initialState = {
   startTile: {},
   curMeeple: {},
   scores: {},
-  meeplesPlaced: [],
-  removeMeeples: []
+  meeplesOnBoard: [],
+  removeMeeples: [],
+  monasteryTiles: []
 };
 
 //action types
@@ -55,6 +56,7 @@ const getNeighbors = (x, y) => {
 
 const initStartNode = (startTile) => {
   const startNode = new TileNode(startTile);
+  startNode.setCoords([0,0])
   const neighb0 = new TileNode(null);
   neighb0.setNeighbor(bottom, startNode);
   const neighb1 = new TileNode(null);
@@ -121,78 +123,183 @@ const updatePlayerMeepleCnt = (curPlayer, allPlayers, addVal, returnOriginal) =>
   return allPlayersCopy;
 };
 
+const addInitNeighbors = (tileNode, region, blocksToCheck) => {
+  let regionClosed = true
+  for (let i = 0; i < region.edges.length; i++) {
+    let neighbor = tileNode.neighbors[region.edges[i]];
+    if (neighbor) {
+      let oppEdge = tileNode.findOppEdge(region.edges[i]);
+      blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+    } else {
+      regionClosed = false;
+    }
+  }
+  return regionClosed
+}
+
+const addNewNeighbors = (region, block, blocksToCheck) => {
+  let regionClosed = true
+  region.edges.forEach(edge => {
+    if (edge !== block.edge) {
+      const neighbor = block.tileNode.neighbors[edge];
+      if (neighbor) {
+        const oppEdge = block.tileNode.findOppEdge(edge);
+        blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
+      } else {
+        regionClosed = false;
+      }
+    }
+  });
+  return regionClosed
+}
+
+const addToScores = (scores, players, addPoints, maxMeeples, extraPoints, multiplyVal = 1) => {
+  for (let key in players) {
+    if (players.hasOwnProperty(key) && players[key] === maxMeeples) {
+      scores[key] += (addPoints * multiplyVal + extraPoints);
+    }
+  }
+}
+
+const updateMeeplePlayers = (meeplePlayers, region, maxMeeples) => {
+  if (meeplePlayers.hasOwnProperty(region.meeple[0].player.name)) {
+    meeplePlayers[region.meeple[0].player.name]++;
+  } else {
+    meeplePlayers[region.meeple[0].player.name] = 1;
+  }
+  return Math.max(maxMeeples, meeplePlayers[region.meeple[0].player.name])
+}
+
+const updateMonasteryScores = (monasteryTiles, board, updateNotClosed, curScores, meeplesToRemove) => {
+  let newMonasteries = [];
+  monasteryTiles.forEach(monastery => {
+    let totalPoints = 1, isClosing = true;
+    const x = monastery.coords[0], y = monastery.coords[1]
+    let corners = [`${x + 1},${y + 1}`,`${x + 1},${y - 1}`, `${x - 1},${y - 1}`, `${x - 1},${y + 1}`]
+    corners.forEach((corner, i) => {
+      if (monastery.neighbors[i]) totalPoints++
+      if (board.hasOwnProperty(corner)) totalPoints++
+      if (!monastery.neighbors[i] || !board.hasOwnProperty(corner)) isClosing = false
+    })
+    if (updateNotClosed || isClosing) {
+      let monasteryRegion = monastery.tile.regions.find(region => region.type === 'monastery')
+      meeplesToRemove.push(monasteryRegion.meeple[0])
+      curScores[monasteryRegion.meeple[0].player.name] += totalPoints
+    } else {
+      newMonasteries.push(monastery)
+    }
+  })
+  return newMonasteries
+}
 
 const updateScores = (tileNodePlaced, curScores) => {
   let meeplesToRemove = [];
+  // eslint-disable-next-line complexity
   tileNodePlaced.tile.regions.forEach(region => {
     if (region.type !== "monastery" && region.type !== "field") {
-      const visitedTiles = new Set();
-      const blocksToCheck = [];
-      let regionClosed = true;
-      let meeples = [];
-      let numTilesInRegion = 1;
+      let maxMeeples = 0, meeplePlayers = {}, numTilesInRegion = 1, meeples = []
+      const visitedTiles = new Set(), blocksToCheck = [];
+      visitedTiles.add('' + tileNodePlaced.coords + '' + region.meeplePosition)
       if (region.meeple.length) {
-        meeples.push(region.meeple[0]);
+        meeplePlayers[region.meeple[0].player.name] = 1;
+        meeples.push(region.meeple[0])
+        maxMeeples = 1
       }
-      for (let i = 0; i < region.edges.length; i++) {
-        let neighbor = tileNodePlaced.neighbors[region.edges[i]];
-        if (neighbor) {
-          let oppEdge = tileNodePlaced.findOppEdge(region.edges[i]);
-          blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
-        } else {
-          regionClosed = false;
-        }
-      }
+      let extraPoints = region.hasShield ? 2 : 0
+      let regionClosed = addInitNeighbors(tileNodePlaced, region, blocksToCheck)
       while (blocksToCheck.length && regionClosed) {
         const block = blocksToCheck.shift();
-        numTilesInRegion++;
-        visitedTiles.add(block.tileNode);
         const curRegion = findRegion(block.tileNode.tile, block.edge);
-        if (curRegion.meeple.length) {
-          meeples.push(curRegion.meeple[0]);
-        }
-        // eslint-disable-next-line no-loop-func
-        curRegion.edges.forEach(edge => {
-          if (edge !== block.edge) {
-            const neighbor = block.tileNode.neighbors[edge];
-            if (!visitedTiles.has(neighbor)) {
-              if (neighbor) {
-                const oppEdge = block.tileNode.findOppEdge(edge);
-                blocksToCheck.push({ tileNode: neighbor, edge: oppEdge });
-              } else {
-                regionClosed = false;
-              }
-            }
+        if (!visitedTiles.has('' + block.tileNode.coords + '' + curRegion.meeplePosition)) {
+          numTilesInRegion++;
+          visitedTiles.add('' + block.tileNode.coords + '' + curRegion.meeplePosition);
+          if (curRegion.hasShield) extraPoints += 2
+          if (curRegion.meeple.length) {
+            maxMeeples = updateMeeplePlayers(meeplePlayers, curRegion, maxMeeples)
+            meeples.push(curRegion.meeple[0])
           }
-        });
+          regionClosed = addNewNeighbors(curRegion, block, blocksToCheck)
+        }
       }
       if (regionClosed) {
-        const scoreVal = region.type === "city" ? 2 : 1;
-        meeples.forEach(
-          meeple =>
-          (curScores[meeple.player.name] += scoreVal * numTilesInRegion)
-          );
-          meeplesToRemove = [...meeplesToRemove, ...meeples];
-        }
+        const scoreVal = region.type === 'city' ? 2 : 1;
+        addToScores(curScores, meeplePlayers, numTilesInRegion, maxMeeples, extraPoints, scoreVal)
+        meeplesToRemove = [...meeplesToRemove, ...meeples]
       }
-    });
-    return { meeplesToRemove, curScores };
-  };
-  
-  const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlayersState) => {
-    updateNeighbors(curLocation[0], curLocation[1], curTile, board, true);
-    const tilePlaced = Object.assign(Object.create(Object.getPrototypeOf(curTile)), curTile);
-    if (curMeeple.coords) {
-      tilePlaced.tile.regions[curMeeple.regionIdx].meeple.push(curMeeple);
     }
-    board[`${curLocation[0]},${curLocation[1]}`] = tilePlaced;
-    const { meeplesToRemove, curScores } = updateScores(tilePlaced, {...scores});
-    meeplesToRemove.forEach(meeple => {
-      let idx = newPlayersState.findIndex(player => player.name === meeple.player.name);
-      newPlayersState[idx].meeple++;
-    });
-    return {board, meeplesToRemove, curScores, newPlayersState}
+  });
+  return { meeplesToRemove, curScores };
+};
+
+
+const finalScores = (meeplesOnBoard, curScores, monasteries, board) => {
+  updateMonasteryScores(monasteries, board, true, curScores, [])
+  const meeplesChecked = new Set();
+  // eslint-disable-next-line complexity
+  meeplesOnBoard.forEach(meepleObj => {
+    if (!meeplesChecked.has(meepleObj.meeple.tile.object.name + meepleObj.meeple.regionIdx)) {
+      let tileNode = meepleObj.tile
+      let region = tileNode.tile.regions[meepleObj.meeple.regionIdx]
+      if (region.type !== 'monastery') {
+        let curPlayers = {[meepleObj.meeple.player.name]: 1}
+        let addPoints = 1;
+        let maxMeeples = 1;
+        const visitedTiles = new Set();
+        visitedTiles.add('' + tileNode.coords + '' + region.meeplePosition)
+        const blocksToCheck = [];
+        let extraPoints = region.hasShield ? 2 : 0
+        addInitNeighbors(tileNode, region, blocksToCheck)
+        while (blocksToCheck.length) {
+          addPoints++;
+          const block = blocksToCheck.shift();
+          const curRegion = findRegion(block.tileNode.tile, block.edge);
+          if (!visitedTiles.has('' + block.tileNode.coords + '' + region.curRegion)) {
+            visitedTiles.add('' + block.tileNode.coords + '' + region.curRegion);
+            if (curRegion.hasShield) extraPoints += 2
+            if (curRegion.meeple && curRegion.meeple.length) {
+              meeplesChecked.add(curRegion.meeple[0].tile.object.name + curRegion.meeple[0].regionIdx);
+              maxMeeples = updateMeeplePlayers(curPlayers, curRegion, maxMeeples) 
+            }
+            addNewNeighbors(curRegion, block, blocksToCheck, visitedTiles)
+          }
+        }
+        addToScores(curScores, curPlayers, addPoints, maxMeeples, extraPoints);
+      }
+    }
+  })
+  console.log('FINAL SCORES', curScores)
+  return curScores
+};
+
+const updateMonasteries = (monasteries, tileNode) => {
+  tileNode.tile.regions.forEach(region => {
+    if (region.type === 'monastery' && region.meeple.length) {
+      monasteries.push(tileNode)
+    }
+  })
+  return monasteries
+}
+
+const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlayersState, meeplesOnBoard, monasteryTiles) => {
+  updateNeighbors(curLocation[0], curLocation[1], curTile, board, true);
+  const tilePlaced = Object.assign(Object.create(Object.getPrototypeOf(curTile)), curTile);
+  if (curMeeple.coords) {
+    tilePlaced.tile.regions[curMeeple.regionIdx].meeple.push(curMeeple);
+    meeplesOnBoard.push({tile: tilePlaced, meeple: curMeeple})
   }
+  board[`${curLocation[0]},${curLocation[1]}`] = tilePlaced;
+  let newMonasteries = updateMonasteries(monasteryTiles, tilePlaced)
+  const { meeplesToRemove, curScores } = updateScores(tilePlaced, {...scores});
+  newMonasteries = updateMonasteryScores(newMonasteries, board, false, curScores, meeplesToRemove)
+  meeplesToRemove.forEach(meeple => {
+    let idx = newPlayersState.findIndex(player => player.name === meeple.player.name);
+    meeplesOnBoard = meeplesOnBoard.filter(meepleObj => {
+      return meepleObj.meeple.tile.object.name !== meeple.tile.object.name || meepleObj.meeple.regionIdx !== meeple.regionIdx
+    })
+    newPlayersState[idx].meeple++;
+  });
+  return {board, meeplesToRemove, curScores, newPlayersState, meeplesOnBoard, newMonasteries}
+}
   
   //reducer
 // eslint-disable-next-line complexity
@@ -209,8 +316,10 @@ const reducer = (state = initialState, action) => {
     case SET_MEEPLE:
       return {...state, curMeeple: action.meeple, players: updatePlayerMeepleCnt(state.currentPlayer, state.players, -1, state.curMeeple.coords)};
     case GAME_OVER:
-      return { ...state, gameState: 'gameOver' };
+      const returnObjects = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players], [...state.meeplesOnBoard], [...state.monasteryTiles]);
+      return { ...state, gameState: 'gameOver', scores: finalScores(returnObjects.meeplesOnBoard, returnObjects.curScores, returnObjects.newMonasteries, returnObjects.board) };
     case ADD_TO_BOARD:
+      state.curTile.setCoords(action.coords)
       if (action.coords) updateNeighbors(action.coords[0], action.coords[1], state.curTile, state.board, false);
       return {
         ...state,
@@ -219,7 +328,7 @@ const reducer = (state = initialState, action) => {
         players: updatePlayerMeepleCnt(state.currentPlayer, state.players, 1, !state.curMeeple.coords)
       };
     case NEXT_TURN:
-      const {board, meeplesToRemove, curScores, newPlayersState} = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players]);
+      const {board, meeplesToRemove, curScores, newPlayersState, meeplesOnBoard, newMonasteries} = nextTurnUpdates({...state.board}, state.curLocation, state.curTile, state.curMeeple, {...state.scores}, [...state.players], [...state.meeplesOnBoard], [...state.monasteryTiles]);
       return {
         ...state,
         currentPlayer: action.player,
@@ -230,7 +339,9 @@ const reducer = (state = initialState, action) => {
         curMeeple: {},
         removeMeeples: meeplesToRemove,
         scores: curScores,
-        allPlayers: newPlayersState
+        allPlayers: newPlayersState,
+        meeplesOnBoard: meeplesOnBoard,
+        monasteryTiles: newMonasteries
       };
     case INIT_GAME:
       const {startNode, unfilled} = initStartNode(action.startTile)

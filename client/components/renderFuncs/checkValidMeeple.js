@@ -11,7 +11,7 @@ export const validMeepleRegion = (region, currentTile) => {
     }
   }
   while (blocksToCheck.length) {
-    const block = blocksToCheck.pop();
+    const block = blocksToCheck.shift();
     visitedTiles.add(block.tileNode);
     const curRegion = findRegion(block.tileNode.tile, block.edge);
     if (curRegion.meeple && curRegion.meeple.length) return false;

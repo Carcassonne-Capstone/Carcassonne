@@ -6,6 +6,7 @@ const left = 3;
 class TileNode {
   constructor(tile) {
     this.tile = tile;
+    this.coords = null
     this.rotation = 0;
     this.neighbors = {
       [top]: null,
@@ -13,6 +14,10 @@ class TileNode {
       [bottom]: null,
       [left]: null
     };
+  }
+
+  setCoords(coords) {
+    this.coords = coords
   }
 
   setNeighbor(direction, tile) {
