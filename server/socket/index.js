@@ -4,6 +4,7 @@ const initializeDeckPlayers = require('../helperFuncs/deckFuncs')
 const getNextPlayer = require('../helperFuncs/playerFuncs')
 const makeid = require('../helperFuncs/roomFuncs')
 const colorArr = [0xff0000, 0x0000ff, 0x9400d3, 0xffff00, 0xffa500];
+const soundArr = ['/Sounds/elephant9.mp3', '/Sounds/lion.mp3', '/Sounds/spidermonkey.mp3', '/Sounds/Tiger2.mp3', '/Sounds/elephant9.mp3']
 const rooms = {};
 
 const broadcastToAll = ( socket, roomId, message, ...props) => {
@@ -18,13 +19,13 @@ module.exports = io => {
       const roomId = makeid();
       socket.join(roomId);
       rooms[roomId] = {colorIdx: 0};
-      socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0]));
+      socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0], soundArr[0]));
     });
 
     socket.on('joinRoom', (roomId, playerName) => {
       socket.join(roomId);
       rooms[roomId].colorIdx++;
-      const player = new Player(playerName, roomId, colorArr[rooms[roomId].colorIdx]);
+      const player = new Player(playerName, roomId, colorArr[rooms[roomId].colorIdx], soundArr[rooms[roomId].colorIdx]);
       socket.broadcast.to(roomId).emit('playerJoined', player);
       socket.emit('me', player);
     });
