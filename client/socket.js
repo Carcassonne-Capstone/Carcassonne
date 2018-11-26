@@ -1,11 +1,27 @@
 import io from "socket.io-client";
-import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, setMeeple, gameOver, postMessage} from "./store";
+import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr} from "./store";
 
 const socket = io(window.location.origin);
 
 socket.on('connect', () => {
   console.log('I am connected');
 });
+
+// socket.on('disconnecting', () => {
+//   socket.emit('playerDisconnected', store.getState())
+// })
+
+// socket.on('disconnectedPlayer', player => {
+//   console.log(`${player.name} disconnected`)
+// })
+
+socket.on('joinRoomErr', (message) => {
+  store.dispatch(setJoinRoomErr(message))
+})
+
+socket.on('startGameErr', (message) => {
+  store.dispatch(setStartGameErr(message))
+})
 
 socket.on('roomCreated', (roomId, player) => {
   store.dispatch(createRoom(roomId, player));

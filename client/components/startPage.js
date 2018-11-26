@@ -63,7 +63,7 @@ class StartPage extends Component {
 
 const mapStateToProps = state => {
   return {
-    gameState: state.gameState
+    gameState: state.game.gameState
   };
 };
 

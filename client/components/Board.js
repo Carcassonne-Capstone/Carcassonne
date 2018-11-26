@@ -239,17 +239,17 @@ class Board extends Component {
 
 const mapStateToProps = state => {
   return {
-    players: state.players,
-    unfilledTiles: state.unfilledTiles,
-    currentTile: state.curTile,
-    startTile: state.startTile,
-    curLocation: state.curLocation,
-    roomId: state.roomId,
-    currentPlayer: state.currentPlayer,
-    player: state.player,
-    meeple: state.curMeeple,
-    removeMeeples: state.removeMeeples,
-    gameState: state.gameState
+    players: state.game.players,
+    unfilledTiles: state.game.unfilledTiles,
+    currentTile: state.game.curTile,
+    startTile: state.game.startTile,
+    curLocation: state.game.curLocation,
+    roomId: state.game.roomId,
+    currentPlayer: state.game.currentPlayer,
+    player: state.game.player,
+    meeple: state.game.curMeeple,
+    removeMeeples: state.game.removeMeeples,
+    gameState: state.game.gameState
   };
 };
 

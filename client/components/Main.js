@@ -11,7 +11,7 @@ class Main extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    roomId: state.roomId
+    roomId: state.game.roomId
   };
 };
 

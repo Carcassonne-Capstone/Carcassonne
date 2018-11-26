@@ -86,9 +86,9 @@ class Chat extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  messages: state.messages,
-  roomId: state.roomId,
-  player: state.player
+  messages: state.messages.messages,
+  roomId: state.game.roomId,
+  player: state.game.player
 });
 
 export default connect(

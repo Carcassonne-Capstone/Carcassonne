@@ -14,27 +14,46 @@ const broadcastToAll = ( socket, roomId, message, ...props) => {
 
 module.exports = io => {
   io.on('connection', socket => {
+    // socket.on('playerDisconnected', (playerStoreState) => {
+    //   console.log(playerStoreState.game.roomId)
+    //   if (playerStoreState.game.roomId !== '') {
+    //     console.log('broadcasting to', playerStoreState.game.roomId)
+    //     socket.broadcast.to(playerStoreState.game.roomId).emit('disconnectedPlayer', playerStoreState.game.player)
+    //   }
+    // })
 
     socket.on('createRoom', playerName => {
       const roomId = makeid();
       socket.join(roomId);
-      rooms[roomId] = {colorIdx: 0};
+      rooms[roomId] = {players: [playerName]};
       socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0], soundArr[0]));
     });
 
     socket.on('joinRoom', (roomId, playerName) => {
-      socket.join(roomId);
-      rooms[roomId].colorIdx++;
-      const player = new Player(playerName, roomId, colorArr[rooms[roomId].colorIdx], soundArr[rooms[roomId].colorIdx]);
-      socket.broadcast.to(roomId).emit('playerJoined', player);
-      socket.emit('me', player);
+      if (!rooms.hasOwnProperty(roomId)) {
+        socket.emit('joinRoomErr', 'This room is not found, please try again')
+      } else if (rooms[roomId].players.includes(playerName)) {
+        socket.emit('joinRoomErr', 'That name is taken, please try another')
+      } else if (rooms[roomId].players.length < 5) {
+        socket.join(roomId);
+        const player = new Player(playerName, roomId, colorArr[rooms[roomId].players.length], soundArr[rooms[roomId].players.length]);
+        rooms[roomId].players.push(playerName);
+        socket.broadcast.to(roomId).emit('playerJoined', player);
+        socket.emit('me', player);
+      } else {
+        socket.emit('joinRoomErr', 'This room is full, please try a different room')
+      }
     });
 
     socket.on('startGame', (roomId, players) => {
-      rooms[roomId].deck = initializeDeckPlayers(players)
-      const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
-      const firstTile = rooms[roomId].deck.getCard();
-      broadcastToAll(socket, roomId, 'initGame', players, roomId, startTile, firstTile, players[0])
+      if (players.length > 1) {
+        rooms[roomId].deck = initializeDeckPlayers(players)
+        const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
+        const firstTile = rooms[roomId].deck.getCard();
+        broadcastToAll(socket, roomId, 'initGame', players, roomId, startTile, firstTile, players[0])
+      } else {
+        socket.emit('startGameErr', 'The game can only be started when 2 people have joined the room')
+      }
     });
 
     socket.on('tilePlaced', (roomId, coords) => {
