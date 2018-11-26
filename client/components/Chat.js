@@ -4,7 +4,7 @@ import { postMessage } from "../store";
 import socket from "../socket";
 import EmojiPicker from "emoji-picker-react";
 import Emoji from "emoji-js";
-const emoji = new Emoji.EmojiConvertor();
+
 
 class Chat extends React.Component {
   constructor() {
@@ -17,8 +17,15 @@ class Chat extends React.Component {
       showEmojis: false
     };
   }
+  componentDidMount() {
+    const chatScroll = document.getElementById('chat-messages');
+    chatScroll.scrollIntoView(false);
+  }
   handleSubmit(e) {
     e.preventDefault();
+    // const chatScroll = document.getElementById('chat-messages');
+    // chatScroll.scrollTop = chatScroll.scrollHeight;
+
     socket.emit(
       "newMessage",
       this.props.roomId,
@@ -45,38 +52,65 @@ class Chat extends React.Component {
       showEmojis: !currentEmojiState
     });
   }
+  getColorClass (color) {
+    switch(color) {
+        case 0xff0000:
+            return "red";
+        case 0x0000ff:
+            return "blue";
+        case 0x9400d3:
+            return "purple";  
+        case 0xffff00:
+            return "yellow"; 
+        case 0xffa500:
+            return "orange";         
+    }
+}
 
   render() {
+    // const chatScroll = document.getElementById('chat-messages');
+    // console.log("chatscroll", chatScroll)
+    // chatScroll.scrollTop = chatScroll.scrollHeight;
     const getTime = date => {
       return `${date.getHours()}:${("0" + date.getMinutes()).slice(-2)}`;
     };
-
+    const emoji = new Emoji.EmojiConvertor();
     return (
       <div className="chat">
         <div id='chat-messages'>
           <h3>Group Chat: </h3>
           {this.props.messages.map((message, i) => {
+            const chatColor = this.getColorClass(message[0].color);
+            console.log("player", message[0]);
             return (
-              <p key={i}>
-                {getTime(new Date(Date.now()))} {message[0].name}: {message[1]}
-              </p>
-            );
+             <div id='chat-scroll' key={i}> 
+              <div className="chat-icon">
+                <img  src={message[0].chatIconSrc} />
+              </div>  
+              <div id={chatColor} className="speech-bubble" >
+                {/* {getTime(new Date(Date.now()))} {message[0].name}: {message[1]} */}
+                {message[1]}
+              </div>
+             </div> 
+            ) ;
           })}
         </div>
 
         <div id={this.state.showEmojis ? 'chat-input-toggle' : 'chat-input'}>  
           <form onSubmit={this.handleSubmit}>
             <input
+              id="chat-input"
               onChange={this.handleChange}
               placeholder="Type message here..."
               value={this.state.newMessage}
             />
             <span onClick={this.toggleEmoji}>🙂 </span>
-            <button type="submit"> Send </button>
           </form>
           <div>
             {this.state.showEmojis ? (
-            <EmojiPicker onEmojiClick={this.handleEmojiClick} />
+            <div id="emoji-picker">
+              <EmojiPicker onEmojiClick={this.handleEmojiClick} />
+            </div>  
             ) : null}
           </div>
         </div>
