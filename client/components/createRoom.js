@@ -31,37 +31,36 @@ class CreateRoom extends Component {
 
     render(){
         return(
-                this.state.waitingRoom===false
-                ?
-                <div>
-                    <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                        <div className="form-group">
-                            <label htmlFor="name" >Name*</label>
-                            <div className="form-control">
-                                <input name="name" type="text" className="input" maxLength="13" required/>
-                            </div>
+            this.state.waitingRoom===false
+            ?
+            <div>
+                <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
+                    <div className="form-group">
+                        <label htmlFor="name" >Name*</label>
+                        <div className="form-control">
+                            <input name="name" type="text" className="input" maxLength="13" required/>
                         </div>
-                        <div className="form-group">
-                            <button type="submit">Create Game</button>
-                        </div>
-                    </form>
-                    <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
-                </div>
-                :
-                <div className='waitingRoom'>
-                    <div id="list">
-                        <ul>Players in Room:{this.props.players.map(player=>(
-                            <li key={player.name}>{player.name}</li>
-                            ))}
-                        </ul>
                     </div>
-                    <div id="info">
-                        <div id='roomId'>Room id: {this.props.roomId}</div>
-                        <div><button type='button' onClick={this.startGame}>Start Game</button></div>
-                        {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}
+                    <div className="form-group">
+                        <button type="submit">Create Game</button>
                     </div>
+                </form>
+                <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
+            </div>
+            :
+            <div className='waitingRoom'>
+                <div id="list">
+                    <ul>Players in Room:{this.props.players.map(player=>(
+                        <li key={player.name}>{player.name}</li>
+                        ))}
+                    </ul>
                 </div>
-        
+                <div id="info">
+                    <div id='roomId'>Room id: {this.props.roomId}</div>
+                    <div><button type='button' onClick={this.startGame}>Start Game</button></div>
+                    {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}
+                </div>
+            </div>
         )
     }
 }

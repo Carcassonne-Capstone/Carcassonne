@@ -13,6 +13,13 @@ const broadcastToAll = ( socket, roomId, message, ...props) => {
 
 module.exports = io => {
   io.on('connection', socket => {
+    // socket.on('playerDisconnected', (playerStoreState) => {
+    //   console.log(playerStoreState.game.roomId)
+    //   if (playerStoreState.game.roomId !== '') {
+    //     console.log('broadcasting to', playerStoreState.game.roomId)
+    //     socket.broadcast.to(playerStoreState.game.roomId).emit('disconnectedPlayer', playerStoreState.game.player)
+    //   }
+    // })
 
     socket.on('createRoom', playerName => {
       const roomId = makeid();

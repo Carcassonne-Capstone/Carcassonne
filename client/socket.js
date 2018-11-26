@@ -7,6 +7,14 @@ socket.on('connect', () => {
   console.log('I am connected');
 });
 
+// socket.on('disconnecting', () => {
+//   socket.emit('playerDisconnected', store.getState())
+// })
+
+// socket.on('disconnectedPlayer', player => {
+//   console.log(`${player.name} disconnected`)
+// })
+
 socket.on('joinRoomErr', (message) => {
   store.dispatch(setJoinRoomErr(message))
 })
