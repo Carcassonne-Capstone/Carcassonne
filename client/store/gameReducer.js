@@ -44,7 +44,7 @@ export const rotate = () => ({ type: ROTATE_TILE });
 export const nextTurn = (player, tile) => ({ type: NEXT_TURN, player, tile });
 export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
 export const setPlayer = player => ({ type: SET_PLAYER, player });
-export const setMeeple = meeple => ({ type: SET_MEEPLE, meeple });
+export const setMeeple = (meeple) => ({ type: SET_MEEPLE, meeple});
 export const gameOver = () => ({ type: GAME_OVER });
 
 const getNeighbors = (x, y) => {
