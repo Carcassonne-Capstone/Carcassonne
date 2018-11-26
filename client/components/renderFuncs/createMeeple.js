@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-export const createMeeple = (x, y, color) => {
+export const createMeeple = (x, y, color, sound) => {
   const geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.3, 32);
   const material = new THREE.MeshBasicMaterial({ color: color });
   const cylinder = new THREE.Mesh(geometry, material);
@@ -9,6 +9,7 @@ export const createMeeple = (x, y, color) => {
   cylinder.position.z = 0.15;
   cylinder.rotation.x = Math.PI / 2;
   cylinder.name = `meeple-${x},${y}`
+  cylinder.soundEffect= sound;
   return cylinder;
 };
 
