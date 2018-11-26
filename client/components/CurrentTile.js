@@ -70,10 +70,7 @@ class CurrentTile extends Component {
 
   addCube() {
     this.scene.remove(this.cube);
-    if (
-      this.props.player.name === this.props.currentPlayer.name &&
-      this.props.curLocation === null
-    ) {
+    if (this.props.curLocation === null) {
       this.cube = createCube(this.props.curTile, 0, 0, false);
       this.scene.add(this.cube);
     }
@@ -92,29 +89,25 @@ class CurrentTile extends Component {
           ref={(mount) => { this.mount = mount }}
       />
         {this.props.me.name === this.props.currentPlayer.name ?
-          this.props.currentPlayer.name === this.props.player.name ?
-            <div className="playerButtons">
-              {
-                this.props.curLocation ?
-                <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
-                <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
-              }
-                <button
-                  type="button"
-                  onClick={this.nextPlayer}
-                  disabled={this.props.curLocation === null}
-                >
-                  End Turn
-                </button>
-                </div>
-              : (
-                <div className="playerButtons" />
-              )
-            : (
-              <div id="notPlayer" />
-            )}
+          <div className="playerButtons">
+            {
+              this.props.curLocation ?
+              <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
+              <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
+            }
+              <button
+                type="button"
+                onClick={this.nextPlayer}
+                disabled={this.props.curLocation === null}
+              >
+                End Turn
+              </button>
+          </div>
+          : (
+            <div id="notPlayer" />
+          )}
 
-        {this.props.me.name === this.props.currentPlayer.name && this.props.currentPlayer.name === this.props.player.name ?
+        {this.props.me.name === this.props.currentPlayer.name ?
         <div>It's your turn!</div>:
         <div>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
       }

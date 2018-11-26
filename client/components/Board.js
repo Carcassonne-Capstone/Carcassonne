@@ -207,12 +207,7 @@ class Board extends Component {
           />
           <div className="playerContainer">
             <div className="currentTiles">
-              {this.props.players.map(player => (
-                player.name === this.props.currentPlayer.name ?
-                <CurrentTile key={player.name} player={player} /> 
-                :
-                <div key={player.name} className="notPlayerTile"></div>
-              ))}
+              <CurrentTile />
             </div>
 
             <div className="playerMat">
