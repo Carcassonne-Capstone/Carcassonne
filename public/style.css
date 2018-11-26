@@ -205,9 +205,11 @@ input:focus {
 .scoreBoard{
     width: 18vw;
     height: 49%;
-    background-color: blue;
+    background-color: white;
 }
-
+.scoreBoard h3{
+    color: rgb(1, 121, 55);
+}
 .chat{
     display: flex;
     flex-direction: column;
@@ -424,6 +426,12 @@ input:focus {
     justify-items: center
 }
 
+#scoreSB {
+    font-size: 1.5em;
+    color: rgb(1, 121, 55);
+    padding: 5%;
+}
+
 #cameraButtons button{
     background-color: green;
     color: white;
@@ -511,4 +519,7 @@ input:focus {
 }
 #emoji-picker {
     width: 16vw;
+}
+.meeple-selection img{
+    height: 7em;
 }

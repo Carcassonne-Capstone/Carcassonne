@@ -8,9 +8,11 @@ class JoinRoom extends Component {
         this.state = {
             name:'',
             roomCode: '',
+            pickMeeple: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.pickMeeple = this.pickMeeple.bind(this);
     }
 
     handleChange(event){
@@ -20,12 +22,16 @@ class JoinRoom extends Component {
     handleSubmit(event){
         event.preventDefault()
         socket.emit('joinRoom', this.state.roomCode, this.state.name)
+        this.setState({pickMeeple: true})
+    }
+    pickMeeple() {
+        this.setState({pickMeeple: false})
     }
 
     render(){
         return(
             <div>
-                {!this.props.player.name
+                {!this.props.player.name && !this.state.pickMeeple
                 ?
                 <div>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
@@ -49,9 +55,16 @@ class JoinRoom extends Component {
                     <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
                 </div>
                 :
+                !this.state.pickMeeple
+                ?
                 <div className="waitingRoomJoin">
                     Please wait for your host to begin the game.
                 </div>
+                :
+                <div className="meeple-selection">
+                    {this.props.meeple.map(meeple => <img src={`images/${meeple}.jpg`}/>)}
+                    <div><button type='button' onClick={this.pickMeeple}>Next</button></div>
+                </div>    
                 }
             </div>
         )
@@ -61,7 +74,8 @@ class JoinRoom extends Component {
 const mapStateToProps = state => {
     return {
         joinRoomErr: state.messages.joinRoomErr,
-        player: state.game.player
+        player: state.game.player,
+        meeple: state.game.meepleSelection
     }
 }
 
