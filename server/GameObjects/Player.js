@@ -6,6 +6,7 @@ class Player {
     this.color = color;
     this.sound = sound;
     this.chatIconSrc = chatImg;
+    this.animal = '';
   }
 
   isUp(name) {

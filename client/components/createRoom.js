@@ -8,11 +8,13 @@ class CreateRoom extends Component {
         super()
         this.state = {
             name:'',
-            waitingRoom: false
+            waitingRoom: false,
+            pickMeeple: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.startGame = this.startGame.bind(this)
+        this.pickMeeple = this.pickMeeple.bind(this)
     }
 
     handleChange(event){
@@ -21,17 +23,20 @@ class CreateRoom extends Component {
 
     handleSubmit(event){
         event.preventDefault()
-        this.setState({waitingRoom: true})
+        this.setState({pickMeeple: true})
         socket.emit('createRoom', this.state.name)
     }
 
     startGame() {
         socket.emit('startGame', this.props.roomId, this.props.players)
     }
+    pickMeeple() {
+        this.setState({waitingRoom: true, pickMeeple: false})
+    }
 
     render(){
         return(
-            this.state.waitingRoom===false
+            !this.state.waitingRoom && !this.state.pickMeeple
             ?
             <div>
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
@@ -48,6 +53,8 @@ class CreateRoom extends Component {
                 <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
             </div>
             :
+            this.state.waitingRoom &&  !this.state.pickMeeple
+            ?
             <div className='waitingRoom'>
                 <div id="list">
                     <ul>Players in Room:{this.props.players.map(player=>(
@@ -58,8 +65,13 @@ class CreateRoom extends Component {
                 <div id="info">
                     <div id='roomId'>Room id: {this.props.roomId}</div>
                     <div><button type='button' onClick={this.startGame}>Start Game</button></div>
-                    {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}
+                    {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}   
                 </div>
+            </div>
+            :
+            <div className="meeple-selection">
+                {this.props.meeple.map(meeple => <img src={`images/${meeple}.jpg`}/>)}
+                <div><button type='button' onClick={this.pickMeeple}>Next</button></div>
             </div>
         )
     }
@@ -69,7 +81,8 @@ const mapStateToProps = state => {
   return {
     roomId: state.game.roomId,
     players: state.game.players,
-    startGameErr: state.messages.startGameErr
+    startGameErr: state.messages.startGameErr,
+    meeple: state.game.meepleSelection
   }
 }
 

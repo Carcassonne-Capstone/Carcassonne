@@ -512,3 +512,6 @@ input:focus {
 #emoji-picker {
     width: 16vw;
 }
+.meeple-selection img{
+    height: 7em;
+}

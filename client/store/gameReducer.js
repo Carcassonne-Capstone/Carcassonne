@@ -22,7 +22,8 @@ const initialState = {
   scores: {},
   meeplesOnBoard: [],
   removeMeeples: [],
-  monasteryTiles: []
+  monasteryTiles: [],
+  meepleSelection: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']
 };
 
 //action types
@@ -35,6 +36,7 @@ const ADD_TO_BOARD = 'ADD_TO_BOARD';
 const SET_PLAYER = 'SET_PLAYER';
 const SET_MEEPLE = 'SET_MEEPLE';
 const GAME_OVER = 'GAME_OVER';
+const SELECT_MEEPLE = 'SELECT_MEEPLE';
 
 //action creators
 export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, player});
@@ -46,6 +48,7 @@ export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
 export const setPlayer = player => ({ type: SET_PLAYER, player });
 export const setMeeple = (meeple) => ({ type: SET_MEEPLE, meeple});
 export const gameOver = () => ({ type: GAME_OVER });
+export const selectMeeple = (meeple) => ({type: SELECT_MEEPLE, meeple})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`,`${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`]
@@ -354,6 +357,11 @@ const reducer = (state = initialState, action) => {
         unfilledTiles: unfilled,
         scores: initScores(action.players)
       };
+    case SELECT_MEEPLE: 
+      return {
+        ...state,
+        meepleSelection: meepleSelection.filter(meeple => meeple !== action.meeple)
+      }  
     default:
       return state;
   }
