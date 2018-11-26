@@ -48,11 +48,7 @@ class CurrentTile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.curTile !== this.props.curTile ||
-      prevProps.currentPlayer.name !== this.props.currentPlayer.name ||
-      prevProps.curLocation !== this.props.curLocation
-    ) {
+    if (prevProps.curTile !== this.props.curTile || prevProps.curLocation !== this.props.curLocation) {
       this.addCube();
     }
   }
