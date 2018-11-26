@@ -1,8 +1,5 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import axios from 'axios';
-import TileNode from './components/BoardComponents/TileNode';
-import { findRegion } from './components/renderFuncs/checkValid';
+import TileNode from '../components/BoardComponents/TileNode';
+import { findRegion } from '../components/renderFuncs/checkValid';
 
 const top = 0;
 const right = 1;
@@ -25,8 +22,7 @@ const initialState = {
   scores: {},
   meeplesOnBoard: [],
   removeMeeples: [],
-  monasteryTiles: [],
-  messages: []
+  monasteryTiles: []
 };
 
 //action types
@@ -39,7 +35,6 @@ const ADD_TO_BOARD = 'ADD_TO_BOARD';
 const SET_PLAYER = 'SET_PLAYER';
 const SET_MEEPLE = 'SET_MEEPLE';
 const GAME_OVER = 'GAME_OVER';
-const POST_MESSAGE = 'POST_MESSAGE';
 
 //action creators
 export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, player});
@@ -51,7 +46,6 @@ export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
 export const setPlayer = player => ({ type: SET_PLAYER, player });
 export const setMeeple = meeple => ({ type: SET_MEEPLE, meeple });
 export const gameOver = () => ({ type: GAME_OVER });
-export const postMessage = (player, message) => ({type: POST_MESSAGE, player, message})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`,`${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`]
@@ -360,16 +354,9 @@ const reducer = (state = initialState, action) => {
         unfilledTiles: unfilled,
         scores: initScores(action.players)
       };
-    case POST_MESSAGE:
-      return {
-        ...state, messages: [...state.messages, [action.player, action.message]]
-      }  
     default:
       return state;
   }
 };
 
-export default createStore(
-  reducer,
-  applyMiddleware(thunkMiddleware.withExtraArgument({ axios }))
-);
+export default reducer

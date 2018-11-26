@@ -58,6 +58,7 @@ class CreateRoom extends Component {
                     <div id="info">
                         <div id='roomId'>Room id: {this.props.roomId}</div>
                         <div><button type='button' onClick={this.startGame}>Start Game</button></div>
+                        {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}
                     </div>
                 </div>
         
@@ -67,8 +68,9 @@ class CreateRoom extends Component {
 
 const mapStateToProps = state => { 
   return {
-    roomId: state.roomId,
-    players: state.players
+    roomId: state.game.roomId,
+    players: state.game.players,
+    startGameErr: state.messages.startGameErr
   }
 }
 

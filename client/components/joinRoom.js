@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import socket from '../socket'
+import {connect} from 'react-redux'
 
 class JoinRoom extends Component {
     constructor(props){
@@ -7,7 +8,6 @@ class JoinRoom extends Component {
         this.state = {
             name:'',
             roomCode: '',
-            waitingRoom: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -19,14 +19,13 @@ class JoinRoom extends Component {
 
     handleSubmit(event){
         event.preventDefault()
-        this.setState({waitingRoom: true})
         socket.emit('joinRoom', this.state.roomCode, this.state.name)
     }
 
     render(){
         return(
             <div>
-                {this.state.waitingRoom===false
+                {!this.props.player.name
                 ?
                 <div>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
@@ -44,6 +43,7 @@ class JoinRoom extends Component {
                         </div>
                         <div className="form-group">
                             <button type="submit">Join Game</button>
+                            {this.props.joinRoomErr !== '' && <div>{this.props.joinRoomErr}</div>}
                         </div>
                     </form>
                     <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
@@ -58,4 +58,11 @@ class JoinRoom extends Component {
     }
 }
 
-export default JoinRoom
+const mapStateToProps = state => {
+    return {
+        joinRoomErr: state.messages.joinRoomErr,
+        player: state.game.player
+    }
+}
+
+export default connect(mapStateToProps)(JoinRoom)

@@ -20,8 +20,8 @@ const ScoreBoard = props => {
 
 const mapStateToProps = state => {
   return {
-    players: state.players,
-    score: state.scores
+    players: state.game.players,
+    score: state.game.scores
   };
 };
 

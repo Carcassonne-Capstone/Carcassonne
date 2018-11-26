@@ -126,12 +126,12 @@ class CurrentTile extends Component {
 
 const mapStateToProps = state => {
   return {
-    curTile: state.curTile,
-    currentPlayer: state.currentPlayer,
-    players: state.players,
-    roomId: state.roomId,
-    curLocation: state.curLocation,
-    me: state.player
+    curTile: state.game.curTile,
+    currentPlayer: state.game.currentPlayer,
+    players: state.game.players,
+    roomId: state.game.roomId,
+    curLocation: state.game.curLocation,
+    me: state.game.player
   };
 };
 
