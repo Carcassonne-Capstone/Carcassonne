@@ -184,12 +184,10 @@ class Board extends Component {
             <div id="cameraButtons">
               <div className="instructions">Change Camera View:</div>
               <button type="button" onClick={this.resetCamera}>
-                {" "}
-                Flat Board{" "}
+                Flat Board
               </button>
               <button type="button" onClick={this.threeDcamera}>
-                {" "}
-                3D Board{" "}
+                3D Board
               </button>
             </div>
             <div className="instructions">
@@ -208,18 +206,6 @@ class Board extends Component {
           <div className="playerContainer">
             <div className="currentTiles">
               <CurrentTile />
-            </div>
-
-            <div className="playerMat">
-              {this.props.players.map(player => (
-                <div id="playerTitle" key={player.name}>
-                  <div id="playerName">{player.name}</div>
-                  <div id="meeple"> 
-                    <img src='/images/meeple.png'/>
-                    {`x${player.meeple}`}
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>

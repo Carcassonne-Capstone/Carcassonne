@@ -205,9 +205,11 @@ input:focus {
 .scoreBoard{
     width: 18vw;
     height: 49%;
-    background-color: blue;
+    background-color: white;
 }
-
+.scoreBoard h3{
+    color: rgb(1, 121, 55);
+}
 .chat{
     display: flex;
     flex-direction: column;
@@ -422,6 +424,12 @@ input:focus {
     align-content: center;
     align-items: center;
     justify-items: center
+}
+
+#scoreSB {
+    font-size: 1.5em;
+    color: rgb(1, 121, 55);
+    padding: 5%;
 }
 
 #cameraButtons button{
