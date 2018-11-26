@@ -205,7 +205,11 @@ input:focus {
 .scoreBoard {
   width: 18vw;
   height: 49%;
-  background-color: blue;
+  background-color: white;
+}
+
+.scoreBoard h3 {
+  color: rgb(1, 121, 55);
 }
 
 .chat {
@@ -214,9 +218,8 @@ input:focus {
   align-content: space-between;
   width: 18vw;
   height: 50%;
-  background-color: green;
+  background-color: red;
   margin-top: auto;
-  color: white;
 }
 
 #chat-input {
@@ -231,15 +234,7 @@ input:focus {
 
 #chat-messages {
   height: 95%;
-  overflow: scroll;
 }
-
-#chat-scroll {
-  display: flex;
-  flex-wrap: nowrap;
-  margin-left: 0.5em;
-}
-
 #boardCanvas {
   height: 85%;
   width: 79vw;
@@ -447,68 +442,8 @@ input:focus {
   width: 28%;
 }
 
-.chat-icon img {
-  width: 99%;
-}
-.chat-icon {
-  width: 15%;
-}
-
-#chat-input {
-  width: 90%;
-}
-
-.speech-bubble {
-  width: 70%;
-  position: relative;
-  border-radius: 0.4em;
-  padding: 0.3em;
-  margin: 0.3em;
-}
-
-.speech-bubble:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 0;
-  height: 0;
-  border: 0.563em solid transparent;
-  border-left: 0;
-  margin-top: -0.562em;
-  margin-left: -0.3em;
-}
-
-#red {
-  background-color: #ff0000;
-}
-#red:after {
-  border-right-color: #ff0000;
-}
-#blue {
-  background-color: #0000ff;
-}
-#blue:after {
-  border-right-color: #0000ff;
-}
-#purple {
-  background-color: #9400d3;
-}
-#purple:after {
-  border-right-color: #9400d3;
-}
-#yellow {
-  background-color: #ffff00;
-}
-#yellow:after {
-  border-right-color: #ffff00;
-}
-#orange {
-  background-color: #ffa500;
-}
-#orange:after {
-  border-right-color: #ffa500;
-}
-#emoji-picker {
-  width: 16vw;
+#scoreSB {
+  font-size: 1.5em;
+  color: rgb(1, 121, 55);
+  padding: 5%;
 }
