@@ -209,12 +209,28 @@ input:focus {
 }
 
 .chat{
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
     width: 18vw;
     height: 50%;
     background-color: red;
-    margin-top: auto
+    margin-top: auto;
 }
 
+#chat-input {
+    height: 10%;
+    margin-left: 2%;
+}
+
+#chat-input-toggle {
+    height: 90%;
+    margin-left: 2%;
+}
+
+#chat-messages {
+    height: 95%;
+}
 #boardCanvas{
     height: 85%;
     width: 79vw;

@@ -1,4 +1,4 @@
-import React from "React";
+import React from "react";
 import { connect } from "react-redux";
 import { postMessage } from "../store";
 import socket from "../socket";
@@ -19,7 +19,6 @@ class Chat extends React.Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    //  this.props.submitMessage(this.state.newMessage);
     socket.emit(
       "newMessage",
       this.props.roomId,
@@ -54,30 +53,34 @@ class Chat extends React.Component {
 
     return (
       <div className="chat">
-        <h3>Group Chat: </h3>
-        <div>
-          {this.props.messages.map(message => {
+        <div id='chat-messages'>
+          <h3>Group Chat: </h3>
+          {this.props.messages.map((message, i) => {
             return (
-              <p>
+              <p key={i}>
                 {getTime(new Date(Date.now()))} {message[0].name}: {message[1]}
               </p>
             );
           })}
         </div>
 
-        <form onSubmit={this.handleSubmit}>
-          <input
-            onChange={this.handleChange}
-            placeholder="Type message here..."
-            value={this.state.newMessage}
-          />
-          <span onClick={this.toggleEmoji}>🙂 </span>
-          <button type="submit"> Send </button>
-        </form>
-        {this.state.showEmojis ? (
-          <EmojiPicker onEmojiClick={this.handleEmojiClick} />
-        ) : null}
-      </div>
+        <div id={this.state.showEmojis ? 'chat-input-toggle' : 'chat-input'}>  
+          <form onSubmit={this.handleSubmit}>
+            <input
+              onChange={this.handleChange}
+              placeholder="Type message here..."
+              value={this.state.newMessage}
+            />
+            <span onClick={this.toggleEmoji}>🙂 </span>
+            <button type="submit"> Send </button>
+          </form>
+          <div>
+            {this.state.showEmojis ? (
+            <EmojiPicker onEmojiClick={this.handleEmojiClick} />
+            ) : null}
+          </div>
+        </div>
+      </div>  
     );
   }
 }
@@ -88,11 +91,6 @@ const mapStateToProps = state => ({
   player: state.player
 });
 
-const mapDispatchToProps = dispatch => ({
-  submitMessage: message => dispatch(postMessage(message))
-});
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Chat);
