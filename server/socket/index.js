@@ -4,7 +4,7 @@ const initializeDeckPlayers = require('../helperFuncs/deckFuncs')
 const getNextPlayer = require('../helperFuncs/playerFuncs')
 const makeid = require('../helperFuncs/roomFuncs')
 const colorArr = ['red', 'blue', 'purple', 'yellow', 'orange'];
-const soundArr = ['/Sounds/elephant9.mp3', '/Sounds/lion.mp3', '/Sounds/spidermonkey.mp3', '/Sounds/Tiger2.mp3', '/Sounds/elephant9.mp3']
+
 const rooms = {};
 
 const broadcastToAll = ( socket, roomId, message, ...props) => {
@@ -26,8 +26,8 @@ module.exports = io => {
     socket.on('createRoom', playerName => {
       const roomId = makeid();
       socket.join(roomId);
-      rooms[roomId] = {players: {[playerName]: socket.id}, meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']};
-      const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0], soundArr[0], '/images/circle.png')
+      rooms[roomId] = {players: {[playerName]: socket.id}, meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant']};
+      const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0])
       hostPlayer.setHost();
       socket.emit('roomCreated', roomId, hostPlayer);
     });
@@ -40,7 +40,7 @@ module.exports = io => {
         socket.emit('joinRoomErr', 'That name is taken, please try another')
       } else if (numPlayers < 5) {
         socket.join(roomId);
-        const player = new Player(playerName, roomId, socket.id, colorArr[numPlayers], soundArr[numPlayers], '/images/circle.png');
+        const player = new Player(playerName, roomId, socket.id, colorArr[numPlayers]);
         rooms[roomId].players[playerName] = socket.id;
         socket.broadcast.to(roomId).emit('playerJoined', player);
         socket.emit('me', player, rooms[roomId].meeple);

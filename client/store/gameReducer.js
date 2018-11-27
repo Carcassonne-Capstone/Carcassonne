@@ -23,7 +23,7 @@ const initialState = {
   meeplesOnBoard: [],
   removeMeeples: [],
   monasteryTiles: [],
-  meepleSelection: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']
+  meepleSelection: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant']
 };
 
 //action types
