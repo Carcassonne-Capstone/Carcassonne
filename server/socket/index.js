@@ -3,7 +3,8 @@ const { Tile, Region } = require('../GameObjects/Tiles');
 const initializeDeckPlayers = require('../helperFuncs/deckFuncs')
 const getNextPlayer = require('../helperFuncs/playerFuncs')
 const makeid = require('../helperFuncs/roomFuncs')
-const colorArr = [0xff0000, 0x0000ff, 0x9400d3, 0xffff00, 0xffa500];
+const colorArr = ['red', 'blue', 'purple', 'yellow', 'orange'];
+
 const rooms = {};
 
 const broadcastToAll = ( socket, roomId, message, ...props) => {

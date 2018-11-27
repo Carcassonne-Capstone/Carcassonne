@@ -205,8 +205,10 @@ input:focus {
 .gameBoard {
     display: flex;
     height: 100%;
+    width: 100vw;
     position: absolute;
-    top:0
+    top:0;
+    background-color: black
 }
 
 .leftSide {
@@ -221,26 +223,78 @@ input:focus {
     flex-direction: column;
     justify-content: space-evenly;
     margin-left: 2%;
-    margin-top: 1%;
+    /* margin-top: 1%; */
     margin-right: 1%
 }
 
 .scoreBoard{
-    width: 18vw;
-    height: 49%;
-    background-color: white;
+    width: 22vw;
+    height: 45%;
+    /* 45% */
+    background-color: rgba(254, 254, 254, 0.3);
+    border: 4px double white;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 1%;
+    color:white;
 }
-.scoreBoard h3{
-    color: rgb(1, 121, 55);
+
+.scoreBoard tr{
+    width: 100%;
 }
+
+.scoreTable{
+    width:100%
+}
+
+.scoreTitle{
+    font-size: 2vw;
+    margin-bottom: 3%;
+    margin-top:2%
+}
+
+.scoreHead{
+    padding-left: 10%;
+}
+
+.playerHead{
+    padding-left: 10%;
+}
+
+#playerImage{
+    width: 15%;
+}
+
+#meepleRemaining{
+    width: 15%;
+    font-size: 1.5em;
+}
+
+#playerNameSB{
+    width: 35%;
+    font-size: 1.5em;
+    text-align: left;
+    padding-left: 10%;
+}
+
+#scoreSB {
+    font-size: 1.5em;
+    width: 35%;
+    padding-left: 10%;
+}
+
+
 .chat{
     display: flex;
     flex-direction: column;
     align-content: space-between;
-    width: 18vw;
-    height: 50%;
-    background-color: green;
-    margin-top: auto;
+    width: 22vw;
+    height: 47%;
+    /* margin-bottom: 2%; */
+    background-color: rgba(254, 254, 254, 0.3);
+    border: 4px double white;
+    border-radius: 15px;
+    margin-top: 1%;
     color: white;
 }
 
@@ -267,16 +321,21 @@ input:focus {
 
 #boardCanvas{
     height: 89%;
-    width: 79vw;
+    width: 75vw;
     margin-left:1%;
     margin-top: 5%
+}
+
+#boardCanvas canvas{
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .playerContainer{
     height: 12%;
     z-index: 5;
     position: absolute;
-    bottom: 14%
+    bottom: 11%
 }
 
 .playerTile{
@@ -291,7 +350,8 @@ input:focus {
     border: 4px double white;
     text-align: center;
     color: white;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 15px
 }
 
 .notPlayerTile{
@@ -432,11 +492,12 @@ input:focus {
     justify-content: space-evenly;
     justify-items: space-evenly;
     /* height: 5%; */
-    width: 79vw;
-    margin: 1% 1% 1% 1%;
+    width: 75vw;
+    margin: 1.5% 1% 1% 1%;
     position: absolute;
     top:0;
-    margin-right: 1%
+    margin-right: 1%;
+    color: white;
 }
 
 .instructions{
@@ -453,12 +514,6 @@ input:focus {
     align-content: center;
     align-items: center;
     justify-items: center
-}
-
-#scoreSB {
-    font-size: 1.5em;
-    color: rgb(1, 121, 55);
-    padding: 5%;
 }
 
 #cameraButtons button{
@@ -517,34 +572,34 @@ input:focus {
 }
 
 #red {
-  background-color: #ff0000;  
+  background-color: red;  
 }
 #red:after {
-    border-right-color:  #ff0000; 
+    border-right-color:  red; 
   }
 #blue {
-    background-color: #0000ff;   
+    background-color: blue;   
 }
 #blue:after { 
-    border-right-color: #0000ff; 
+    border-right-color: blue; 
 }
 #purple {
-    background-color: #9400d3;  
+    background-color: purple;  
 }
 #purple:after {   
-    border-right-color: #9400d3;
+    border-right-color: purple;
 }
 #yellow {
-    background-color: #ffff00;
+    background-color: yellow;
 }
 #yellow:after {
-    border-right-color: #ffff00;
+    border-right-color: yellow;
 }
 #orange {
-    background-color: #ffa500;
+    background-color: orange;
 }
 #orange:after {
-    border-right-color: #ffa500;
+    border-right-color: orange;
 }
 #emoji-picker {
     width: 16vw;
