@@ -56,7 +56,7 @@ class CurrentTile extends Component {
   initializeCamera() {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
-    this.camera.position.z = 1;
+    this.camera.position.z = 2;
   }
 
   animate() {
@@ -79,11 +79,6 @@ class CurrentTile extends Component {
   render() {
     return (
       <div className="playerTile">
-      <div
-          id="playerCurrentTile"
-          //style={{ width: '15vw', height: '12vw' }}
-          ref={(mount) => { this.mount = mount }}
-      />
         {this.props.me.name === this.props.currentPlayer.name ?
           <div className="playerButtons">
             {
@@ -103,9 +98,15 @@ class CurrentTile extends Component {
             <div id="notPlayer" />
           )}
 
+        <div
+          id="playerCurrentTile"
+          //style={{ width: '15vw', height: '12vw' }}
+          ref={(mount) => { this.mount = mount }}
+        />
+
         {this.props.me.name === this.props.currentPlayer.name ?
-        <div>It's your turn!</div>:
-        <div>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
+        <div className='currentPlayer'>It's your turn!</div>:
+        <div className='currentPlayer'>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
       }
         
       </div>
