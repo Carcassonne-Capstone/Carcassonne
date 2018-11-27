@@ -45,10 +45,10 @@ export const initGame = (players, roomId, startTile, curTile, currentPlayer) => 
 export const rotate = () => ({ type: ROTATE_TILE });
 export const nextTurn = (player, tile) => ({ type: NEXT_TURN, player, tile });
 export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
-export const setPlayer = player => ({ type: SET_PLAYER, player });
+export const setPlayer = (player, meeple) => ({ type: SET_PLAYER, player, meeple });
 export const setMeeple = (meeple) => ({ type: SET_MEEPLE, meeple});
 export const gameOver = () => ({ type: GAME_OVER });
-export const selectMeeple = (meeple) => ({type: SELECT_MEEPLE, meeple})
+export const selectMeeple = (meeple, newMeeple, player) => ({type: SELECT_MEEPLE, meeple, newMeeple, player})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`,`${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`]
@@ -306,7 +306,7 @@ const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlay
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PLAYER:
-      return { ...state, player: action.player };
+      return { ...state, player: action.player, meepleSelection: action.meeple };
     case CREATE_ROOM:
       return {...state, roomId: action.roomId, players: [action.player], player: action.player};
     case JOIN_ROOM:
@@ -357,11 +357,20 @@ const reducer = (state = initialState, action) => {
         unfilledTiles: unfilled,
         scores: initScores(action.players)
       };
-    case SELECT_MEEPLE: 
-      return {
-        ...state,
-        meepleSelection: meepleSelection.filter(meeple => meeple !== action.meeple)
-      }  
+    case SELECT_MEEPLE:
+      if (state.player.name === action.player.name) {
+        return {
+          ...state,
+          player: {...state.player, animal: action.meeple},
+          meepleSelection: action.newMeeple
+        }
+      }
+      else {
+        return {
+          ...state,
+          meepleSelection: action.newMeeple
+        }
+      } 
     default:
       return state;
   }

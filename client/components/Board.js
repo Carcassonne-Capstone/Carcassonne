@@ -70,6 +70,8 @@ class Board extends Component {
     var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
     var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
     this.scene.add( skyBox );
+
+    console.log("player", this.props.player)
   }
 
   componentWillUnmount() {

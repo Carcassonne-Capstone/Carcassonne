@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr} from "./store";
+import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr, selectMeeple} from "./store";
 
 const socket = io(window.location.origin);
 
@@ -47,8 +47,8 @@ socket.on('newPlayer', (player, newTile) => {
   store.dispatch(nextTurn(player, newTile));
 });
 
-socket.on('me', player => {
-  store.dispatch(setPlayer(player));
+socket.on('me', (player, meeple) => {
+  store.dispatch(setPlayer(player, meeple));
 });
 
 socket.on('meepleOn', meeple => {
@@ -61,6 +61,10 @@ socket.on('gameOver', () => {
 
 socket.on('postMessage', (player, message) => {
   store.dispatch(postMessage(player, message));
+});
+
+socket.on('pickedMeeple', (meeple, newMeeple, player) => {
+  store.dispatch(selectMeeple(meeple, newMeeple, player));
 });
 
 export default socket;
