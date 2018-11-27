@@ -1,12 +1,10 @@
 class Player {
-  constructor(name, roomId, socketId, color, sound, chatImg) {
+  constructor(name, roomId, socketId, color) {
     this.name = name;
     this.room = roomId;
     this.socketId = socketId;
     this.meeple = 7;
     this.color = color;
-    this.sound = sound;
-    this.chatIconSrc = chatImg;
     this.animal = '';
     this.host = false;
   }
