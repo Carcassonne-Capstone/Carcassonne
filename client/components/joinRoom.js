@@ -24,7 +24,7 @@ class JoinRoom extends Component {
     handleSubmit(event){
         event.preventDefault()
         socket.emit('joinRoom', this.state.roomCode, this.state.name)
-        if (this.props.joinRoomErr !== '') {
+        if (this.props.joinRoomErr === '') {
             this.showMeeple();
         }
     }
@@ -34,6 +34,20 @@ class JoinRoom extends Component {
     selectMeeple(meeple) {
         socket.emit('selectMeeple', this.state.roomCode, meeple, this.props.player)
         this.setState({showMeeple: false})
+    }
+    getClass(animal) {
+        switch (animal) {
+            case 'tiger':
+                return 'meeple-selection-orange'
+            case 'gorilla':
+                return 'meeple-selection-blue' 
+            case 'elephant':
+                return 'meeple-selection-purple'
+            case 'monkey':
+                return 'meeple-selection-red'
+            case 'lion':
+                return 'meeple-selection-yellow' 
+        }
     }
 
     render(){
@@ -67,7 +81,12 @@ class JoinRoom extends Component {
                 ?
                 <div className="meeple-selection">
                     {this.props.meeple.map(meeple => {
-                        return <img key={meeple} onClick={() => this.selectMeeple(meeple)} src={`images/${meeple}.jpg`}/>
+                        const meepleClass = this.getClass(meeple);
+                        return (
+                            <div key={meeple} className={meepleClass}>
+                              <img onClick={(e) => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.png`}/>
+                            </div>   
+                        )
                     })}
                 </div>
                 :

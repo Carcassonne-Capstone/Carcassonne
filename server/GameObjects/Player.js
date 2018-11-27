@@ -16,6 +16,9 @@ class Player {
   isUp(name) {
     return this.name === name;
   }
+  setAnimal(animal) {
+    this.animal = animal;
+  }
 }
 
 module.exports = Player;
