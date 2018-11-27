@@ -85,7 +85,7 @@ class Chat extends React.Component {
             return (
              <div id='chat-scroll' key={i}> 
               <div className="chat-icon">
-                <img  src={`/animals/images/${message[0].animal}.png`}/>
+                <img  src={message[0].chatIconSrc} />
               </div>  
               <div id={chatColor} className="speech-bubble" >
                 {/* {getTime(new Date(Date.now()))} {message[0].name}: {message[1]} */}
@@ -104,7 +104,7 @@ class Chat extends React.Component {
               placeholder="Type message here..."
               value={this.state.newMessage}
             />
-            {/* <span onClick={this.toggleEmoji}>🙂 </span> */}
+            <span onClick={this.toggleEmoji}>🙂 </span>
           </form>
           <div>
             {this.state.showEmojis ? (
@@ -122,7 +122,7 @@ class Chat extends React.Component {
 const mapStateToProps = state => ({
   messages: state.messages.messages,
   roomId: state.game.roomId,
-  currentPlayer: state.game.currentPlayer
+  player: state.game.player
 });
 
 export default connect(
