@@ -266,29 +266,29 @@ input:focus {
 }
 
 #boardCanvas{
-    height: 90%;
+    height: 89%;
     width: 79vw;
     margin-left:1%;
     margin-top: 5%
 }
 
 .playerContainer{
-    height: 10%;
+    height: 12%;
     z-index: 5;
     position: absolute;
-    bottom: 0
+    bottom: 14%
 }
 
 .playerTile{
-    height: 97%;
+    /* height: 97%;
     margin-bottom: 2%;
-    margin-top:-2%;
-    margin-left: 2%;
+    margin-top:-2%; */
+    margin-left: 10%;
     margin-right: 1%;
-    width:18%;
+    width:100%;
     background-color: black 0;
     /* background-image: url("https://bit.ly/2DFCmo1"); */
-    border: 1px solid white;
+    border: 4px double white;
     text-align: center;
     color: white;
     font-family: Arial, Helvetica, sans-serif
@@ -322,11 +322,11 @@ input:focus {
     align-items: center; */
     margin-left: 1%;
     height: 185%;
-    width: 80vw;
+    width: 18vw;
     z-index: 1;
-    position: absolute;
-    bottom: 60%;
-    margin-top:-8%;
+    /* position: absolute; */
+    /* bottom: 60%;
+    margin-top:-8%; */
 }
 
 #playerCurrentTile{
@@ -400,7 +400,7 @@ input:focus {
 .playerButtons button{
     margin: 0;
     padding: 0;
-    font-size: .75vw;
+    font-size: 1vw;
     background-color: green;
     color: white;
     width: 35%;
@@ -419,6 +419,11 @@ input:focus {
 .playerButtons button:disabled{
     background-color: gray;
     cursor: default
+}
+
+.currentPlayer{
+    margin-top: 2%;
+    font-size: 1.2vw;
 }
 
 .gameButtons{
