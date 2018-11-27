@@ -597,6 +597,7 @@ input:focus {
 }
 .chat-icon {
     width: 15%;
+    margin-right: 0.5em;
 }
 
 .speech-bubble {
@@ -620,6 +621,7 @@ input:focus {
 	border-left: 0;
 	margin-top: -0.562em;
     margin-left: -0.3em;
+
 }
 
 #red {
@@ -655,6 +657,44 @@ input:focus {
 #emoji-picker {
     width: 16vw;
 }
-.meeple-selection img{
+.meeple-selection-red img{
     height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 red)
+                    drop-shadow(-0.125em -0.125em 0 red);
+    filter: drop-shadow(0.25em 0.125em 0 red) 
+            drop-shadow(-0.125em -0.125em 0 red);
+}
+.meeple-selection-orange img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 orange)
+                    drop-shadow(-1px -1px 0 orange);
+    filter: drop-shadow(0.25em 0.125em 0 orange) 
+            drop-shadow(-1px -1px 0 orange);
+}
+.meeple-selection-blue img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 blue)
+                    drop-shadow(-1px -1px 0 blue);
+    filter: drop-shadow(0.25em 0.125em 0 blue) 
+            drop-shadow(-1px -1px 0 blue);
+}
+.meeple-selection-purple img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
+                    drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+    filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224)) 
+            drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+}
+.meeple-selection-yellow img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 yellow)
+                    drop-shadow(-1px -1px 0 yellow);
+    filter: drop-shadow(0.25em 0.125em 0 yellow) 
+            drop-shadow(-1px -1px 0 yellow);
+}
+.meeple-selection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: none;
+    justify-content: space-between;
 }
