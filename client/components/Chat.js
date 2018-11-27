@@ -39,7 +39,7 @@ class Chat extends React.Component {
   }
 
   handleEmojiClick = (code, emojiPicked) => {
-    let emojiPic = emoji.replace_colons(`:${emojiPicked.name}:`);
+    let emojiPic = Emoji.replace_colons(`:${emojiPicked.name}:`);
 
     this.setState({
       newMessage: this.state.newMessage + emojiPic
@@ -78,7 +78,7 @@ class Chat extends React.Component {
     return (
       <div className="chat">
         <div id='chat-messages'>
-          <h3>Group Chat: </h3>
+          <div className="chatTitle">Chat</div>
           {this.props.messages.map((message, i) => {
             const chatColor = this.getColorClass(message[0].color);
             console.log("player", message[0]);

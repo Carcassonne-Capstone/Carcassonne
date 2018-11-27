@@ -250,15 +250,17 @@ input:focus {
 .scoreTitle{
     font-size: 2vw;
     margin-bottom: 3%;
-    margin-top:2%
+    margin-top:2%;
+    text-align: center
 }
 
-.scoreHead{
+/* .scoreHead{
     padding-left: 10%;
-}
+} */
 
 .playerHead{
-    padding-left: 10%;
+    padding-left: 6%;
+    /* text-align: left; */
 }
 
 #playerImage{
@@ -271,23 +273,23 @@ input:focus {
 }
 
 #playerNameSB{
-    width: 35%;
+    width: 45%;
     font-size: 1.5em;
     /* text-align: left; */
-    padding-left: 10%;
+    padding-left: 6%;
 }
 
 #scoreSB {
     font-size: 1.5em;
-    width: 35%;
-    padding-left: 10%;
+    width: 25%;
+    /* padding-left: 10%; */
 }
-
 
 .chat{
     display: flex;
     flex-direction: column;
     align-content: space-between;
+    align-items: center;
     width: 22vw;
     height: 47%;
     /* margin-bottom: 2%; */
@@ -298,18 +300,53 @@ input:focus {
     color: white;
 }
 
+.chatTitle{
+    font-size: 2vw;
+    margin-bottom: 3%;
+    margin-top:2%;
+    text-align: center
+}
+
 #chat-input {
     height: 10%;
-    margin-left: 2%;
+    width: 96%;
+    margin-left: 1%;
+}
+
+#chat-input form{
+    display:flex;
+    align-items: center;
+    justify-items: center;
+}
+
+#chat-input input{
+    background-color: rgba(254, 254, 254, 0);
+    color: white;
+    font-size: 1.5vw;
+    border: none
 }
 
 #chat-input-toggle {
     height: 90%;
-    margin-left: 2%;
+    /* margin-left: 2%; */
+}
+
+#chat-input-toggle form{
+    display:flex;
+    align-items: center;
+    justify-items: center;
+}
+
+#chat-input-toggle input{
+    background-color: rgba(254, 254, 254, 0);
+    color: white;
+    font-size: 1.5vw;
+    border: none
 }
 
 #chat-messages {
-   height: 95%;
+    height: 95%;
+    width:100%;
     overflow: scroll;
 }
 
@@ -562,16 +599,14 @@ input:focus {
     width: 15%;
 }
 
-#chat-input {
-    width: 90%;
-}
-
 .speech-bubble {
-    width: 70%;
+    width: 75%;
 	position: relative;
     border-radius: .4em;
     padding: 0.3em;
     margin: 0.3em;
+    overflow-wrap: break-word;
+    hyphens: auto
 }
 
 .speech-bubble:after {
@@ -584,7 +619,7 @@ input:focus {
 	border: 0.563em solid transparent;
 	border-left: 0;
 	margin-top: -0.562em;
-	margin-left: -0.3em;
+    margin-left: -0.3em;
 }
 
 #red {

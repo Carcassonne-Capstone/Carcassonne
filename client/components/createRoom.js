@@ -44,7 +44,7 @@ class CreateRoom extends Component {
                     <div className="form-group">
                         <label htmlFor="name" >Name*</label>
                         <div className="form-control">
-                            <input name="name" type="text" className="input" maxLength="13" required/>
+                            <input name="name" type="text" className="input" maxLength="10" required/>
                         </div>
                     </div>
                     <div className="form-group">
