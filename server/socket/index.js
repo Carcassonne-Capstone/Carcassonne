@@ -14,31 +14,34 @@ const broadcastToAll = ( socket, roomId, message, ...props) => {
 
 module.exports = io => {
   io.on('connection', socket => {
-    // socket.on('playerDisconnected', (playerStoreState) => {
-    //   console.log(playerStoreState.game.roomId)
-    //   if (playerStoreState.game.roomId !== '') {
-    //     console.log('broadcasting to', playerStoreState.game.roomId)
-    //     socket.broadcast.to(playerStoreState.game.roomId).emit('disconnectedPlayer', playerStoreState.game.player)
-    //   }
-    // })
+
+    socket.on('disconnecting', () => {
+      const [socketId, roomId] = Object.keys(socket.rooms);
+      if (roomId) {
+        let playerName = Object.keys(rooms[roomId].players).find(name => rooms[roomId].players[name] === socketId)
+        socket.broadcast.to(roomId).emit('disconnectedPlayer', playerName)
+      }
+    })
 
     socket.on('createRoom', playerName => {
       const roomId = makeid();
       socket.join(roomId);
-      rooms[roomId] = {players: [playerName],
-      meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']};
-      socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0], soundArr[0], '/images/circle.png'));
+      rooms[roomId] = {players: {[playerName]: socket.id}, meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']};
+      const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0], soundArr[0], '/images/circle.png')
+      hostPlayer.setHost();
+      socket.emit('roomCreated', roomId, hostPlayer);
     });
 
     socket.on('joinRoom', (roomId, playerName) => {
+      let numPlayers = Object.keys(rooms[roomId].players).length
       if (!rooms.hasOwnProperty(roomId)) {
         socket.emit('joinRoomErr', 'This room is not found, please try again')
-      } else if (rooms[roomId].players.includes(playerName)) {
+      } else if (rooms[roomId].players.hasOwnProperty(playerName)) {
         socket.emit('joinRoomErr', 'That name is taken, please try another')
-      } else if (rooms[roomId].players.length < 5) {
+      } else if (numPlayers < 5) {
         socket.join(roomId);
-        const player = new Player(playerName, roomId, colorArr[rooms[roomId].players.length], soundArr[rooms[roomId].players.length], '/images/circle.png');
-        rooms[roomId].players.push(playerName);
+        const player = new Player(playerName, roomId, socket.id, colorArr[numPlayers], soundArr[numPlayers], '/images/circle.png');
+        rooms[roomId].players[playerName] = socket.id;
         socket.broadcast.to(roomId).emit('playerJoined', player);
         socket.emit('me', player, rooms[roomId].meeple);
       } else {
@@ -88,7 +91,13 @@ module.exports = io => {
       const filtered = meepleArr.filter(curMeeple => curMeeple !== meeple);
       rooms[roomId] = {...rooms[roomId], meeple: filtered};
       broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, player)
-    })
-    
-  });
-};
+    });
+
+    socket.on('playingWithBots', (roomId) => {
+      broadcastToAll(socket, roomId, 'botsPlay')
+    });
+
+  }
+)}
+   
+

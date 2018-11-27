@@ -79,6 +79,7 @@ class Board extends Component {
     // this.mount.removeChild(this.renderer.domElement);
   }
 
+  // eslint-disable-next-line complexity
   componentDidUpdate(prevProps) {
     if (prevProps.removeMeeples !== this.props.removeMeeples) {
       removeMeeples(this.props.removeMeeples, this.scene)
@@ -100,6 +101,31 @@ class Board extends Component {
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
       changeMeeple(this.props.meeple, prevProps.meeple, this.curTile)
+    }
+    if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
+      this.checkPlayerBotTurn()
+    }
+  }
+
+  checkPlayerBotTurn() {
+    if (this.props.disconnectedPlayers.find(player => player === this.props.currentPlayer.name) && this.props.player.host) {
+      if (this.props.meeple.coords) {
+        setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1200);
+      } else if (this.props.curLocation) {
+        const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
+        const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
+        if (filteredChildren.length > 0) {
+          const randMeeple = filteredChildren[Math.floor(Math.random() * filteredChildren.length)]
+          setTimeout(() => socket.emit('meeplePlaced', this.props.roomId, [randMeeple.position.x, randMeeple.position.y], this.props.player, randMeeple.regionIdx, randMeeple.tile), 1500)
+        } else {
+          setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1200);
+        }
+      } else if (this.validTiles.length) {
+        const randTile = this.validTiles[Math.floor(Math.random()*this.validTiles.length)]
+        setTimeout(() => socket.emit('tilePlaced', this.props.roomId, [randTile.position.x, randTile.position.y]), 1500)
+      } else {
+        setTimeout(() => socket.emit('rotateTile', this.props.roomId), 1200)
+      }
     }
   }
   
@@ -232,7 +258,9 @@ const mapStateToProps = state => {
     player: state.game.player,
     meeple: state.game.curMeeple,
     removeMeeples: state.game.removeMeeples,
-    gameState: state.game.gameState
+    gameState: state.game.gameState,
+    disconnectedPlayers: state.messages.disconnectedPlayers,
+    playingWithBots: state.messages.playingWithBots
   };
 };
 

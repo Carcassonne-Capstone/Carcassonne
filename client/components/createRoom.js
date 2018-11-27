@@ -75,8 +75,8 @@ class CreateRoom extends Component {
                     {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}   
                 </div>
             </div>
-        )
-    }
+    
+        )}
 }
 
 const mapStateToProps = state => { 

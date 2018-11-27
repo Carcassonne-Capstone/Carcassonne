@@ -4,7 +4,6 @@ import * as THREE from "three";
 const replaceMeeple = (tile, prevMeeple, newMeeple) => {
     tile.remove(prevMeeple);
     tile.add(newMeeple);
-    console.log("in new meeple", newMeeple)
     const sound = new Audio(newMeeple.soundEffect);
     sound.play();
 }

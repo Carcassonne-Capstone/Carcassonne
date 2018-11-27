@@ -1,34 +1,10 @@
 import * as THREE from "three";
 import {validMeepleRegion} from './checkValidMeeple'
 import {createEmptyMeeple} from './createMeeple'
+import createBaseTile from '../tiles/createBaseTile'
 
 export const createCube = (tileNode, x, y, addEmptyMeeples) => {
-  const tile = tileNode.tile
-  const tileImgSrc = `/images/${tile.id}.png`;
-  const texture = new THREE.TextureLoader().load(tileImgSrc);
-  const back = new THREE.TextureLoader().load("/images/back.jpg");
-  const materials = [
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      map: texture
-    }),
-    new THREE.MeshBasicMaterial({
-      map: back
-    })
-  ];
-  var cubeGeo = new THREE.CubeGeometry(1, 1, 0.1);
-  let cube = new THREE.Mesh(cubeGeo, materials);
+  const cube = createBaseTile(tileNode.tile.id)
   cube.position.x = x;
   cube.position.y = y;
   cube.position.z = 0;
@@ -36,7 +12,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
   cube.name = `tile-${x},${y}`
 
   if (addEmptyMeeples) {
-    tile.regions.forEach((region, idx) => {
+    tileNode.tile.regions.forEach((region, idx) => {
       if (validMeepleRegion(region, tileNode)) {
         if (region.meeplePosition) {
           const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube);
