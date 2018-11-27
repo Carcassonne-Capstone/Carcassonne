@@ -1,4 +1,5 @@
-import {createMeeple, createEmptyMeeple} from './createMeeple'
+import {createMeeple, animal, createEmptyMeeple} from './createMeeple'
+import * as THREE from "three";
 
 const replaceMeeple = (tile, prevMeeple, newMeeple) => {
     tile.remove(prevMeeple);
@@ -15,14 +16,14 @@ export const removeMeeples = (meeplesToRemove, scene) => {
     });
 }
 
-export const changeMeeple = (meeple, prevMeeple, tile, tileNode) => {
+export const changeMeeple = async (meeple, prevMeeple, tile, tileNode, animal) => {
     if (meeple.coords) {
         if (prevMeeple.coords) {
             const oldMeeple = tile.getObjectByName(`meeple-${prevMeeple.coords[0]},${prevMeeple.coords[1]}`)
             replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile, tileNode.tile.regions[prevMeeple.regionIdx].type))
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
-        const newMeeple = createMeeple(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound, tileNode.tile.regions[meeple.regionIdx].type)
-        replaceMeeple(tile, old, newMeeple)
+        tile.remove(old)
+        createMeeple(meeple.coords[0], meeple.coords[1], tileNode.tile.regions[meeple.regionIdx].type, tile, animal)
     }
 }

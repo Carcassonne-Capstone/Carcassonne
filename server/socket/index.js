@@ -26,7 +26,7 @@ module.exports = io => {
     socket.on('createRoom', playerName => {
       const roomId = makeid();
       socket.join(roomId);
-      rooms[roomId] = {players: {[playerName]: socket.id}};
+      rooms[roomId] = {players: {[playerName]: socket.id}, meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'bear']};
       const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0], soundArr[0], '/images/circle.png')
       hostPlayer.setHost();
       socket.emit('roomCreated', roomId, hostPlayer);
@@ -43,7 +43,7 @@ module.exports = io => {
         const player = new Player(playerName, roomId, socket.id, colorArr[numPlayers], soundArr[numPlayers], '/images/circle.png');
         rooms[roomId].players[playerName] = socket.id;
         socket.broadcast.to(roomId).emit('playerJoined', player);
-        socket.emit('me', player);
+        socket.emit('me', player, rooms[roomId].meeple);
       } else {
         socket.emit('joinRoomErr', 'This room is full, please try a different room')
       }
@@ -86,9 +86,18 @@ module.exports = io => {
       broadcastToAll(socket, roomId, 'postMessage', player, message)
     })
 
+    socket.on('selectMeeple', (roomId, meeple, player) => {
+      const meepleArr = rooms[roomId].meeple;
+      const filtered = meepleArr.filter(curMeeple => curMeeple !== meeple);
+      rooms[roomId] = {...rooms[roomId], meeple: filtered};
+      broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, player)
+    });
+
     socket.on('playingWithBots', (roomId) => {
       broadcastToAll(socket, roomId, 'botsPlay')
-    })
-    
-  });
-};
+    });
+
+  }
+)}
+   
+

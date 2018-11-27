@@ -70,6 +70,8 @@ class Board extends Component {
     var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
     var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
     this.scene.add( skyBox );
+
+    console.log("player", this.props.player)
   }
 
   componentWillUnmount() {
@@ -98,7 +100,7 @@ class Board extends Component {
       this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentTile)
+      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentTile, this.props.player.animal)
     }
     if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
       this.checkPlayerBotTurn()
