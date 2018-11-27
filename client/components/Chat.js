@@ -39,7 +39,7 @@ class Chat extends React.Component {
   }
 
   handleEmojiClick = (code, emojiPicked) => {
-    let emojiPic = emoji.replace_colons(`:${emojiPicked.name}:`);
+    let emojiPic = Emoji.replace_colons(`:${emojiPicked.name}:`);
 
     this.setState({
       newMessage: this.state.newMessage + emojiPic
@@ -54,15 +54,15 @@ class Chat extends React.Component {
   }
   getColorClass (color) {
     switch(color) {
-        case 0xff0000:
+        case 'red':
             return "red";
-        case 0x0000ff:
+        case 'blue':
             return "blue";
-        case 0x9400d3:
+        case 'purple':
             return "purple";  
-        case 0xffff00:
+        case 'yellow':
             return "yellow"; 
-        case 0xffa500:
+        case 'orange':
             return "orange";         
     }
 }
@@ -78,7 +78,7 @@ class Chat extends React.Component {
     return (
       <div className="chat">
         <div id='chat-messages'>
-          <h3>Group Chat: </h3>
+          <div className="chatTitle">Chat</div>
           {this.props.messages.map((message, i) => {
             const chatColor = this.getColorClass(message[0].color);
             console.log("player", message[0]);

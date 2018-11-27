@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import socket from '../socket'
 import { Redirect } from 'react-router-dom'
+import {selectMeeple} from '../store'
 
 class CreateRoom extends Component {
     constructor(){
@@ -9,12 +10,12 @@ class CreateRoom extends Component {
         this.state = {
             name:'',
             waitingRoom: false,
-            pickMeeple: false
+            showMeeple: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.selectMeeple = this.selectMeeple.bind(this)
         this.startGame = this.startGame.bind(this)
-        this.pickMeeple = this.pickMeeple.bind(this)
     }
 
     handleChange(event){
@@ -23,27 +24,27 @@ class CreateRoom extends Component {
 
     handleSubmit(event){
         event.preventDefault()
-        this.setState({pickMeeple: true})
         socket.emit('createRoom', this.state.name)
+        this.setState({showMeeple: true})
     }
-
+    selectMeeple(meeple) {
+        socket.emit('selectMeeple', this.props.roomId, meeple, this.props.player)
+        this.setState({showMeeple: false, waitingRoom: true})
+    }
     startGame() {
-        socket.emit('startGame', this.props.roomId, this.props.players)
-    }
-    pickMeeple() {
-        this.setState({waitingRoom: true, pickMeeple: false})
+        socket.emit('startGame', this.props.roomId);
     }
 
     render(){
         return(
-            !this.state.waitingRoom && !this.state.pickMeeple
+            !this.state.waitingRoom && !this.state.showMeeple
             ?
             <div>
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                     <div className="form-group">
                         <label htmlFor="name" >Name*</label>
                         <div className="form-control">
-                            <input name="name" type="text" className="input" maxLength="13" required/>
+                            <input name="name" type="text" className="input" maxLength="10" required/>
                         </div>
                     </div>
                     <div className="form-group">
@@ -53,8 +54,14 @@ class CreateRoom extends Component {
                 <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
             </div>
             :
-            this.state.waitingRoom &&  !this.state.pickMeeple
+            !this.state.waitingRoom &&  this.state.showMeeple
             ?
+            <div className="meeple-selection">
+                {this.props.meeple.map(meeple => {
+                    return <img key={meeple} onClick={(e) => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.jpg`}/>
+                })}
+            </div>
+            :
             <div className='waitingRoom'>
                 <div id="list">
                     <ul>Players in Room:{this.props.players.map(player=>(
@@ -68,13 +75,8 @@ class CreateRoom extends Component {
                     {this.props.startGameErr !== '' && <div>{this.props.startGameErr}</div>}   
                 </div>
             </div>
-            :
-            <div className="meeple-selection">
-                {this.props.meeple.map(meeple => <img src={`images/${meeple}.jpg`}/>)}
-                <div><button type='button' onClick={this.pickMeeple}>Next</button></div>
-            </div>
-        )
-    }
+    
+        )}
 }
 
 const mapStateToProps = state => { 
@@ -82,8 +84,14 @@ const mapStateToProps = state => {
     roomId: state.game.roomId,
     players: state.game.players,
     startGameErr: state.messages.startGameErr,
-    meeple: state.game.meepleSelection
+    meeple: state.game.meepleSelection,
+    player: state.game.player
   }
 }
+const mapDispatchToProps = dispatch => { 
+    return {
+      selectMeeple: (meeple) => dispatch(selectMeeple(meeple))
+    }
+}
 
-export default connect(mapStateToProps, null)(CreateRoom)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateRoom)

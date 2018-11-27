@@ -6,6 +6,29 @@ html {
   font-family: "MedievalSharp", cursive;
 }
 
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  padding: 30px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
 #StayFocusd-infobar {
   height: 0;
 }
@@ -182,8 +205,10 @@ input:focus {
 .gameBoard {
   display: flex;
   height: 100%;
+  width: 100vw;
   position: absolute;
   top: 0;
+  background-color: black;
 }
 
 .leftSide {
@@ -198,41 +223,130 @@ input:focus {
   flex-direction: column;
   justify-content: space-evenly;
   margin-left: 2%;
-  margin-top: 1%;
+  /* margin-top: 1%; */
   margin-right: 1%;
 }
 
 .scoreBoard {
-  width: 18vw;
-  height: 49%;
-  background-color: white;
+  width: 22vw;
+  height: 45%;
+  /* 45% */
+  background-color: rgba(254, 254, 254, 0.3);
+  border: 4px double white;
+  border-radius: 15px;
+  text-align: center;
+  margin-top: 1%;
+  color: white;
 }
-.scoreBoard h3 {
-  color: rgb(1, 121, 55);
+
+.scoreBoard tr {
+  width: 100%;
 }
+
+.scoreTable {
+  width: 100%;
+}
+
+.scoreTitle {
+  font-size: 2vw;
+  margin-bottom: 3%;
+  margin-top: 2%;
+  text-align: center;
+}
+
+/* .scoreHead{
+    padding-left: 10%;
+} */
+
+.playerHead {
+  padding-left: 6%;
+  /* text-align: left; */
+}
+
+#playerImage {
+  width: 15%;
+}
+
+#meepleRemaining {
+  width: 15%;
+  font-size: 1.5em;
+}
+
+#playerNameSB {
+  width: 45%;
+  font-size: 1.5em;
+  /* text-align: left; */
+  padding-left: 6%;
+}
+
+#scoreSB {
+  font-size: 1.5em;
+  width: 25%;
+  /* padding-left: 10%; */
+}
+
 .chat {
   display: flex;
   flex-direction: column;
   align-content: space-between;
-  width: 18vw;
-  height: 50%;
-  background-color: green;
-  margin-top: auto;
+  align-items: center;
+  width: 22vw;
+  height: 47%;
+  /* margin-bottom: 2%; */
+  background-color: rgba(254, 254, 254, 0.3);
+  border: 4px double white;
+  border-radius: 15px;
+  margin-top: 1%;
   color: white;
+}
+
+.chatTitle {
+  font-size: 2vw;
+  margin-bottom: 3%;
+  margin-top: 2%;
+  text-align: center;
 }
 
 #chat-input {
   height: 10%;
-  margin-left: 2%;
+  width: 96%;
+  margin-left: 1%;
+}
+
+#chat-input form {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+#chat-input input {
+  background-color: rgba(254, 254, 254, 0);
+  color: white;
+  font-size: 1.5vw;
+  border: none;
 }
 
 #chat-input-toggle {
   height: 90%;
-  margin-left: 2%;
+  /* margin-left: 2%; */
+}
+
+#chat-input-toggle form {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+#chat-input-toggle input {
+  background-color: rgba(254, 254, 254, 0);
+  color: white;
+  font-size: 1.5vw;
+  border: none;
 }
 
 #chat-messages {
   height: 95%;
+  width: 100%;
   overflow: scroll;
 }
 
@@ -243,32 +357,38 @@ input:focus {
 }
 
 #boardCanvas {
-  height: 85%;
-  width: 79vw;
+  height: 88%;
+  width: 75vw;
   margin-left: 1%;
-  margin-bottom: 1%;
+  margin-top: 7%;
+}
+
+#boardCanvas canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .playerContainer {
-  height: 10%;
+  height: 12%;
   z-index: 5;
   position: absolute;
-  bottom: 0;
+  bottom: 11%;
 }
 
 .playerTile {
-  height: 97%;
-  margin-bottom: 2%;
-  margin-top: -2%;
-  margin-left: 2%;
+  /* height: 97%;
+    margin-bottom: 2%;
+    margin-top:-2%; */
+  margin-left: 10%;
   margin-right: 1%;
-  width: 18%;
+  width: 100%;
   background-color: black 0;
   /* background-image: url("https://bit.ly/2DFCmo1"); */
-  border: 1px solid white;
+  border: 4px double white;
   text-align: center;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  border-radius: 15px;
 }
 
 .notPlayerTile {
@@ -295,14 +415,15 @@ input:focus {
 
 .currentTiles {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  /* justify-content: space-evenly;
+    align-items: center; */
   margin-left: 1%;
   height: 185%;
-  width: 80vw;
+  width: 18vw;
   z-index: 1;
-  position: absolute;
-  bottom: 60%;
+  /* position: absolute; */
+  /* bottom: 60%;
+    margin-top:-8%; */
 }
 
 #playerCurrentTile {
@@ -376,7 +497,7 @@ input:focus {
 .playerButtons button {
   margin: 0;
   padding: 0;
-  font-size: 0.75vw;
+  font-size: 1vw;
   background-color: green;
   color: white;
   width: 35%;
@@ -385,16 +506,23 @@ input:focus {
   border-radius: 5px;
   border: none;
   margin-bottom: 2%;
+  border: 1px solid white;
 }
 
 .playerButtons button:hover:enabled {
   opacity: 0.8;
   cursor: pointer;
+  transform: scale(1.1);
 }
 
 .playerButtons button:disabled {
   background-color: gray;
   cursor: default;
+}
+
+.currentPlayer {
+  margin-top: 2%;
+  font-size: 1.2vw;
 }
 
 .gameButtons {
@@ -403,33 +531,41 @@ input:focus {
   justify-content: space-evenly;
   justify-items: space-evenly;
   /* height: 5%; */
-  width: 79vw;
+  width: 75vw;
   margin: 1% 1% 1% 1%;
   position: absolute;
   top: 0;
   margin-right: 1%;
+  color: white;
 }
 
 .instructions {
   /* margin-left: auto; */
   width: 50%;
-  text-align: right;
+  /* text-align: right; */
   font-size: 1vw;
+  /* margin-right: 1%; */
+  display: flex;
+  flex-direction: column;
+}
+
+.tileRemain {
+  font-weight: bold;
+  font-size: 2vw;
+  text-align: right;
   margin-right: 1%;
 }
 
+.drag {
+  padding-bottom: 2%;
+}
+
 #cameraButtons {
-  width: 50%;
+  width: 100%;
   display: flex;
   align-content: center;
   align-items: center;
   justify-items: center;
-}
-
-#scoreSB {
-  font-size: 1.5em;
-  color: rgb(1, 121, 55);
-  padding: 5%;
 }
 
 #cameraButtons button {
@@ -440,14 +576,15 @@ input:focus {
   font-size: 1vw;
   font-weight: bold;
   border-radius: 10px;
-  border: none;
+  border: 1px solid white;
   text-align: center;
-  margin: 0 4% 0 0;
+  margin: 0 4% 0;
 }
 
 #cameraButtons button:hover {
   opacity: 0.9;
   cursor: pointer;
+  transform: scale(1.1);
 }
 
 #cameraButtons div {
@@ -462,16 +599,14 @@ input:focus {
   width: 15%;
 }
 
-#chat-input {
-  width: 90%;
-}
-
 .speech-bubble {
-  width: 70%;
+  width: 75%;
   position: relative;
   border-radius: 0.4em;
   padding: 0.3em;
   margin: 0.3em;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .speech-bubble:after {
@@ -488,34 +623,34 @@ input:focus {
 }
 
 #red {
-  background-color: #ff0000;
+  background-color: red;
 }
 #red:after {
-  border-right-color: #ff0000;
+  border-right-color: red;
 }
 #blue {
-  background-color: #0000ff;
+  background-color: blue;
 }
 #blue:after {
-  border-right-color: #0000ff;
+  border-right-color: blue;
 }
 #purple {
-  background-color: #9400d3;
+  background-color: purple;
 }
 #purple:after {
-  border-right-color: #9400d3;
+  border-right-color: purple;
 }
 #yellow {
-  background-color: #ffff00;
+  background-color: yellow;
 }
 #yellow:after {
-  border-right-color: #ffff00;
+  border-right-color: yellow;
 }
 #orange {
-  background-color: #ffa500;
+  background-color: orange;
 }
 #orange:after {
-  border-right-color: #ffa500;
+  border-right-color: orange;
 }
 #emoji-picker {
   width: 16vw;
@@ -583,4 +718,7 @@ input:focus {
   margin-bottom: 3%;
   position: fixed;
   bottom: 0;
+}
+.meeple-selection img {
+  height: 7em;
 }

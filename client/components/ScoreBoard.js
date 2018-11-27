@@ -4,23 +4,31 @@ import { connect } from "react-redux";
 const ScoreBoard = props => {
   return (
     <div className="scoreBoard">
-      <h3>Score Board:</h3>
+      <div className="scoreTitle">Score Board</div>
       <table className="scoreTable">
-        {props.players.map(player => {
-          return (
-            <tr key={player.name}>
-              <td>
-                <img src="favicon.png" alt="" height="40px" width="40px" />
-              </td>
-              <td id="playerNameSB">{player.name}</td>
-              <td id="meepleSB">
-                <img src="/images/meeple.png" alt="" height={20} width={20} />
-              </td>
-              <td>{`x${player.meeple}`}</td>
-              <td id="scoreSB">{props.score[player.name]}</td>
-            </tr>
-          );
-        })}
+        <tbody>
+        <tr>
+          <th></th>
+          <th></th>
+          <th className="playerHead">Player</th>
+          <th className="scoreHead">Score</th>
+        </tr>
+        
+          {props.players.map(player => {
+            let color = player.color
+            // style={{color: color}}
+            return (
+              <tr key={player.name} >
+                <td id="playerImage">
+                  <img src="favicon.png" alt="" height="40px" width="40px" />
+                </td>
+                <td id="meepleRemaining" >{`x${player.meeple}`}</td>
+                <td id="playerNameSB" >{player.name}</td>
+                <td id="scoreSB" >{props.score[player.name]}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );

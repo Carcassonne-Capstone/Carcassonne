@@ -1,5 +1,7 @@
 import io from "socket.io-client";
-import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr} from "./store";
+import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, 
+  setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr, playerDisconnected, 
+  playingWithBots, selectMeeple, newHost} from "./store";
 
 const socket = io(window.location.origin);
 
@@ -7,13 +9,9 @@ socket.on('connect', () => {
   console.log('I am connected');
 });
 
-// socket.on('disconnecting', () => {
-//   socket.emit('playerDisconnected', store.getState())
-// })
-
-// socket.on('disconnectedPlayer', player => {
-//   console.log(`${player.name} disconnected`)
-// })
+socket.on('disconnectedPlayer', player => {
+  store.dispatch(playerDisconnected(player))
+})
 
 socket.on('joinRoomErr', (message) => {
   store.dispatch(setJoinRoomErr(message))
@@ -47,8 +45,8 @@ socket.on('newPlayer', (player, newTile) => {
   store.dispatch(nextTurn(player, newTile));
 });
 
-socket.on('me', player => {
-  store.dispatch(setPlayer(player));
+socket.on('me', (player, meeple) => {
+  store.dispatch(setPlayer(player, meeple));
 });
 
 socket.on('meepleOn', meeple => {
@@ -62,5 +60,17 @@ socket.on('gameOver', () => {
 socket.on('postMessage', (player, message) => {
   store.dispatch(postMessage(player, message));
 });
+
+socket.on('pickedMeeple', (meeple, newMeeple, player) => {
+  store.dispatch(selectMeeple(meeple, newMeeple, player));
+});
+
+socket.on('botsPlay', () => {
+  store.dispatch(playingWithBots())
+})
+
+socket.on('newHost', (players) => {
+  store.dispatch(newHost(players))
+})
 
 export default socket;

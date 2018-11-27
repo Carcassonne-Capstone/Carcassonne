@@ -48,11 +48,7 @@ class CurrentTile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.curTile !== this.props.curTile ||
-      prevProps.currentPlayer.name !== this.props.currentPlayer.name ||
-      prevProps.curLocation !== this.props.curLocation
-    ) {
+    if (prevProps.curTile !== this.props.curTile || prevProps.curLocation !== this.props.curLocation) {
       this.addCube();
     }
   }
@@ -60,7 +56,7 @@ class CurrentTile extends Component {
   initializeCamera() {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
-    this.camera.position.z = .75;
+    this.camera.position.z = 2;
   }
 
   animate() {
@@ -83,11 +79,6 @@ class CurrentTile extends Component {
   render() {
     return (
       <div className="playerTile">
-      <div
-          id="playerCurrentTile"
-          //style={{ width: '15vw', height: '12vw' }}
-          ref={(mount) => { this.mount = mount }}
-      />
         {this.props.me.name === this.props.currentPlayer.name ?
           <div className="playerButtons">
             {
@@ -107,9 +98,15 @@ class CurrentTile extends Component {
             <div id="notPlayer" />
           )}
 
+        <div
+          id="playerCurrentTile"
+          //style={{ width: '15vw', height: '12vw' }}
+          ref={(mount) => { this.mount = mount }}
+        />
+
         {this.props.me.name === this.props.currentPlayer.name ?
-        <div>It's your turn!</div>:
-        <div>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
+        <div className='currentPlayer'>It's your turn!</div>:
+        <div className='currentPlayer'>{`It's ${this.props.currentPlayer.name}'s turn!`}</div>
       }
         
       </div>
