@@ -539,13 +539,12 @@ input:focus {
 #endBody {
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-items: center;
   font-family: "Hanalei Fill", cursive;
   font-size: 3em;
   color: white;
-  padding: 10%;
+  padding: 5%;
 }
 
 #endMsgHead {
@@ -553,7 +552,7 @@ input:focus {
 
 #winnerName {
   font-family: "Hanalei", cursive;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 #endMsgScore {
 }
@@ -566,9 +565,22 @@ input:focus {
 
 #playAgain {
   display: flex;
-  font-family: "MedievalSharp", cursive;
   justify-content: center;
   align-items: center;
+  font-family: "MedievalSharp", cursive;
   color: white;
   text-decoration: none;
+}
+
+.stumps {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  /* align-self: flex-end; */
+  flex-direction: row;
+  color: white;
+  font-size: 1em;
+  margin-bottom: 3%;
+  position: fixed;
+  bottom: 0;
 }

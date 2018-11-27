@@ -47,30 +47,61 @@ class gameOver extends Component {
 
     return (
       <div className="endGameContainer">
+        <div>
+          <audio
+            ref="audio_tag"
+            src="/Sounds/CantWaitToBeKing.mp3"
+            controls
+            autoPlay
+          />
+        </div>
+
         {winner.length < 2 ? (
           <div id="endBody">
             <div id="endMsgHead">And the winner is ...</div>
-            <br />
+
             <div id="winnerName">{winner[0][0]} </div>
-            <br />
+            {/* <br />
             <div id="endMsgScore">with a score of </div>
-            <br />
-            <div id="score">{winner[0][1]} </div>
+
+            <div id="score">{winner[0][1]} </div> */}
           </div>
         ) : (
           <div id="endBody">
             <div id="endMsgHead">We have a tie between ...</div>
             <br />
             <div id="winnerName">{message} </div>
-            <br />
+            {/* <br />
             <div id="endMsgScore">with a score of </div>
-            <br />
-            <div id="score">{winner[0][1]} </div>
+
+            <div id="score">{winner[0][1]} </div> */}
           </div>
         )}
-        <a href="/" id="playAgain">
-          Play again
-        </a>
+        <div>
+          <a href="/" id="playAgain">
+            Play again
+          </a>
+        </div>
+
+        <div className="stumps">
+          {playScrs.map(player => {
+            return (
+              <div key={player[0]}>
+                <div>
+                  {player[0]} : {player[1]}
+                </div>
+                <div>
+                  <img
+                    src="/images/stump.png"
+                    alt="Stump"
+                    height={175 + player[1] * 10}
+                    width={200 + player[1] * 7.5}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
