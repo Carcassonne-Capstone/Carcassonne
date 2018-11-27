@@ -9,11 +9,10 @@ class JoinRoom extends Component {
         this.state = {
             name:'',
             roomCode: '',
-            showMeeple: false
+            meepleSelected: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.showMeeple = this.showMeeple.bind(this)
         this.selectMeeple = this.selectMeeple.bind(this)
     }
 
@@ -24,22 +23,17 @@ class JoinRoom extends Component {
     handleSubmit(event){
         event.preventDefault()
         socket.emit('joinRoom', this.state.roomCode, this.state.name)
-        if (this.props.joinRoomErr !== '') {
-            this.showMeeple();
-        }
     }
-    showMeeple() {
-        this.setState({showMeeple: true})
-    }
+
     selectMeeple(meeple) {
         socket.emit('selectMeeple', this.state.roomCode, meeple, this.props.player)
-        this.setState({showMeeple: false})
+        this.setState({meepleSelected: true})
     }
 
     render(){
         return(
             <div>
-                {!this.props.player.name && !this.state.showMeeple
+                {!this.props.player.name
                 ?
                 <div>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
@@ -63,11 +57,11 @@ class JoinRoom extends Component {
                     <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
                 </div>
                 :
-                this.state.showMeeple
+                !this.state.meepleSelected
                 ?
                 <div className="meeple-selection">
                     {this.props.meeple.map(meeple => {
-                        return <img key={meeple} onClick={() => this.selectMeeple(meeple)} src={`images/${meeple}.jpg`}/>
+                        return <img key={meeple} onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.jpg`}/>
                     })}
                 </div>
                 :
