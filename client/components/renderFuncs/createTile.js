@@ -15,7 +15,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
     tileNode.tile.regions.forEach((region, idx) => {
       if (validMeepleRegion(region, tileNode)) {
         if (region.meeplePosition) {
-          const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube, region.type);
+          const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube);
           cube.add(emptyMeeple);
         }
       }
@@ -74,7 +74,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
 };
 
 export const createBlankTile = (tile, x, y) => {
-  const newCube = new THREE.CubeGeometry(0.99, 0.99, 0.09);
+  const newCube = new THREE.CubeGeometry(1, 1, 0.1);
   let material = new THREE.MeshBasicMaterial({ color: 0xa9b6cc });
   let cube = new THREE.Mesh(newCube, material);
   cube.position.x = x;

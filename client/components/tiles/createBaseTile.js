@@ -37,9 +37,9 @@ const createBaseTile = (tileId) => {
         object.position.x=location[0];
         object.position.y=location[1];
         object.position.z=.05;
-        object.scale.x=.03;
-        object.scale.y=.05;
-        object.scale.z=.03;
+        object.scale.x=.05;
+        object.scale.y=.1;
+        object.scale.z=.05;
         object.rotation.x = Math.PI / 2;
         cube.add(object)
         })
