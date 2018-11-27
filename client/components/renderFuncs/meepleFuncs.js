@@ -15,14 +15,14 @@ export const removeMeeples = (meeplesToRemove, scene) => {
     });
 }
 
-export const changeMeeple = (meeple, prevMeeple, tile) => {
+export const changeMeeple = (meeple, prevMeeple, tile, tileNode) => {
     if (meeple.coords) {
         if (prevMeeple.coords) {
             const oldMeeple = tile.getObjectByName(`meeple-${prevMeeple.coords[0]},${prevMeeple.coords[1]}`)
-            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile))
+            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile, tileNode.tile.regions[prevMeeple.regionIdx].type))
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
-        const newMeeple = createMeeple(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
+        const newMeeple = createMeeple(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound, tileNode.tile.regions[meeple.regionIdx].type)
         replaceMeeple(tile, old, newMeeple)
     }
 }

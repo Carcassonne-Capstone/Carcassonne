@@ -56,7 +56,7 @@ class CurrentTile extends Component {
   initializeCamera() {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
-    this.camera.position.z = 2;
+    this.camera.position.z = 1.25;
   }
 
   animate() {
