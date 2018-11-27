@@ -93,3 +93,4 @@ const getModelData = (animal) => {
             }     
         }
 }
+

@@ -20,8 +20,7 @@ const ScoreBoard = props => {
             return (
               <tr key={player.name} >
                 <td id="playerImage">
-              {/* favicon.png */}
-                  <img src={`/animals/images/${props.player.animal}.png`} alt="" height="40px" width="40px" />
+                  <img src="favicon.png" alt="" height="40px" width="40px" />
                 </td>
                 <td id="meepleRemaining" >{`x${player.meeple}`}</td>
                 <td id="playerNameSB" >{player.name}</td>
@@ -37,7 +36,6 @@ const ScoreBoard = props => {
 
 const mapStateToProps = state => {
   return {
-    player: state.game.player,
     players: state.game.players,
     score: state.game.scores
   };
