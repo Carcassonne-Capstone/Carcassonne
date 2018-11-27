@@ -98,7 +98,7 @@ class Board extends Component {
       this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentPlayer.animal)
+      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.player.animal)
     }
     if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
       this.checkPlayerBotTurn()
@@ -207,7 +207,6 @@ class Board extends Component {
           <div className="gameButtons"
             //style={{ width: "80vw", height: "5vw" }}
           > 
-          
           <div className="instructions">
             <div className='drag'>Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out</div>
               <div id="cameraButtons">
@@ -220,8 +219,11 @@ class Board extends Component {
                 </button>
               </div>
             </div>
-            <div className="instructions">
-              <div className="tileRemain">Tiles Remaining: </div>
+            <div className="tileInstructions">
+              <div className="helpButton">
+                <img src="/helpButton.svg" style={{ width: "60px", height: "60px" }}/>
+              </div>
+              <div className="tileRemain">Tiles Remaining: XX</div>
             </div>
           </div>
 
