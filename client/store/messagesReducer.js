@@ -21,6 +21,8 @@ const reducer = (state = initialState, action) => {
         case SET_START_GAME_ERR:
             return {...state, startGameErr: action.message}
         case POST_MESSAGE:
+            const messageNot = new Audio('/Sounds/definite.mp3')
+            messageNot.play();
             return {
               ...state, messages: [...state.messages, [action.player, action.message]]
             }  

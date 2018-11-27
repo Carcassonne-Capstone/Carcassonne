@@ -26,7 +26,7 @@ module.exports = io => {
       const roomId = makeid();
       socket.join(roomId);
       rooms[roomId] = {players: [playerName]};
-      socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0], soundArr[0]));
+      socket.emit('roomCreated', roomId, new Player(playerName, roomId, colorArr[0], soundArr[0], '/images/circle.png'));
     });
 
     socket.on('joinRoom', (roomId, playerName) => {
@@ -36,7 +36,7 @@ module.exports = io => {
         socket.emit('joinRoomErr', 'That name is taken, please try another')
       } else if (rooms[roomId].players.length < 5) {
         socket.join(roomId);
-        const player = new Player(playerName, roomId, colorArr[rooms[roomId].players.length], soundArr[rooms[roomId].players.length]);
+        const player = new Player(playerName, roomId, colorArr[rooms[roomId].players.length], soundArr[rooms[roomId].players.length], '/images/circle.png');
         rooms[roomId].players.push(playerName);
         socket.broadcast.to(roomId).emit('playerJoined', player);
         socket.emit('me', player);
