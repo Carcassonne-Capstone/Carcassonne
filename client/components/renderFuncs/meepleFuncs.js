@@ -16,14 +16,27 @@ export const removeMeeples = (meeplesToRemove, scene) => {
     });
 }
 
-export const changeMeeple = async (meeple, prevMeeple, tile, tileNode, animal) => {
+export const changeMeeple = (meeple, prevMeeple, tile) => {
     if (meeple.coords) {
         if (prevMeeple.coords) {
             const oldMeeple = tile.getObjectByName(`meeple-${prevMeeple.coords[0]},${prevMeeple.coords[1]}`)
-            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile, tileNode.tile.regions[prevMeeple.regionIdx].type))
+            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile))
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
-        tile.remove(old)
-        createMeeple(meeple.coords[0], meeple.coords[1], tileNode.tile.regions[meeple.regionIdx].type, tile, animal)
+        //const newMeeple = animal(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
+        const objLoader = new THREE.ObjectLoader();
+        objLoader.load('/animals/tiger.json', (object) => {
+        object.position.x=meeple.coords[0];
+        object.position.y=meeple.coords[1];
+        object.position.z=.25;
+        object.scale.x=.003;
+        object.scale.y=.003;
+        object.scale.z=.003;
+        object.rotation.x = Math.PI / 2;
+        object.rotation.y = Math.PI / 2;
+        object.name = `meeple-${meeple.coords[0]},${meeple.coords[1]}`
+        object.soundEffect= meeple.player.sound;
+        replaceMeeple(tile, old, object)
+        });
     }
 }
