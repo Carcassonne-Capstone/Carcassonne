@@ -44,6 +44,8 @@
     "redux-thunk": "^2.3.0",
     "socket.io": "^2.1.1",
     "three": "^0.98.0",
+    "three-gltf-loader": "^1.98.0",
+    "three-obj-mtl-loader": "^1.0.3",
     "three-orbit-controls": "^82.1.0"
   }
 }
