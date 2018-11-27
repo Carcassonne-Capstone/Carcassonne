@@ -37,6 +37,7 @@ const SET_PLAYER = 'SET_PLAYER';
 const SET_MEEPLE = 'SET_MEEPLE';
 const GAME_OVER = 'GAME_OVER';
 const SELECT_MEEPLE = 'SELECT_MEEPLE';
+const NEW_HOST = 'NEW_HOST'
 
 //action creators
 export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, player});
@@ -49,6 +50,7 @@ export const setPlayer = (player, meeple) => ({ type: SET_PLAYER, player, meeple
 export const setMeeple = (meeple) => ({ type: SET_MEEPLE, meeple});
 export const gameOver = () => ({ type: GAME_OVER });
 export const selectMeeple = (meeple, newMeeple, player) => ({type: SELECT_MEEPLE, meeple, newMeeple, player})
+export const newHost = (players) => ({type: NEW_HOST, players})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`,`${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`]
@@ -371,6 +373,8 @@ const reducer = (state = initialState, action) => {
           meepleSelection: action.newMeeple
         }
       } 
+    case NEW_HOST:
+      return {...state, player: action.players.find(curPlayer => curPlayer.name === state.player.name)}
     default:
       return state;
   }

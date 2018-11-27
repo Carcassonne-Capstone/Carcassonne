@@ -9,8 +9,8 @@ class Player {
     this.host = false;
   }
 
-  setHost() {
-    this.host = true;
+  setHost(isHost) {
+    this.host = isHost;
   }
 
   isUp(name) {

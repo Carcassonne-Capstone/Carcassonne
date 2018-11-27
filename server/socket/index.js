@@ -19,7 +19,21 @@ module.exports = io => {
       const [socketId, roomId] = Object.keys(socket.rooms);
       if (roomId) {
         let player = rooms[roomId].players.find(curPlayer => curPlayer.socketId === socketId)
-        socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+        rooms[roomId].disconnected.push(player)
+        if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+          delete rooms[roomId]
+        } else {
+          if (player.host) {
+            player.setHost(false)
+            let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+            while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
+              newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+            }
+            newHost.setHost(true)
+            broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+          }
+          socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+        }
       }
     })
 
@@ -27,8 +41,8 @@ module.exports = io => {
       const roomId = makeid();
       socket.join(roomId);
       const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0])
-      hostPlayer.setHost();
-      rooms[roomId] = {players: [hostPlayer], meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant']};
+      hostPlayer.setHost(true);
+      rooms[roomId] = {players: [hostPlayer], meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant'], disconnected: []};
       socket.emit('roomCreated', roomId, hostPlayer);
     });
 
