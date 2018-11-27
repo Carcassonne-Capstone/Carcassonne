@@ -32,7 +32,7 @@ class CreateRoom extends Component {
         this.setState({showMeeple: false, waitingRoom: true})
     }
     startGame() {
-        socket.emit('startGame', this.props.roomId, this.props.players);
+        socket.emit('startGame', this.props.roomId);
     }
     getClass(animal) {
         switch (animal) {

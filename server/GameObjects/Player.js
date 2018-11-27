@@ -9,15 +9,16 @@ class Player {
     this.host = false;
   }
 
-  setHost() {
-    this.host = true;
+  setHost(isHost) {
+    this.host = isHost;
   }
 
   isUp(name) {
     return this.name === name;
   }
+
   setAnimal(animal) {
-    this.animal = animal;
+    this.animal = animal
   }
 }
 

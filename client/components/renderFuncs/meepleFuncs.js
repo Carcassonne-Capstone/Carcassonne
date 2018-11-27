@@ -24,8 +24,9 @@ export const changeMeeple = (meeple, prevMeeple, tile, animal) => {
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
         //const newMeeple = animal(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
+        const file = `/animals/models/${animal}.json`
         const objLoader = new THREE.ObjectLoader();
-        objLoader.load(`/animals/models/${animal}.json`, (object) => {
+        objLoader.load(file, (object) => {
             const data = getModelData(animal)
             object.position.x=meeple.coords[0];
             object.position.y=meeple.coords[1];

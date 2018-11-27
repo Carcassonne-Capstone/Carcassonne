@@ -597,6 +597,7 @@ input:focus {
 }
 .chat-icon {
     width: 15%;
+    margin-right: 0.5em;
 }
 
 .speech-bubble {
@@ -620,6 +621,7 @@ input:focus {
 	border-left: 0;
 	margin-top: -0.562em;
     margin-left: -0.3em;
+
 }
 
 #red {

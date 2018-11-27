@@ -18,30 +18,43 @@ module.exports = io => {
     socket.on('disconnecting', () => {
       const [socketId, roomId] = Object.keys(socket.rooms);
       if (roomId) {
-        let playerName = Object.keys(rooms[roomId].players).find(name => rooms[roomId].players[name] === socketId)
-        socket.broadcast.to(roomId).emit('disconnectedPlayer', playerName)
+        let player = rooms[roomId].players.find(curPlayer => curPlayer.socketId === socketId)
+        rooms[roomId].disconnected.push(player)
+        if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+          delete rooms[roomId]
+        } else {
+          if (player.host) {
+            player.setHost(false)
+            let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+            while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
+              newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+            }
+            newHost.setHost(true)
+            broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+          }
+          socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+        }
       }
     })
 
     socket.on('createRoom', playerName => {
       const roomId = makeid();
       socket.join(roomId);
-      rooms[roomId] = {players: {[playerName]: socket.id}, meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant']};
       const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0])
-      hostPlayer.setHost();
+      hostPlayer.setHost(true);
+      rooms[roomId] = {players: [hostPlayer], meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant'], disconnected: []};
       socket.emit('roomCreated', roomId, hostPlayer);
     });
 
     socket.on('joinRoom', (roomId, playerName) => {
-      let numPlayers = Object.keys(rooms[roomId].players).length
       if (!rooms.hasOwnProperty(roomId)) {
         socket.emit('joinRoomErr', 'This room is not found, please try again')
-      } else if (rooms[roomId].players.hasOwnProperty(playerName)) {
+      } else if (rooms[roomId].players.find(player => player.name === playerName)) {
         socket.emit('joinRoomErr', 'That name is taken, please try another')
-      } else if (numPlayers < 5) {
+      } else if (rooms[roomId].players.length < 5) {
         socket.join(roomId);
-        const player = new Player(playerName, roomId, socket.id, colorArr[numPlayers]);
-        rooms[roomId].players[playerName] = socket.id;
+        const player = new Player(playerName, roomId, socket.id, colorArr[rooms[roomId].players.length]);
+        rooms[roomId].players.push(player)
         socket.broadcast.to(roomId).emit('playerJoined', player);
         socket.emit('me', player, rooms[roomId].meeple);
       } else {
@@ -49,12 +62,12 @@ module.exports = io => {
       }
     });
 
-    socket.on('startGame', (roomId, players) => {
-      if (players.length > 0) {
-        rooms[roomId].deck = initializeDeckPlayers(players)
+    socket.on('startGame', (roomId) => {
+      if (rooms[roomId].players.length > 1) {
+        rooms[roomId].deck = initializeDeckPlayers(rooms[roomId].players)
         const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
         const firstTile = rooms[roomId].deck.getCard();
-        broadcastToAll(socket, roomId, 'initGame', players, roomId, startTile, firstTile, players[0])
+        broadcastToAll(socket, roomId, 'initGame', rooms[roomId].players, roomId, startTile, firstTile, rooms[roomId].players[0])
       } else {
         socket.emit('startGameErr', 'The game can only be started when 2 people have joined the room')
       }
@@ -90,7 +103,9 @@ module.exports = io => {
       const meepleArr = rooms[roomId].meeple;
       const filtered = meepleArr.filter(curMeeple => curMeeple !== meeple);
       rooms[roomId] = {...rooms[roomId], meeple: filtered};
-      broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, player)
+      let curPlayer = rooms[roomId].players.find(play => play.name === player.name)
+      curPlayer.setAnimal(meeple)
+      broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, curPlayer)
     });
 
     socket.on('playingWithBots', (roomId) => {
