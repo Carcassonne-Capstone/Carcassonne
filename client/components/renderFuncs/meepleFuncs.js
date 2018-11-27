@@ -1,4 +1,5 @@
-import {createMeeple, createEmptyMeeple} from './createMeeple'
+import {createMeeple, animal, createEmptyMeeple} from './createMeeple'
+import * as THREE from "three";
 
 const replaceMeeple = (tile, prevMeeple, newMeeple) => {
     tile.remove(prevMeeple);
@@ -22,7 +23,20 @@ export const changeMeeple = (meeple, prevMeeple, tile) => {
             replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile))
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
-        const newMeeple = createMeeple(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
-        replaceMeeple(tile, old, newMeeple)
+        //const newMeeple = animal(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
+        const objLoader = new THREE.ObjectLoader();
+        objLoader.load('/animals/tiger.json', (object) => {
+        object.position.x=meeple.coords[0];
+        object.position.y=meeple.coords[1];
+        object.position.z=.25;
+        object.scale.x=.003;
+        object.scale.y=.003;
+        object.scale.z=.003;
+        object.rotation.x = Math.PI / 2;
+        object.rotation.y = Math.PI / 2;
+        object.name = `meeple-${meeple.coords[0]},${meeple.coords[1]}`
+        object.soundEffect= meeple.player.sound;
+        replaceMeeple(tile, old, object)
+        });
     }
 }
