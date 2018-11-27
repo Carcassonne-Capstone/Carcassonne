@@ -58,7 +58,7 @@ class CreateRoom extends Component {
             ?
             <div className="meeple-selection">
                 {this.props.meeple.map(meeple => {
-                    return <img key={meeple} onClick={(e) => this.selectMeeple(meeple)} src={`images/${meeple}.jpg`}/>
+                    return <img key={meeple} onClick={(e) => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.jpg`}/>
                 })}
             </div>
             :
