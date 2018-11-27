@@ -46,7 +46,7 @@ module.exports = io => {
     });
 
     socket.on('startGame', (roomId, players) => {
-      if (players.length > 1) {
+      if (players.length > 0) {
         rooms[roomId].deck = initializeDeckPlayers(players)
         const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
         const firstTile = rooms[roomId].deck.getCard();

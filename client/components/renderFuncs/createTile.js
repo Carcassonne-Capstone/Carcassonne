@@ -1,37 +1,10 @@
 import * as THREE from "three";
 import {validMeepleRegion} from './checkValidMeeple'
 import {createEmptyMeeple} from './createMeeple'
-
-
-
+import createBaseTile from '../tiles/createBaseTile'
 
 export const createCube = (tileNode, x, y, addEmptyMeeples) => {
-  const tile = tileNode.tile
-  const tileImgSrc = `/images/${tile.id}.png`;
-  const texture = new THREE.TextureLoader().load(tileImgSrc);
-  const back = new THREE.TextureLoader().load("/images/back.jpg");
-  const cubeMaterials = [
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      color: 0x6e9329
-    }),
-    new THREE.MeshBasicMaterial({
-      map: texture
-    }),
-    new THREE.MeshBasicMaterial({
-      map: back
-    })
-  ];
-  var cubeGeo = new THREE.CubeGeometry(1, 1, 0.1);
-  let cube = new THREE.Mesh(cubeGeo, cubeMaterials);
+  const cube = createBaseTile(tileNode.tile.id)
   cube.position.x = x;
   cube.position.y = y;
   cube.position.z = 0;
@@ -39,7 +12,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
   cube.name = `tile-${x},${y}`
 
   if (addEmptyMeeples) {
-    tile.regions.forEach((region, idx) => {
+    tileNode.tile.regions.forEach((region, idx) => {
       if (validMeepleRegion(region, tileNode)) {
         if (region.meeplePosition) {
           const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube);
@@ -48,21 +21,6 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
       }
     });
   }
-
-
-    var objLoader = new THREE.ObjectLoader();
-
-    objLoader.load('/models/tree/tree.json', (object) => {
-      object.position.x=0;
-      object.position.y=0;
-      object.position.z=.4;
-      object.scale.x=.1;
-      object.scale.y=.2;
-      object.scale.z=.1;
-      object.rotation.x = Math.PI / 2;
-      cube.add(object)
-    })
-
 
   return cube;
 };
