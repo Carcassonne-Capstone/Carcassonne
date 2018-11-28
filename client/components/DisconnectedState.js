@@ -24,7 +24,7 @@ class Main extends React.Component {
                 {this.props.gameState === 'gameOver' && <Redirect to="/" />}
                 <div className="modal-content">
                     <div>
-                        The following players have left the game:
+                        UH OH! The following players have left the game:
                         {this.props.disconnectedPlayers.map(player => <div key={player}>{player}</div>)}
                     </div>
                     <div>

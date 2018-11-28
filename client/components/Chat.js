@@ -103,7 +103,7 @@ class Chat extends React.Component {
               onChange={this.handleChange}
               placeholder="Type message here..."
               value={this.state.newMessage}
-              autocomplete="off"
+              autoComplete="off"
             />
             {/* <span onClick={this.toggleEmoji}>🙂 </span> */}
           </form>
