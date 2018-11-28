@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, setPlayer, 
-  setMeeple, gameOver, postMessage, setJoinRoomErr, setStartGameErr, playerDisconnected, 
-  playingWithBots, selectMeeple, newHost, changeGameState, hostLeft, playerLeft, resetState} from "./store";
+  setMeeple, postMessage, setJoinRoomErr, setStartGameErr, playerDisconnected, 
+  playingWithBots, selectMeeple, newHost, changeGameState, hostLeft, playerLeft, resetState, removeAndScore} from "./store";
 
 const socket = io(window.location.origin);
 
@@ -53,10 +53,6 @@ socket.on('meepleOn', meeple => {
   store.dispatch(setMeeple(meeple));
 });
 
-socket.on('gameOver', () => {
-  store.dispatch(gameOver());
-});
-
 socket.on('postMessage', (player, message) => {
   store.dispatch(postMessage(player, message));
 });
@@ -84,6 +80,10 @@ socket.on('hostLeft', () => {
 
 socket.on('playerLeft', (newMeeples, newPlayers) => {
   store.dispatch(playerLeft(newMeeples, newPlayers))
+})
+
+socket.on('removeMeepleScore', () => {
+  store.dispatch(removeAndScore())
 })
 
 export default socket;

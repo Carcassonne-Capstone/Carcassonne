@@ -21,6 +21,7 @@ class Board extends Component {
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.noTilesLeft = this.noTilesLeft.bind(this);
     this.state = {
       directionsToggle:false,
       currentHover: {}
@@ -86,47 +87,69 @@ class Board extends Component {
     if (prevProps.removeMeeples !== this.props.removeMeeples) {
       removeMeeples(this.props.removeMeeples, this.scene)
     }
-    if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
+    if (!this.props.currentTile.tile) {
+      this.validTiles.forEach(tile => this.scene.remove(tile));
+      this.validTiles = [];
       [...this.curTile.children].forEach(meeple => {
         if (meeple.name.split('-')[0] === 'emptyMeeple') {
           this.curTile.remove(meeple);
         }
       });
-      this.curTile = null;
-    }
-    if (prevProps.curLocation !== this.props.curLocation) {
-      const currPlayer = this.props.players.find(player => player.name === this.props.currentPlayer.name);
-      this.curTile = changeCurTile(this.scene, this.curTile, this.props.curLocation, this.props.currentTile, this.props.meeple, currPlayer)
-    }
-    if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation) {
-      this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
-    }
-    if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentPlayer.animal, this.props.currentTile)
-    }
-    if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
-      this.checkPlayerBotTurn()
+
+      if (this.props.meeplesOnBoard.length > 0){
+        this.noTilesLeft()
+      } else {
+        setTimeout(() => socket.emit('gameOverNoMeeples'), 2000)
+      }
+    } else {
+      if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
+        [...this.curTile.children].forEach(meeple => {
+          if (meeple.name.split('-')[0] === 'emptyMeeple') {
+            this.curTile.remove(meeple);
+          }
+        });
+        this.curTile = null;
+      }
+      if (prevProps.curLocation !== this.props.curLocation) {
+        const currPlayer = this.props.players.find(player => player.name === this.props.currentPlayer.name);
+        this.curTile = changeCurTile(this.scene, this.curTile, this.props.curLocation, this.props.currentTile, this.props.meeple, currPlayer)
+      }
+      if (prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation) {
+        this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
+      }
+      if (prevProps.meeple.coords !== this.props.meeple.coords) {
+        changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentPlayer.animal, this.props.currentTile)
+      }
+      if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
+        this.checkPlayerBotTurn()
+      }
     }
   }
-  
+
+  noTilesLeft() {
+    if (this.props.player.host) {
+      setTimeout(() => socket.emit('removeAndScore', this.props.roomId), 2000)
+    }
+  }
+
   checkPlayerBotTurn() {
     if (this.props.disconnectedPlayers.find(player => player === this.props.currentPlayer.name) && this.props.player.host) {
       if (this.props.meeple.coords) {
-        setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1200);
+        setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 100);
       } else if (this.props.curLocation) {
         const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
         const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
         if (filteredChildren.length > 0) {
           const randMeeple = filteredChildren[Math.floor(Math.random() * filteredChildren.length)]
-          setTimeout(() => socket.emit('meeplePlaced', this.props.roomId, [randMeeple.position.x, randMeeple.position.y], this.props.player, randMeeple.regionIdx, randMeeple.tile), 1500)
+          setTimeout(() => socket.emit('meeplePlaced', this.props.roomId, [randMeeple.position.x, randMeeple.position.y], this.props.currentPlayer, randMeeple.regionIdx, randMeeple.tile), 100)
         } else {
-          setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1200);
+          setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 100);
         }
       } else if (this.validTiles.length) {
         const randTile = this.validTiles[Math.floor(Math.random()*this.validTiles.length)]
-        setTimeout(() => socket.emit('tilePlaced', this.props.roomId, [randTile.position.x, randTile.position.y]), 1500)
+        setTimeout(() => socket.emit('tilePlaced', this.props.roomId, [randTile.position.x, randTile.position.y]), 100)
       } else {
-        setTimeout(() => socket.emit('rotateTile', this.props.roomId), 1200)
+        setTimeout(() => socket.emit('rotateTile', this.props.roomId), 100)
       }
     }
   }
@@ -253,11 +276,12 @@ class Board extends Component {
               this.mount = mount;
             }}
           />
+          {this.props.currentTile.tile &&
           <div className="playerContainer">
             <div className="currentTiles">
               <CurrentTile />
             </div>
-          </div>
+          </div>}
         </div>
         <div className="rightSide">
           <ScoreBoard />
@@ -283,7 +307,8 @@ const mapStateToProps = state => {
     gameState: state.game.gameState,
     disconnectedPlayers: state.messages.disconnectedPlayers,
     playingWithBots: state.messages.playingWithBots,
-    numTiles: state.game.numTiles
+    numTiles: state.game.numTiles,
+    meeplesOnBoard: state.game.meeplesOnBoard
   };
 };
 
