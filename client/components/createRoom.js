@@ -55,9 +55,9 @@ class CreateRoom extends Component {
             <div>
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                     <div className="form-group">
-                        <label htmlFor="name" >Name*</label>
+                        {/* <label htmlFor="name" >Name*</label> */}
                         <div className="form-control">
-                            <input name="name" type="text" className="input" maxLength="10" required/>
+                            <input name="name" type="text" className="input" maxLength="10" required autoComplete="off" placeholder="Name*"/>
                         </div>
                     </div>
                     <div className="form-group">

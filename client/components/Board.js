@@ -212,16 +212,20 @@ class Board extends Component {
             //style={{ width: "80vw", height: "5vw" }}
           > 
           <div className="instructions">
-            <div className='drag'>Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out</div>
-              <div id="cameraButtons">
-                <div >Change Camera View:</div>
-                <button type="button" onClick={this.resetCamera}>
-                  Flat Board
-                </button>
-                <button type="button" onClick={this.threeDcamera}>
-                  3D Board
-                </button>
-              </div>
+            <div 
+              className='drag'>{`Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out\n     \n \n`}
+            </div>
+            <div id="placeHolder">_</div>
+
+            <div id="cameraButtons">
+              <div >Change Camera View:</div>
+              <button type="button" onClick={this.resetCamera}>
+                Flat Board
+              </button>
+              <button type="button" onClick={this.threeDcamera}>
+                3D Board
+              </button>
+            </div>
             </div>
             <div className="tileInstructions">
               <div className="helpButton">
