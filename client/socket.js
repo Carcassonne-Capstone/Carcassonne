@@ -41,8 +41,8 @@ socket.on('rotate', () => {
   store.dispatch(rotate());
 });
 
-socket.on('newPlayer', (player, newTile) => {
-  store.dispatch(nextTurn(player, newTile));
+socket.on('newPlayer', (player, newTile, numTiles) => {
+  store.dispatch(nextTurn(player, newTile, numTiles));
 });
 
 socket.on('me', (player, meeple) => {

@@ -16,21 +16,23 @@ export const removeMeeples = (meeplesToRemove, scene) => {
     });
 }
 
-export const changeMeeple = (meeple, prevMeeple, tile, animal) => {
+export const changeMeeple = (meeple, prevMeeple, tile, animal, tileNode) => {
     if (meeple.coords) {
         if (prevMeeple.coords) {
             const oldMeeple = tile.getObjectByName(`meeple-${prevMeeple.coords[0]},${prevMeeple.coords[1]}`)
-            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile))
+            replaceMeeple(tile, oldMeeple, createEmptyMeeple(prevMeeple.coords[0], prevMeeple.coords[1], prevMeeple.regionIdx, tile, tileNode.tile.regions[prevMeeple.regionIdx].type))
         }
         const old = tile.getObjectByName(`emptyMeeple-${meeple.coords[0]},${meeple.coords[1]}`)
-        //const newMeeple = animal(meeple.coords[0], meeple.coords[1], meeple.player.color, meeple.player.sound)
+        let addZ = 0;
+        if (tileNode.tile.regions[meeple.regionIdx].type === 'monastery') addZ = -0.09
+        else if (tileNode.tile.regions[meeple.regionIdx].type === 'city') addZ = 0.4
         const file = `/animals/models/${animal}.json`
         const objLoader = new THREE.ObjectLoader();
         objLoader.load(file, (object) => {
             const data = getModelData(animal)
             object.position.x=meeple.coords[0];
             object.position.y=meeple.coords[1];
-            object.position.z= data.posZ;
+            object.position.z= data.posZ + addZ;
             object.scale.x=data.scaleX;
             object.scale.y=data.scaleY;
             object.scale.z=data.scaleZ;
@@ -47,48 +49,48 @@ const getModelData = (animal) => {
     switch(animal) {
         case 'tiger':
             return {
-                posZ: .25,
-                scaleX:.003,
-                scaleY:.003,
-                scaleZ:.003,
+                posZ: .05,
+                scaleX:.03,
+                scaleY:.03,
+                scaleZ:.03,
                 rotX: Math.PI/2,
-                rotY: Math.PI/2
+                rotY: Math.PI
             }
         case 'gorilla':
             return {
-                posZ: .05,
-                scaleX:.003,
-                scaleY:.003,
-                scaleZ:.003,
-                rotX: Math.PI,
+                posZ: .25,
+                scaleX:.0023,
+                scaleY:.0023,
+                scaleZ:.0023,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }   
         case 'elephant':
             return {
                 posZ: .05,
-                scaleX:.0015,
-                scaleY:.0015,
-                scaleZ:.0015,
-                rotX: Math.PI,
+                scaleX:.0014,
+                scaleY:.0014,
+                scaleZ:.0014,
+                rotX: Math.PI / 2,
                 rotY: Math.PI
             } 
         case 'monkey':
             return {
                 posZ: .05,
-                scaleX:.006,
-                scaleY:.006,
-                scaleZ:.006,
-                rotX: Math.PI,
+                scaleX:.1,
+                scaleY:.07,
+                scaleZ:.07,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }      
        
         case 'lion':
             return {
                 posZ: .05,
-                scaleX:.004,
-                scaleY:.004,
-                scaleZ:.004,
-                rotX: Math.PI,
+                scaleX:.06,
+                scaleY:.04,
+                scaleZ:.04,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }     
         }

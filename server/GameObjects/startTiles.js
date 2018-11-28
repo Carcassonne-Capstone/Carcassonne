@@ -21,7 +21,7 @@ const tileInfo = [
   {quantity: 2, regionInfo: [[city, [top, right], true, [0.25, 0.25]]]},
   {quantity: 3, regionInfo: [[city, [top], false, [0, 0.35]], [city, [bottom], false, [0, -0.35]]]},
   {quantity: 2, regionInfo: [[city, [top], false, [0, 0.35]], [city, [right], false, [0.35, 0]]]},
-  {quantity: 2, regionInfo: [[monastery, [], false, [0, 0]], [road, [bottom], false, [0, -0.3]]]},
+  {quantity: 2, regionInfo: [[monastery, [], false, [0, 0]], [road, [bottom], false, [0, -0.35]]]},
   {quantity: 1, regionInfo: [[city, [top, right, left], false, [0, 0.15]], [road, [bottom], false, [0, -0.35]]]},
   {quantity: 2, regionInfo: [[city, [top, right, left], true, [0, 0.15]], [road, [bottom], false, [0, -0.35]]]},
   {quantity: 8, regionInfo: [[road, [right, left], false, [0, 0]]]},

@@ -23,7 +23,8 @@ class Board extends Component {
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.state = {
-      directionsToggle: false
+      directionsToggle: false,
+      currentHover: {}
     };
   }
 
@@ -132,7 +133,8 @@ class Board extends Component {
         this.props.meeple,
         prevProps.meeple,
         this.curTile,
-        this.props.currentPlayer.animal
+        this.props.currentPlayer.animal,
+        this.props.currentTile
       );
     }
     if (
@@ -337,9 +339,10 @@ class Board extends Component {
           >
             <div className="instructions">
               <div className="drag">
-                Drag mouse to move board, right click and drag to rotate, scroll
-                to zoom in/out
+                {`Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out\n     \n \n`}
               </div>
+              <div id="placeHolder">_</div>
+
               <div id="cameraButtons">
                 <div>Change Camera View:</div>
                 <button type="button" onClick={this.resetCamera}>
@@ -377,7 +380,9 @@ class Board extends Component {
                   ``
                 )}
               </div>
-              <div className="tileRemain">Tiles Remaining: XX</div>
+              <div className="tileRemain">{`Tiles Remaining: ${
+                this.props.numTiles < 9 ? 0 : ""
+              }${this.props.numTiles + 1}`}</div>
             </div>
           </div>
 
@@ -418,7 +423,8 @@ const mapStateToProps = state => {
     removeMeeples: state.game.removeMeeples,
     gameState: state.game.gameState,
     disconnectedPlayers: state.messages.disconnectedPlayers,
-    playingWithBots: state.messages.playingWithBots
+    playingWithBots: state.messages.playingWithBots,
+    numTiles: state.game.numTiles
   };
 };
 

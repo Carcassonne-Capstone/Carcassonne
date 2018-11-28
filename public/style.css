@@ -3,7 +3,7 @@ html {
   height: 100vw !important;
   overflow: hidden;
   margin: 0;
-  font-family: "MedievalSharp", cursive;
+  font-family: "Sofadi One", cursive;
 }
 
 .modal {
@@ -132,7 +132,7 @@ html {
 }
 
 .title {
-  font-size: 3.5vw;
+  font-size: 3vw;
   font-weight: bold;
   padding: 5%;
   /* margin-top: 5% */
@@ -205,7 +205,7 @@ html {
   font-weight: bold;
   padding: 0;
   margin: 0;
-  width: 80%;
+  width: 87%;
   margin: 10%;
   margin-top: 2%;
 }
@@ -252,6 +252,10 @@ html {
   padding: 10%;
   padding-top: 3%;
   font-weight: bold;
+}
+
+#roomId {
+  padding-bottom: 4%;
 }
 
 button:focus {
@@ -319,12 +323,17 @@ input:focus {
 } */
 
 .playerHead {
-  padding-left: 6%;
+  padding-left: 4%;
   /* text-align: left; */
+}
+
+#placeHolder {
+  color: black;
 }
 
 #playerImage {
   width: 15%;
+  padding-left: 4%;
 }
 
 #meepleRemaining {
@@ -336,7 +345,7 @@ input:focus {
   width: 45%;
   font-size: 1.5em;
   /* text-align: left; */
-  padding-left: 6%;
+  padding-left: 4%;
 }
 
 #scoreSB {
@@ -535,6 +544,13 @@ input:focus {
   margin-right: 2%;
 }
 
+.buttonMenu {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  align-content: center;
+}
+
 .helpButton img:hover {
   opacity: 0.5;
   cursor: pointer;
@@ -626,7 +642,7 @@ input:focus {
   /* margin-right: 1%; */
   display: flex;
   align-items: center;
-  margin-left: 10%;
+  margin-left: 8%;
 }
 
 .tileRemain {
@@ -689,6 +705,7 @@ input:focus {
   margin: 0.3em;
   overflow-wrap: break-word;
   hyphens: auto;
+  margin-left: 4%;
 }
 
 .speech-bubble:after {
@@ -705,43 +722,34 @@ input:focus {
 }
 
 #red {
-  background-color: red;
-  opacity: 0.6;
+  background-color: rgb(255, 0, 0, 0.6);
 }
 #red:after {
-  border-right-color: red;
-  opacity: 0.6;
+  border-right-color: rgb(255, 0, 0, 0.6);
 }
 #blue {
-  background-color: blue;
-  opacity: 0.6;
+  background-color: rgb(0, 0, 255, 0.6);
 }
 #blue:after {
-  border-right-color: blue;
-  opacity: 0.6;
+  border-right-color: rgb(0, 0, 255, 0.6);
 }
 #purple {
-  background-color: purple;
-  opacity: 0.6;
+  background-color: rgb(128, 0, 128, 0.6);
 }
 #purple:after {
-  border-right-color: purple;
-  opacity: 0.6;
+  border-right-color: rgb(128, 0, 128, 0.6);
 }
 #yellow {
   background-color: rgb(255, 255, 0, 0.6);
-  opacity: 0.6;
 }
 #yellow:after {
-  border-right-color: yellow;
-  opacity: 0.6;
+  border-right-color: rgb(255, 255, 0, 0.6);
 }
 #orange {
   background-color: rgb(255, 165, 0, 0.6);
 }
 #orange:after {
-  border-right-color: orange;
-  opacity: 0.6;
+  border-right-color: rgb(255, 165, 0, 0.6);
 }
 #emoji-picker {
   width: 16vw;
@@ -820,41 +828,39 @@ input:focus {
   height: 7em;
 }
 .meeple-selection-red img {
-  height: 7em;
   -webkit-filter: drop-shadow(0.25em 0.125em 0 red)
     drop-shadow(-0.125em -0.125em 0 red);
   filter: drop-shadow(0.25em 0.125em 0 red) drop-shadow(-0.125em -0.125em 0 red);
 }
 .meeple-selection-orange img {
-  height: 7em;
   -webkit-filter: drop-shadow(0.25em 0.125em 0 orange)
     drop-shadow(-1px -1px 0 orange);
   filter: drop-shadow(0.25em 0.125em 0 orange) drop-shadow(-1px -1px 0 orange);
 }
 .meeple-selection-blue img {
-  height: 7em;
   -webkit-filter: drop-shadow(0.25em 0.125em 0 blue)
     drop-shadow(-1px -1px 0 blue);
   filter: drop-shadow(0.25em 0.125em 0 blue) drop-shadow(-1px -1px 0 blue);
 }
 .meeple-selection-purple img {
-  height: 7em;
   -webkit-filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
     drop-shadow(-1px -1px 0 rgb(224, 20, 224));
   filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
     drop-shadow(-1px -1px 0 rgb(224, 20, 224));
 }
 .meeple-selection-yellow img {
-  height: 7em;
   -webkit-filter: drop-shadow(0.25em 0.125em 0 yellow)
     drop-shadow(-1px -1px 0 yellow);
   filter: drop-shadow(0.25em 0.125em 0 yellow) drop-shadow(-1px -1px 0 yellow);
 }
+
 .meeple-selection {
   display: flex;
   flex-direction: row;
-  flex-wrap: none;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 75%;
+  padding: 2%;
 }
 
 .rules {
@@ -867,4 +873,21 @@ input:focus {
 
 #ruleHeader {
   font-weight: bold;
+}
+#meep2 {
+  padding: 2%;
+  margin-left: 10%;
+}
+
+.meeple-selection img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
+  border: 6px;
+}
+
+.meeple-selection-2 img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
 }
