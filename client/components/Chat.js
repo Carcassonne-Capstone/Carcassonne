@@ -19,13 +19,10 @@ class Chat extends React.Component {
   }
   componentDidMount() {
     const chatScroll = document.getElementById('chat-messages');
-    console.log('chatScroll', chatScroll)
   }
 
   componentDidUpdate(){
     var element = document.getElementById("chat-messages");
-    console.log('scrollHeight', element.scrollHeight)
-    console.log('scrollTop', element.scrollTop)
     element.scrollTop = element.scrollHeight
   }
   

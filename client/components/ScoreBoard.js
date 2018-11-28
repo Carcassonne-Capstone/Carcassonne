@@ -31,7 +31,6 @@ const ScoreBoard = props => {
           {props.players.map(player => {
             // let color = getColor(player.animal);
             // style={{color: color}}
-            console.log("player in score", player)
             const classIcon = getClass(player.animal)
             return (
               <tr key={player.name} >

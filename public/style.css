@@ -3,7 +3,7 @@ html {
   height: 100vw !important;
   overflow: hidden;
   margin: 0;
-  font-family: 'Sofadi One', cursive;
+  font-family: "Sofadi One", cursive;
 }
 
 .modal {
@@ -55,34 +55,57 @@ html {
 
 .directionsModal {
   display: block; /* Hidden by default */
-  position: fixed; /* Stay in place */
   z-index: 5; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 50vw;
+  height: 40vw;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0, 0); /* Fallback color */
-  font-size: 2.5vw;
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  overflow-y: auto;
+  /* color: rgba(0, 0, 0, 0.5); */
 }
 
 .directions-modal-content {
-  background-color: rgba(0, 0, 0);
+  background-color: grey;
   border: 4px double white;
   margin: 10% auto; /* 15% from the top and centered */
-  padding: 20px;
-  width: 80%; /* Could be more or less, depending on screen size */
+  padding: 30px;
+  width: 75%; /* Could be more or less, depending on screen size */
   text-align: center;
   border-radius: 20px;
   color: white;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-top: 60px;
+  text-align: left;
+}
+
+#ruleHeader {
+  font-weight: bold;
+  font-size: 18px;
+  color: blue;
+}
+
+#mergingEx {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  /* height: 180px;
+  width: 150px; */
 }
 
 .directionsModal button {
-  color: red;
   border: none;
   background-color: rgba(0, 0, 0, 0);
-  font-size: 3vw;
-  font-weight: bold;
+  color: red;
+  position: fixed;
+  top: 15%;
+  right: 37%;
+  text-decoration: bold;
+  font-size: 26px;
 }
 
 .directionsModal button:hover {
@@ -257,8 +280,8 @@ html {
   font-weight: bold;
 }
 
-#roomId{
-    padding-bottom:4%
+#roomId {
+  padding-bottom: 4%;
 }
 
 button:focus {
@@ -331,13 +354,13 @@ input:focus {
   /* text-align: left; */
 }
 
-#placeHolder{
-    color:black
+#placeHolder {
+  color: black;
 }
 
 #playerImage {
   width: 15%;
-  padding-left:4%
+  padding-left: 4%;
 }
 
 #meepleRemaining {
@@ -548,11 +571,11 @@ input:focus {
   margin-right: 2%;
 }
 
-.buttonMenu{
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    align-content: center;
+.buttonMenu {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  align-content: center;
 }
 
 .helpButton img:hover {
@@ -662,7 +685,6 @@ input:focus {
   transform: scale(1.1);
 }
 
-
 #cameraButtons {
   width: 90%;
   display: flex;
@@ -710,7 +732,7 @@ input:focus {
   margin: 0.3em;
   overflow-wrap: break-word;
   hyphens: auto;
-  margin-left:4%;
+  margin-left: 4%;
 }
 
 .speech-bubble:after {
@@ -727,22 +749,22 @@ input:focus {
 }
 
 #red {
-  background-color: rgb(255, 0, 0, .6);
+  background-color: rgb(255, 0, 0, 0.6);
 }
 #red:after {
-  border-right-color: rgb(255, 0, 0, .6);
+  border-right-color: rgb(255, 0, 0, 0.6);
 }
 #blue {
-  background-color: rgb(0, 0, 255, .6);
+  background-color: rgb(0, 0, 255, 0.6);
 }
 #blue:after {
-  border-right-color: rgb(0, 0, 255, .6);
+  border-right-color: rgb(0, 0, 255, 0.6);
 }
 #purple {
-  background-color: rgb(128, 0, 128, .6);
+  background-color: rgb(128, 0, 128, 0.6);
 }
 #purple:after {
-  border-right-color: rgb(128, 0, 128, .6);
+  border-right-color: rgb(128, 0, 128, 0.6);
 }
 #yellow {
   background-color: rgb(255, 255, 0, 0.6);
@@ -945,35 +967,24 @@ input:focus {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  width:75%;
+  width: 75%;
   padding: 2%;
 }
 
-#meep2{
-    padding: 2%;
-    /* margin-left:10% */
+#meep2 {
+  padding: 2%;
+  /* margin-left: 10%; */
 }
 
-.characterContainer{
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
+.meeple-selection img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
+  border: 6px;
 }
 
-.pick{
-    font-size: 2vw;
-}
-
-.meeple-selection img:hover{
-    opacity:.6;
-    cursor: pointer;
-    transform: scale(1.1);
-    border: 6px
-}
-
-.meeple-selection-2 img:hover{
-    opacity:.6;
-    cursor: pointer;
-    transform: scale(1.1);
+.meeple-selection-2 img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
 }
