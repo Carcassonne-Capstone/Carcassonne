@@ -21,6 +21,9 @@ class Board extends Component {
     this.resetCamera = this.resetCamera.bind(this);
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.state = {
+      directionsToggle:false
+    }
   }
 
   onWindowResize() {
@@ -104,7 +107,7 @@ class Board extends Component {
       this.checkPlayerBotTurn()
     }
   }
-
+  
   checkPlayerBotTurn() {
     if (this.props.disconnectedPlayers.find(player => player === this.props.currentPlayer.name) && this.props.player.host) {
       if (this.props.meeple.coords) {
@@ -221,7 +224,17 @@ class Board extends Component {
             </div>
             <div className="tileInstructions">
               <div className="helpButton">
-                <img src="/helpButton.svg" style={{ width: "60px", height: "60px" }}/>
+                <img src="/helpButton.svg" style={{ width: "60px", height: "60px" }} onClick={()=>this.setState({directionsToggle: true})}/>
+                {this.state.directionsToggle === true ?
+                  <div className="directionsModal">
+                    <div id="directions">
+                      <div className="directions-modal-content">
+                        <button id="exitOut" onClick={()=>this.setState({directionsToggle: false})} type="button">X</button>
+                      </div> 
+                    </div>
+                  </div>:
+                  ``
+                }
               </div>
               <div className="tileRemain">Tiles Remaining: XX</div>
             </div>
