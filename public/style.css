@@ -679,7 +679,7 @@ input:focus {
   font-family: "Bungee", cursive;
   font-size: 3em;
   color: green;
-  padding: 5%;
+  padding: 3%;
   background-color: antiquewhite;
   opacity: 0.5;
 }
@@ -696,6 +696,11 @@ input:focus {
   color: white;
   text-decoration: none;
   font-size: 1.8em;
+  margin: 2%;
+}
+
+#playAgain:hover {
+  color: yellow;
 }
 
 .stumps {
@@ -714,7 +719,10 @@ input:focus {
 }
 
 #playScrs {
+  display: flex;
+  flex-direction: column;
   align-content: center;
+  align-items: center;
 }
 
 .meeple-selection img {

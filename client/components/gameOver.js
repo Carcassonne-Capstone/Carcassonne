@@ -39,12 +39,6 @@ class gameOver extends Component {
       message = message.slice(0, message.length - 5);
     }
 
-    // players.forEach(player => {
-    //   if (player.name === winner[0][0]) {
-    //     image = player.chatIconSrc;
-    //   }
-    // });
-
     return (
       <div className="endGameContainer">
         <div>
@@ -59,22 +53,13 @@ class gameOver extends Component {
         {winner.length < 2 ? (
           <div id="endBody">
             <div id="endMsgHead">And the winner is ...</div>
-
             <div id="winnerName">{winner[0][0]} </div>
-            {/* <br />
-            <div id="endMsgScore">with a score of </div>
-
-            <div id="score">{winner[0][1]} </div> */}
           </div>
         ) : (
           <div id="endBody">
             <div id="endMsgHead">We have a tie between ...</div>
             <br />
             <div id="winnerName">{message} </div>
-            {/* <br />
-            <div id="endMsgScore">with a score of </div>
-
-            <div id="score">{winner[0][1]} </div> */}
           </div>
         )}
         <div>
@@ -86,9 +71,9 @@ class gameOver extends Component {
         <div className="stumps">
           {playScrs.map(player => {
             return (
-              <div key={player[0]}>
-                <div id="playScrs">
-                  {player[0]} : {player[1]}
+              <div id="playScrs" key={player[0]}>
+                <div>
+                  {player[0]}: {player[1]}
                 </div>
                 <div>
                   <img
