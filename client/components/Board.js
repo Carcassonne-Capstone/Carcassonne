@@ -241,7 +241,7 @@ class Board extends Component {
                   ``
                 }
               </div>
-              <div className="tileRemain">Tiles Remaining: XX</div>
+              <div className="tileRemain">{`Tiles Remaining: ${this.props.numTiles < 9 ? 0 : ''}${this.props.numTiles + 1}`}</div>
             </div>
           </div>
 
@@ -282,7 +282,8 @@ const mapStateToProps = state => {
     removeMeeples: state.game.removeMeeples,
     gameState: state.game.gameState,
     disconnectedPlayers: state.messages.disconnectedPlayers,
-    playingWithBots: state.messages.playingWithBots
+    playingWithBots: state.messages.playingWithBots,
+    numTiles: state.game.numTiles
   };
 };
 

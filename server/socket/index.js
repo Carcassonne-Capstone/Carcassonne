@@ -98,13 +98,15 @@ module.exports = io => {
     });
 
     socket.on('turnEnded', (curPlayer, allPlayers, roomId) => {
-      const newPlayer = getNextPlayer(allPlayers, curPlayer)
-      const tile = rooms[roomId].deck.getCard();
-      if (tile) {
-        broadcastToAll(socket, roomId, 'newPlayer', newPlayer, tile)
-      } else {
-        broadcastToAll(socket, roomId, 'gameOver')
-        delete rooms[roomId]
+      if (rooms.hasOwnProperty(roomId)) {
+        const newPlayer = getNextPlayer(allPlayers, curPlayer)
+        const tile = rooms[roomId].deck.getCard();
+        if (tile) {
+          broadcastToAll(socket, roomId, 'newPlayer', newPlayer, tile, rooms[roomId].deck.tiles.length)
+        } else {
+          broadcastToAll(socket, roomId, 'gameOver')
+          delete rooms[roomId]
+        }
       }
     });
 

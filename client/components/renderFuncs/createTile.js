@@ -25,7 +25,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
 };
 
 export const createBlankTile = (tile, x, y) => {
-  const newCube = new THREE.CubeGeometry(1, 1, 0.1);
+  const newCube = new THREE.CubeGeometry(0.99, 0.99, 0.09);
   let material = new THREE.MeshBasicMaterial({ color: 0x433C3B });
   let cube = new THREE.Mesh(newCube, material);
   cube.position.x = x;
