@@ -78,11 +78,8 @@ html {
 }
 
 .directionsModal button {
-  color: red;
   border: none;
   background-color: rgba(0, 0, 0, 0);
-  font-size: 3vw;
-  font-weight: bold;
 }
 
 .directionsModal button:hover {
@@ -858,4 +855,16 @@ input:focus {
   flex-direction: row;
   flex-wrap: none;
   justify-content: space-between;
+}
+
+.rules {
+  font-size: 13px;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  text-align: left;
+}
+
+#ruleHeader {
+  font-weight: bold;
 }
