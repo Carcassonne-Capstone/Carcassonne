@@ -626,7 +626,8 @@ input:focus {
     padding: 0.3em;
     margin: 0.3em;
     overflow-wrap: break-word;
-    hyphens: auto
+    hyphens: auto;
+
 }
 
 .speech-bubble:after {
@@ -643,38 +644,89 @@ input:focus {
 }
 
 #red {
-  background-color: red;  
+  background-color: red; 
+  opacity:.6 ;
 }
 #red:after {
     border-right-color:  red; 
+    opacity:.6 ;
   }
 #blue {
-    background-color: blue;   
+    background-color: blue;  
+    opacity:.6 ; 
 }
 #blue:after { 
     border-right-color: blue; 
+    opacity:.6 ;
 }
 #purple {
     background-color: purple;  
+    opacity:.6 ;
 }
 #purple:after {   
     border-right-color: purple;
+    opacity:.6 ;
 }
 #yellow {
     background-color: yellow;
+    opacity:.6 ;
 }
 #yellow:after {
     border-right-color: yellow;
+    opacity:.6 ;
 }
 #orange {
     background-color: orange;
+    opacity:.6 ;
 }
 #orange:after {
     border-right-color: orange;
+    opacity:.6 ;
 }
 #emoji-picker {
     width: 16vw;
 }
 .meeple-selection img{
     height: 7em;
+}
+.meeple-selection-red img{
+   height: 7em;
+   -webkit-filter: drop-shadow(0.25em 0.125em 0 red)
+                  drop-shadow(-0.125em -0.125em 0 red);
+   filter: drop-shadow(0.25em 0.125em 0 red) 
+           drop-shadow(-0.125em -0.125em 0 red);
+}
+.meeple-selection-orange img{
+   height: 7em;
+   -webkit-filter: drop-shadow(0.25em 0.125em 0 orange)
+                   drop-shadow(-1px -1px 0 orange);
+   filter: drop-shadow(0.25em 0.125em 0 orange) 
+           drop-shadow(-1px -1px 0 orange);
+    }
+    .meeple-selection-blue img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 blue)
+                    drop-shadow(-1px -1px 0 blue);
+   filter: drop-shadow(0.25em 0.125em 0 blue) 
+            drop-shadow(-1px -1px 0 blue);
+    }
+    .meeple-selection-purple img{
+         height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
+                    drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+    filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224)) 
+            drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+    }
+    .meeple-selection-yellow img{
+    height: 7em;
+    -webkit-filter: drop-shadow(0.25em 0.125em 0 yellow)
+                    drop-shadow(-1px -1px 0 yellow);
+   filter: drop-shadow(0.25em 0.125em 0 yellow) 
+           drop-shadow(-1px -1px 0 yellow);
+    }
+.meeple-selection {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: none;
+   justify-content: space-between;
 }
