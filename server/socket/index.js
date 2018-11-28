@@ -20,24 +20,36 @@ module.exports = io => {
       delete rooms[roomId]
     })
 
+    // eslint-disable-next-line complexity
     socket.on('disconnecting', () => {
       const [socketId, roomId] = Object.keys(socket.rooms);
-      if (roomId) {
+      if (roomId && rooms.hasOwnProperty(roomId)) {
         let player = rooms[roomId].players.find(curPlayer => curPlayer.socketId === socketId)
-        rooms[roomId].disconnected.push(player)
-        if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+        if (rooms[roomId].gameState === 'playing') {
+          rooms[roomId].disconnected.push(player)
+          if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+            delete rooms[roomId]
+          } else {
+            if (player.host) {
+              player.setHost(false)
+              let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+              while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
+                newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+              }
+              newHost.setHost(true)
+              broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+            }
+            socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+          }
+        } else if (player.host) {
+          socket.broadcast.to(roomId).emit('hostLeft')
           delete rooms[roomId]
         } else {
-          if (player.host) {
-            player.setHost(false)
-            let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
-            while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
-              newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
-            }
-            newHost.setHost(true)
-            broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+          rooms[roomId].players = rooms[roomId].players.filter(curPlayer => player.name !== curPlayer.name)
+          if (player.animal !== '') {
+            rooms[roomId].meeple.push(player.animal)
           }
-          socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+          socket.broadcast.to(roomId).emit('playerLeft', rooms[roomId].meeple, rooms[roomId].players)
         }
       }
     })
@@ -47,7 +59,7 @@ module.exports = io => {
       socket.join(roomId);
       const hostPlayer = new Player(playerName, roomId, socket.id, colorArr[0])
       hostPlayer.setHost(true);
-      rooms[roomId] = {players: [hostPlayer], meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant'], disconnected: []};
+      rooms[roomId] = {players: [hostPlayer], meeple: ['monkey', 'lion', 'tiger', 'gorilla', 'elephant'], disconnected: [], gameState: 'waiting'};
       socket.emit('roomCreated', roomId, hostPlayer);
     });
 
@@ -72,6 +84,7 @@ module.exports = io => {
         socket.emit('startGameErr', 'The game can only be started when everyone has selected an animal')
       } else if (rooms[roomId].players.length > 0) {
         rooms[roomId].deck = initializeDeckPlayers(rooms[roomId].players)
+        rooms[roomId].gameState = 'playing'
         const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
         const firstTile = rooms[roomId].deck.getCard();
         broadcastToAll(socket, roomId, 'initGame', rooms[roomId].players, roomId, startTile, firstTile, rooms[roomId].players[0])
@@ -91,6 +104,7 @@ module.exports = io => {
         broadcastToAll(socket, roomId, 'newPlayer', newPlayer, tile)
       } else {
         broadcastToAll(socket, roomId, 'gameOver')
+        delete rooms[roomId]
       }
     });
 

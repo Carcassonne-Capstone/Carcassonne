@@ -7,9 +7,8 @@ import { connect } from "react-redux";
 class Main extends React.Component {
   render() {
     return (
-      this.props.roomId ?
+      this.props.roomId || this.props.gameState ?
         <div>
-          {/* {this.props.disconnectedPlayers.length > 0 && <DisconnectedState />} */}
           <DisconnectedState />
           <Board />
         </div>
@@ -22,7 +21,7 @@ class Main extends React.Component {
 const mapStateToProps = state => {
   return {
     roomId: state.game.roomId,
-    // disconnectedPlayers: state.messages.disconnectedPlayers
+    gameState: state.game.gameState
   };
 };
 
