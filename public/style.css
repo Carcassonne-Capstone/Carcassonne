@@ -9,24 +9,87 @@ html {
 .modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 10; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  padding: 30px;
+  background-color: rgb(0, 0, 0, 0); /* Fallback color */
+  font-size: 2.5vw;
 }
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  background-color: rgba(0, 0, 0);
+  border: 4px double white;
+  margin: 10% auto; /* 15% from the top and centered */
   padding: 20px;
-  border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
+  text-align: center;
+  border-radius: 20px;
+  color: white;
+}
+
+.modal-content button {
+  background-color: green;
+  color: white;
+  width: 20vw;
+  margin: 2%;
+  font-size: 2vw;
+  font-weight: bold;
+  margin-bottom: 5%;
+  border-radius: 15px;
+  border: none;
+}
+
+.modal-content button:hover {
+  cursor: pointer;
+  opacity: 0.7;
+  transform: scale(1.1);
+}
+
+.modal-content div {
+  padding: 2%;
+}
+
+.directionsModal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 5; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0, 0); /* Fallback color */
+  font-size: 2.5vw;
+}
+
+.directions-modal-content {
+  background-color: rgba(0, 0, 0);
+  border: 4px double white;
+  margin: 10% auto; /* 15% from the top and centered */
+  padding: 20px;
+  width: 80%; /* Could be more or less, depending on screen size */
+  text-align: center;
+  border-radius: 20px;
+  color: white;
+}
+
+.directionsModal button {
+  color: red;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 3vw;
+  font-weight: bold;
+}
+
+.directionsModal button:hover {
+  cursor: pointer !important;
+  z-index: 20 !important;
+  opacity: 0.5 !important;
+  transform: scale(1.1);
 }
 
 #StayFocusd-infobar {
@@ -471,6 +534,15 @@ input:focus {
   background-color: black;
 }
 
+.helpButton {
+  margin-right: 2%;
+}
+
+.helpButton img:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
 #meeple {
   margin-left: auto;
   display: flex;
@@ -541,12 +613,23 @@ input:focus {
 
 .instructions {
   /* margin-left: auto; */
-  width: 50%;
+  width: 65%;
   /* text-align: right; */
   font-size: 1vw;
   /* margin-right: 1%; */
   display: flex;
   flex-direction: column;
+}
+
+.tileInstructions {
+  /* margin-left: auto; */
+  width: 35%;
+  /* text-align: right; */
+  font-size: 1vw;
+  /* margin-right: 1%; */
+  display: flex;
+  align-items: center;
+  margin-left: 10%;
 }
 
 .tileRemain {
@@ -556,12 +639,14 @@ input:focus {
   margin-right: 1%;
 }
 
-.drag {
-  padding-bottom: 2%;
+#cameraButtons button:hover {
+  opacity: 0.9;
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 #cameraButtons {
-  width: 100%;
+  width: 90%;
   display: flex;
   align-content: center;
   align-items: center;
@@ -619,38 +704,47 @@ input:focus {
   border: 0.563em solid transparent;
   border-left: 0;
   margin-top: -0.562em;
-  margin-left: -0.3em;
+  margin-left: -0.5em;
 }
 
 #red {
   background-color: red;
+  opacity: 0.6;
 }
 #red:after {
   border-right-color: red;
+  opacity: 0.6;
 }
 #blue {
   background-color: blue;
+  opacity: 0.6;
 }
 #blue:after {
   border-right-color: blue;
+  opacity: 0.6;
 }
 #purple {
   background-color: purple;
+  opacity: 0.6;
 }
 #purple:after {
   border-right-color: purple;
+  opacity: 0.6;
 }
 #yellow {
-  background-color: yellow;
+  background-color: rgb(255, 255, 0, 0.6);
+  opacity: 0.6;
 }
 #yellow:after {
   border-right-color: yellow;
+  opacity: 0.6;
 }
 #orange {
-  background-color: orange;
+  background-color: rgb(255, 165, 0, 0.6);
 }
 #orange:after {
   border-right-color: orange;
+  opacity: 0.6;
 }
 #emoji-picker {
   width: 16vw;
@@ -727,4 +821,41 @@ input:focus {
 
 .meeple-selection img {
   height: 7em;
+}
+.meeple-selection-red img {
+  height: 7em;
+  -webkit-filter: drop-shadow(0.25em 0.125em 0 red)
+    drop-shadow(-0.125em -0.125em 0 red);
+  filter: drop-shadow(0.25em 0.125em 0 red) drop-shadow(-0.125em -0.125em 0 red);
+}
+.meeple-selection-orange img {
+  height: 7em;
+  -webkit-filter: drop-shadow(0.25em 0.125em 0 orange)
+    drop-shadow(-1px -1px 0 orange);
+  filter: drop-shadow(0.25em 0.125em 0 orange) drop-shadow(-1px -1px 0 orange);
+}
+.meeple-selection-blue img {
+  height: 7em;
+  -webkit-filter: drop-shadow(0.25em 0.125em 0 blue)
+    drop-shadow(-1px -1px 0 blue);
+  filter: drop-shadow(0.25em 0.125em 0 blue) drop-shadow(-1px -1px 0 blue);
+}
+.meeple-selection-purple img {
+  height: 7em;
+  -webkit-filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
+    drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+  filter: drop-shadow(0.25em 0.125em 0 rgb(224, 20, 224))
+    drop-shadow(-1px -1px 0 rgb(224, 20, 224));
+}
+.meeple-selection-yellow img {
+  height: 7em;
+  -webkit-filter: drop-shadow(0.25em 0.125em 0 yellow)
+    drop-shadow(-1px -1px 0 yellow);
+  filter: drop-shadow(0.25em 0.125em 0 yellow) drop-shadow(-1px -1px 0 yellow);
+}
+.meeple-selection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: none;
+  justify-content: space-between;
 }

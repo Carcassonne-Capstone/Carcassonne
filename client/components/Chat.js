@@ -52,17 +52,17 @@ class Chat extends React.Component {
       showEmojis: !currentEmojiState
     });
   }
-  getColorClass (color) {
-    switch(color) {
-        case 'red':
+  getColorClass (animal) {
+    switch(animal) {
+        case 'monkey':
             return "red";
-        case 'blue':
+        case 'gorilla':
             return "blue";
-        case 'purple':
+        case 'elephant':
             return "purple";  
-        case 'yellow':
+        case 'lion':
             return "yellow"; 
-        case 'orange':
+        case 'tiger':
             return "orange";         
     }
 }
@@ -80,12 +80,12 @@ class Chat extends React.Component {
         <div id='chat-messages'>
           <div className="chatTitle">Chat</div>
           {this.props.messages.map((message, i) => {
-            const chatColor = this.getColorClass(message[0].color);
-            console.log("player", message[0]);
+            const chatColor = this.getColorClass(message[0].animal);
+            console.log(message[0])
             return (
              <div id='chat-scroll' key={i}> 
               <div className="chat-icon">
-                <img  src={message[0].chatIconSrc} />
+                <img  src={`/animals/images/${message[0].animal}.png`} />
               </div>  
               <div id={chatColor} className="speech-bubble" >
                 {/* {getTime(new Date(Date.now()))} {message[0].name}: {message[1]} */}
@@ -103,8 +103,9 @@ class Chat extends React.Component {
               onChange={this.handleChange}
               placeholder="Type message here..."
               value={this.state.newMessage}
+              autoComplete="off"
             />
-            <span onClick={this.toggleEmoji}>🙂 </span>
+            {/* <span onClick={this.toggleEmoji}>🙂 </span> */}
           </form>
           <div>
             {this.state.showEmojis ? (
@@ -122,6 +123,7 @@ class Chat extends React.Component {
 const mapStateToProps = state => ({
   messages: state.messages.messages,
   roomId: state.game.roomId,
+  currentPlayer: state.game.currentPlayer,
   player: state.game.player
 });
 
