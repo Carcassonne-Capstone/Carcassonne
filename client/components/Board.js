@@ -23,7 +23,8 @@ class Board extends Component {
     this.onWindowResize = this.onWindowResize.bind(this);
     this.state = {
       directionsToggle:false,
-      currentHover: {}
+      currentHover: {},
+      currentHoverMeeple: {}
     }
   }
 
@@ -201,6 +202,50 @@ class Board extends Component {
       }
     }
   }
+  onMouseOver(event, tiles) {
+    const windowArea = event.target.getBoundingClientRect();
+      const mouse3D = new THREE.Vector3(
+        ((event.clientX - windowArea.left) / (windowArea.right - windowArea.left)) * 2 - 1,
+        -((event.clientY - windowArea.top) / (windowArea.bottom - windowArea.top)) * 2 + 1,
+        0
+      );
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse3D, this.camera);
+      const intersects = raycaster.intersectObjects(tiles);
+      const current = this.state.currentHover;
+      const currentMeeple = this.state.currentHoverMeeple;
+      let intersectsMeeple = false;
+
+        if (this.props.curLocation) {
+          const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
+          const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
+          intersectsMeeple = raycaster.intersectObjects(filteredChildren);
+        }
+
+        if (intersectsMeeple.length) {
+          const hex = getHex(this.props.player.animal);
+          this.setState({currentHoverMeeple: intersectsMeeple[0]});
+          intersectsMeeple[0].object.material.color.setHex(hex);  
+        } 
+        else {
+          currentMeeple.object && currentMeeple.object.material.color.setHex(0xa9b6cc);
+        }
+      
+    
+        if (intersects.length) {
+          if (intersects.length > 1) {
+            current.object && current.object.material.color.setHex(0x3a3636);
+            this.setState({currentHover: intersects[1]});
+          }
+          else {
+          this.setState({currentHover: intersects[0]});
+          intersects[0].object.material.color.setHex(0x3b684f);
+          }  
+        } 
+        else {
+          current.object && current.object.material.color.setHex(0x3a3636);
+        }
+      }
   
   render() {
     return this.props.gameState === "gameOver" ? (
@@ -246,6 +291,7 @@ class Board extends Component {
           </div>
 
           <div
+            onMouseMove={e => this.onMouseOver(e, this.validTiles)}
             onClick={e => this.onDocMouseDown(e, this.validTiles)}
             id="boardCanvas"
             //style={{ width: "80vw", height: "40vw" }}
@@ -288,3 +334,18 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(Board);
+
+const getHex = (animal) => {
+  switch (animal) {
+    case 'monkey':
+      return '0xF72E12';
+    case 'gorilla':
+      return '0x122AF7';
+      case 'elephant':
+      return '0xAD37C7';
+      case 'lion':
+      return '0xEDF635';
+      case 'tiger':
+      return '0xEE7913';
+    }  
+}
