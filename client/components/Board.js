@@ -201,27 +201,6 @@ class Board extends Component {
       }
     }
   }
-  onMouseOver(event, tiles) {
-    const windowArea = event.target.getBoundingClientRect();
-      const mouse3D = new THREE.Vector3(
-        ((event.clientX - windowArea.left) / (windowArea.right - windowArea.left)) * 2 - 1,
-        -((event.clientY - windowArea.top) / (windowArea.bottom - windowArea.top)) * 2 + 1,
-        0
-      );
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse3D, this.camera);
-      const intersects = raycaster.intersectObjects(tiles);
-      if (intersects.length) {
-        this.setState({currentHover: intersects[0]});
-        intersects[0].object.material.color.setHex(0xedd089);
-        console.log("current tile", this.props.currentTile)
-      }  
-      else {
-        const current = this.state.currentHover;
-        console.log("mouseOut", intersects)
-        current.object.material.color.setHex(0x433C3B);
-      }
-  }
   
   render() {
     return this.props.gameState === "gameOver" ? (
@@ -233,16 +212,20 @@ class Board extends Component {
             //style={{ width: "80vw", height: "5vw" }}
           > 
           <div className="instructions">
-            <div className='drag'>Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out</div>
-              <div id="cameraButtons">
-                <div >Change Camera View:</div>
-                <button type="button" onClick={this.resetCamera}>
-                  Flat Board
-                </button>
-                <button type="button" onClick={this.threeDcamera}>
-                  3D Board
-                </button>
-              </div>
+            <div 
+              className='drag'>{`Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out\n     \n \n`}
+            </div>
+            <div id="placeHolder">_</div>
+
+            <div id="cameraButtons">
+              <div >Change Camera View:</div>
+              <button type="button" onClick={this.resetCamera}>
+                Flat Board
+              </button>
+              <button type="button" onClick={this.threeDcamera}>
+                3D Board
+              </button>
+            </div>
             </div>
             <div className="tileInstructions">
               <div className="helpButton">
@@ -264,7 +247,6 @@ class Board extends Component {
 
           <div
             onClick={e => this.onDocMouseDown(e, this.validTiles)}
-            onMouseMove={e => this.onMouseOver(e, this.validTiles)}
             id="boardCanvas"
             //style={{ width: "80vw", height: "40vw" }}
             ref={mount => {

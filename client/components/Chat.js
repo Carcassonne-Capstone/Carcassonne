@@ -19,18 +19,27 @@ class Chat extends React.Component {
   }
   componentDidMount() {
     const chatScroll = document.getElementById('chat-messages');
-    chatScroll.scrollIntoView(false);
+    console.log('chatScroll', chatScroll)
   }
+
+  componentDidUpdate(){
+    var element = document.getElementById("chat-messages");
+    console.log('scrollHeight', element.scrollHeight)
+    console.log('scrollTop', element.scrollTop)
+    element.scrollTop = element.scrollHeight
+  }
+  
   handleSubmit(e) {
     e.preventDefault();
     // const chatScroll = document.getElementById('chat-messages');
     // chatScroll.scrollTop = chatScroll.scrollHeight;
+    
 
     socket.emit(
       "newMessage",
       this.props.roomId,
       this.props.player,
-      this.state.newMessage
+      this.state.newMessage,
     );
     this.setState({ newMessage: "" });
   }
@@ -81,7 +90,7 @@ class Chat extends React.Component {
           <div className="chatTitle">Chat</div>
           {this.props.messages.map((message, i) => {
             const chatColor = this.getColorClass(message[0].animal);
-            console.log(message[0])
+            //console.log(message[0])
             return (
              <div id='chat-scroll' key={i}> 
               <div className="chat-icon">
