@@ -22,3 +22,4 @@ export const treeLocations2 =  [ [ 0.3188171842393799, 0.44451879041045955 ],
 [ 0.07428622096698972, 0.46140814989108394 ] ]
 
 export const hasMonastery2 = false
+export const hasShield2 = false

@@ -45,3 +45,4 @@ export const treeLocations3 =  [ [ 0.2039015162955124, 0.0632617199130954 ],
 [ 0.4371570512871709, 0.36692234477266344 ] ]
 
 export const hasMonastery3 = false
+export const hasShield3 = false
