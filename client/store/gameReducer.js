@@ -23,7 +23,8 @@ const initialState = {
   meeplesOnBoard: [],
   removeMeeples: [],
   monasteryTiles: [],
-  meepleSelection: ["monkey", "lion", "tiger", "gorilla", "elephant"]
+  meepleSelection: ["monkey", "lion", "tiger", "gorilla", "elephant"],
+  numTiles: 70
 };
 
 //action types
@@ -57,7 +58,7 @@ export const initGame = (
   currentPlayer
 ) => ({ type: INIT_GAME, players, roomId, startTile, curTile, currentPlayer });
 export const rotate = () => ({ type: ROTATE_TILE });
-export const nextTurn = (player, tile) => ({ type: NEXT_TURN, player, tile });
+export const nextTurn = (player, tile, numTiles) => ({ type: NEXT_TURN, player, tile, numTiles });
 export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
 export const setPlayer = (player, meeple) => ({
   type: SET_PLAYER,
@@ -534,7 +535,8 @@ const reducer = (state = initialState, action) => {
         scores: curScores,
         allPlayers: newPlayersState,
         meeplesOnBoard: meeplesOnBoard,
-        monasteryTiles: newMonasteries
+        monasteryTiles: newMonasteries,
+        numTiles: action.numTiles
       };
     case INIT_GAME:
       const { startNode, unfilled } = initStartNode(action.startTile);
