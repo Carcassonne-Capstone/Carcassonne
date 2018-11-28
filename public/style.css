@@ -640,7 +640,7 @@ input:focus {
 	border: 0.563em solid transparent;
 	border-left: 0;
 	margin-top: -0.562em;
-    margin-left: -0.3em;
+    margin-left: -0.5em;
 }
 
 #red {
@@ -668,7 +668,7 @@ input:focus {
     opacity:.6 ;
 }
 #yellow {
-    background-color: yellow;
+    background-color: rgb(255, 255, 0, 0.6);
     opacity:.6 ;
 }
 #yellow:after {
@@ -676,8 +676,7 @@ input:focus {
     opacity:.6 ;
 }
 #orange {
-    background-color: orange;
-    opacity:.6 ;
+    background-color: rgb(255, 165, 0, 0.6);
 }
 #orange:after {
     border-right-color: orange;

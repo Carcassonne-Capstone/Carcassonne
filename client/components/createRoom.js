@@ -34,7 +34,20 @@ class CreateRoom extends Component {
     startGame() {
         socket.emit('startGame', this.props.roomId);
     }
-
+    getClass(animal) {
+       switch (animal) {
+            case 'tiger':
+              return 'meeple-selection-orange'
+           case 'gorilla':
+               return 'meeple-selection-blue' 
+            case 'elephant':
+                return 'meeple-selection-purple'
+            case 'monkey':
+                return 'meeple-selection-red'
+            case 'lion':
+               return 'meeple-selection-yellow' 
+       }       
+    }
     render(){
         return(
             !this.state.waitingRoom && !this.state.showMeeple
@@ -57,10 +70,15 @@ class CreateRoom extends Component {
             !this.state.waitingRoom &&  this.state.showMeeple
             ?
             <div className="meeple-selection">
-                {this.props.meeple.map(meeple => {
-                    return <img key={meeple} onClick={(e) => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.jpg`}/>
-                })}
-            </div>
+            {this.props.meeple.map(meeple => {
+                const meepleClass = this.getClass(meeple);
+                return (
+                <div key={meeple} className={meepleClass}>
+                    <img onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.png`}/>
+                </div>   
+                )  
+            })}
+        </div>
             :
             <div className='waitingRoom'>
                 <div id="list">
