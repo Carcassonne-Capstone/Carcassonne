@@ -21,6 +21,7 @@ class Main extends React.Component {
     render() {
         return (
             <div id="disconnectModel" className="modal" style={{display: (this.props.disconnectedPlayers.length && !this.props.playingWithBots) ? 'block' : 'none'}}>
+                {this.props.gameState === 'gameOver' && <Redirect to="/" />}
                 <div className="modal-content">
                     <div>
                         The following players have left the game:
@@ -46,7 +47,8 @@ const mapStateToProps = state => {
     disconnectedPlayers: state.messages.disconnectedPlayers,
     roomId: state.game.roomId,
     playingWithBots: state.messages.playingWithBots,
-    player: state.game.player
+    player: state.game.player,
+    gameState: state.game.gameState
   };
 };
 

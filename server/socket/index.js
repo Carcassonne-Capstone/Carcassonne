@@ -15,6 +15,11 @@ const broadcastToAll = ( socket, roomId, message, ...props) => {
 module.exports = io => {
   io.on('connection', socket => {
 
+    socket.on('endGame', (roomId) => {
+      broadcastToAll(socket, roomId, 'changeGameState', 'gameOver')
+      delete rooms[roomId]
+    })
+
     socket.on('disconnecting', () => {
       const [socketId, roomId] = Object.keys(socket.rooms);
       if (roomId) {
