@@ -20,8 +20,6 @@ const Rules = props => {
         positions. Positions are valid if the region on its edges – either a
         forest, field, or leafy trail – match the corresponding region on the
         board position.
-        {/* *** todo: INSERT IMAGE PLAYING WITH BOTS */}
-        {/* TODO: meeple VALIDITY W/ IMAGE? */}
       </div>
       <br />
       <div>
@@ -31,16 +29,21 @@ const Rules = props => {
       </div>
       <br />
       <div>
-        A player cannot place an animal piece on a region that has been claimed
-        -- however, if two separate regions may eventually be joined, a player
-        can place a piece on a region that may potentially join another. If the
+        A player cannot place a piece on a region that has been claimed --
+        however, if two separate regions may eventually be joined, a player can
+        place a piece on a region that may potentially join another. If the
         regions do join later in the game, scoring will depend on how many
-        pieces are placed on this region: if each player has one piece on the
-        region, they will each receive the total points. However, a player who
-        already has a claim to this region may place additional pieces on this
-        region, and if one player has more pieces on the region, they will
-        recieve all the points for the region and the other player will receive
-        none.
+        pieces are placed on this region (see Points).
+      </div>
+      <br />
+      <div>
+        In this example, although the top-right forest region is claimed, the
+        bottom-right forest region may be claimed by a new player. This is
+        because both are unconnected at the time of placement, and may be closed
+        together or separately.
+      </div>
+      <div id="mergingEx">
+        <img align="middle" src="/images/merging-regions.png" />
       </div>
       <br />
       <div>
@@ -136,7 +139,7 @@ const Rules = props => {
       <br />
       <div>
         See the <strong>tiles remaining</strong> (out of a total of 72) on the
-        top right corner, and chat with your fellow players on in the
+        top right corner, and chat with your fellow players on in the{" "}
         <strong>Chat</strong> box.
       </div>
       <div />

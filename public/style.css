@@ -55,31 +55,57 @@ html {
 
 .directionsModal {
   display: block; /* Hidden by default */
-  position: fixed; /* Stay in place */
   z-index: 5; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 50vw;
+  height: 40vw;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0, 0); /* Fallback color */
-  font-size: 2.5vw;
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  overflow-y: auto;
+  /* color: rgba(0, 0, 0, 0.5); */
 }
 
 .directions-modal-content {
-  background-color: rgba(0, 0, 0);
+  background-color: grey;
   border: 4px double white;
   margin: 10% auto; /* 15% from the top and centered */
-  padding: 20px;
-  width: 80%; /* Could be more or less, depending on screen size */
+  padding: 30px;
+  width: 75%; /* Could be more or less, depending on screen size */
   text-align: center;
   border-radius: 20px;
   color: white;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-top: 60px;
+  text-align: left;
+}
+
+#ruleHeader {
+  font-weight: bold;
+  font-size: 18px;
+  color: blue;
+}
+
+#mergingEx {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  /* height: 180px;
+  width: 150px; */
 }
 
 .directionsModal button {
   border: none;
   background-color: rgba(0, 0, 0, 0);
+  color: red;
+  position: fixed;
+  top: 15%;
+  right: 37%;
+  text-decoration: bold;
+  font-size: 26px;
 }
 
 .directionsModal button:hover {
@@ -863,17 +889,6 @@ input:focus {
   padding: 2%;
 }
 
-.rules {
-  font-size: 13px;
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  text-decoration: none;
-  text-align: left;
-}
-
-#ruleHeader {
-  font-weight: bold;
-}
 #meep2 {
   padding: 2%;
   margin-left: 10%;

@@ -371,8 +371,9 @@ class Board extends Component {
                           }
                           type="button"
                         >
-                          <Rules />
+                          X
                         </button>
+                        <Rules />
                       </div>
                     </div>
                   </div>
