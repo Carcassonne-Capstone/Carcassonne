@@ -326,12 +326,17 @@ input:focus {
 } */
 
 .playerHead {
-  padding-left: 6%;
+  padding-left: 4%;
   /* text-align: left; */
+}
+
+#placeHolder{
+    color:black
 }
 
 #playerImage {
   width: 15%;
+  padding-left:4%
 }
 
 #meepleRemaining {
@@ -343,7 +348,7 @@ input:focus {
   width: 45%;
   font-size: 1.5em;
   /* text-align: left; */
-  padding-left: 6%;
+  padding-left: 4%;
 }
 
 #scoreSB {
@@ -640,7 +645,7 @@ input:focus {
   /* margin-right: 1%; */
   display: flex;
   align-items: center;
-  margin-left: 10%;
+  margin-left: 8%;
 }
 
 .tileRemain {
@@ -655,6 +660,7 @@ input:focus {
   cursor: pointer;
   transform: scale(1.1);
 }
+
 
 #cameraButtons {
   width: 90%;
@@ -703,6 +709,7 @@ input:focus {
   margin: 0.3em;
   overflow-wrap: break-word;
   hyphens: auto;
+  margin-left:4%;
 }
 
 .speech-bubble:after {
@@ -719,43 +726,34 @@ input:focus {
 }
 
 #red {
-  background-color: red;
-  opacity: 0.6;
+  background-color: rgb(255, 0, 0, .6);
 }
 #red:after {
-  border-right-color: red;
-  opacity: 0.6;
+  border-right-color: rgb(255, 0, 0, .6);
 }
 #blue {
-  background-color: blue;
-  opacity: 0.6;
+  background-color: rgb(0, 0, 255, .6);
 }
 #blue:after {
-  border-right-color: blue;
-  opacity: 0.6;
+  border-right-color: rgb(0, 0, 255, .6);
 }
 #purple {
-  background-color: purple;
-  opacity: 0.6;
+  background-color: rgb(128, 0, 128, .6);
 }
 #purple:after {
-  border-right-color: purple;
-  opacity: 0.6;
+  border-right-color: rgb(128, 0, 128, .6);
 }
 #yellow {
   background-color: rgb(255, 255, 0, 0.6);
-  opacity: 0.6;
 }
 #yellow:after {
-  border-right-color: yellow;
-  opacity: 0.6;
+  border-right-color: rgb(255, 255, 0, 0.6);
 }
 #orange {
   background-color: rgb(255, 165, 0, 0.6);
 }
 #orange:after {
-  border-right-color: orange;
-  opacity: 0.6;
+  border-right-color: rgb(255, 165, 0, 0.6);
 }
 #emoji-picker {
   width: 16vw;
@@ -869,12 +867,7 @@ input:focus {
   padding: 2%;
 }
 
-.meeple-selection-2{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width:75%;
+#meep2{
     padding: 2%;
     margin-left:10%
 }
