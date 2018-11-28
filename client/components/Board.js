@@ -473,9 +473,11 @@ class Board extends Component {
                   ``
                 )}
               </div>
-              <div className="tileRemain">{`Tiles Remaining: ${
-                this.props.numTiles < 9 ? 0 : ""
-              }${this.props.numTiles + 1}`}</div>
+              <div className="tileRemain">
+                {this.props.currentTile.tile ? 
+                `Tiles Remaining: ${this.props.numTiles < 9 ? 0 : ""}${this.props.numTiles + 1}` :
+                `Tiles Remaining: 00`}
+              </div>
             </div>
           </div>
 
