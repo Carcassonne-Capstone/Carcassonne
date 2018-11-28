@@ -676,35 +676,26 @@ input:focus {
   flex-direction: column;
   align-items: center;
   justify-items: center;
-  font-family: "Hanalei Fill", cursive;
+  font-family: "Bungee", cursive;
   font-size: 3em;
-  color: white;
+  color: green;
   padding: 5%;
-}
-
-#endMsgHead {
+  background-color: antiquewhite;
+  opacity: 0.5;
 }
 
 #winnerName {
-  font-family: "Hanalei", cursive;
   font-size: 1.5em;
-}
-#endMsgScore {
-}
-
-#score {
-  display: flex;
-  font-family: "MedievalSharp", cursive;
-  font-size: 2em;
 }
 
 #playAgain {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "MedievalSharp", cursive;
+  font-family: "Bungee", cursive;
   color: white;
   text-decoration: none;
+  font-size: 1.8em;
 }
 
 .stumps {
@@ -713,12 +704,19 @@ input:focus {
   align-content: center;
   /* align-self: flex-end; */
   flex-direction: row;
+  font-family: "Bungee", cursive;
   color: white;
-  font-size: 1em;
-  margin-bottom: 3%;
+  font-size: 1.5em;
   position: fixed;
   bottom: 0;
+  margin: 3%;
+  width: 100%;
 }
+
+#playScrs {
+  align-content: center;
+}
+
 .meeple-selection img {
   height: 7em;
 }

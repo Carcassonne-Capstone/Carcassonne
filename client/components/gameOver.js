@@ -87,7 +87,7 @@ class gameOver extends Component {
           {playScrs.map(player => {
             return (
               <div key={player[0]}>
-                <div>
+                <div id="playScrs">
                   {player[0]} : {player[1]}
                 </div>
                 <div>
