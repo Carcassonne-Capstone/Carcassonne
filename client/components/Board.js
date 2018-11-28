@@ -135,21 +135,21 @@ class Board extends Component {
   checkPlayerBotTurn() {
     if (this.props.disconnectedPlayers.find(player => player === this.props.currentPlayer.name) && this.props.player.host) {
       if (this.props.meeple.coords) {
-        setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 100);
+        setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1500);
       } else if (this.props.curLocation) {
         const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
         const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
         if (filteredChildren.length > 0) {
           const randMeeple = filteredChildren[Math.floor(Math.random() * filteredChildren.length)]
-          setTimeout(() => socket.emit('meeplePlaced', this.props.roomId, [randMeeple.position.x, randMeeple.position.y], this.props.currentPlayer, randMeeple.regionIdx, randMeeple.tile), 100)
+          setTimeout(() => socket.emit('meeplePlaced', this.props.roomId, [randMeeple.position.x, randMeeple.position.y], this.props.currentPlayer, randMeeple.regionIdx, randMeeple.tile), 1500)
         } else {
-          setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 100);
+          setTimeout(() => socket.emit('turnEnded', this.props.currentPlayer, this.props.players, this.props.roomId), 1500);
         }
       } else if (this.validTiles.length) {
         const randTile = this.validTiles[Math.floor(Math.random()*this.validTiles.length)]
-        setTimeout(() => socket.emit('tilePlaced', this.props.roomId, [randTile.position.x, randTile.position.y]), 100)
+        setTimeout(() => socket.emit('tilePlaced', this.props.roomId, [randTile.position.x, randTile.position.y]), 1500)
       } else {
-        setTimeout(() => socket.emit('rotateTile', this.props.roomId), 100)
+        setTimeout(() => socket.emit('rotateTile', this.props.roomId), 1500)
       }
     }
   }
