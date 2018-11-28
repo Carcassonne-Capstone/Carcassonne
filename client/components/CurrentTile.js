@@ -38,6 +38,7 @@ class CurrentTile extends Component {
     this.initializeCamera();
     this.addCube();
     this.animate();
+    this.setState({playSound: true})
 
     window.addEventListener("resize", this.onWindowResize, false);
   }
@@ -83,7 +84,8 @@ class CurrentTile extends Component {
           <div className="playerButtons">
             {
               this.props.curLocation ?
-              <button type="button" onClick={() => socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> :
+              <button type="button" onClick={()=>  socket.emit('tilePlaced', this.props.roomId, null)}> Back </button> 
+              :
               <button type="button" onClick={() => socket.emit('rotateTile', this.props.roomId)}>Rotate</button>
             }
               <button
