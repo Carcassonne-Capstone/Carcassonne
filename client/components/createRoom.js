@@ -69,16 +69,19 @@ class CreateRoom extends Component {
             :
             !this.state.waitingRoom &&  this.state.showMeeple
             ?
-            <div className="meeple-selection">
-            {this.props.meeple.map(meeple => {
-                const meepleClass = this.getClass(meeple);
-                return (
-                <div key={meeple} className={meepleClass}>
-                    <img onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.png`}/>
-                </div>   
-                )  
-            })}
-        </div>
+            <div className='characterContainer'>
+                    <div className='pick'>Pick your character.</div>
+                    <div className="meeple-selection">
+                    {this.props.meeple.map(meeple => {
+                        const meepleClass = this.getClass(meeple);
+                        return (
+                        <div key={meeple} className={meepleClass}>
+                            <img onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.png`}/>
+                        </div>   
+                        )  
+                    })}
+                    </div>
+            </div>
             :
             <div className='waitingRoom'>
                 <div id="list">

@@ -5,6 +5,24 @@ import {Redirect} from 'react-router-dom'
 class gameOver extends Component {
   constructor(props) {
     super();
+    this.state = {
+      sound: true
+    }
+  }
+
+  getClass(animal){
+    switch (animal) {
+         case 'tiger':
+           return 'meeple-selection-orange'
+        case 'gorilla':
+            return 'meeple-selection-blue' 
+         case 'elephant':
+             return 'meeple-selection-purple'
+         case 'monkey':
+             return 'meeple-selection-red'
+         case 'lion':
+            return 'meeple-selection-yellow' 
+    }       
   }
 
   render() {
@@ -13,10 +31,17 @@ class gameOver extends Component {
     let playScrs = [];
     let winner = [];
     let message = "";
+    let max=0; 
 
     for (let key in scores) {
       if (scores.hasOwnProperty(key)) {
         playScrs.push([key, scores[key]]);
+        if (scores[key]>max){
+          winner=[key]
+          max=scores[key]
+        } else if (scores[key]===max){
+          winner.push(key)
+        }
       }
     }
 
@@ -24,18 +49,17 @@ class gameOver extends Component {
       return b[1] - a[1];
     });
 
-    for (let i = 0; i < playScrs.length - 1; i++) {
-      if (playScrs[i][1] >= playScrs[i + 1][1]) {
-        winner.push(playScrs[i]);
-      }
-      if (playScrs[playScrs.length - 1][1] === playScrs[0][1]) {
-        winner.push(playScrs[playScrs.length - 1]);
-      }
-    }
+    // for (let i = 0; i < playScrs.length; i++) {
+    //   console.log('playScrs', playScrs)
+    //   if (playScrs[i][1] >= max) {
+    //     winner.push(playScrs[i]);
+    //     max=playScrs[i][1]
+    //   }
+    // }
 
     if (winner.length > 1) {
       winner.map(name => {
-        message += name[0] + " and ";
+        message += name + " and ";
       });
       message = message.slice(0, message.length - 5);
     }
@@ -43,46 +67,65 @@ class gameOver extends Component {
     return (
       this.props.gameState === 'gameOver' ?
         <div className="endGameContainer">
-          <div>
-            <audio
-              ref="audio_tag"
-              src="/Sounds/CantWaitToBeKing.mp3"
-              controls
-              autoPlay
-            />
-          </div>
+          <div className="endTop">
+            <div className='muteUnmute' onClick={()=>{this.setState({sound: !this.state.sound}); document.getElementById('end-audio').muted = !document.getElementById('end-audio').muted }}>
+              <audio
+                id='end-audio'
+                ref="audio_tag"
+                src="/Sounds/CantWaitToBeKing.mp3"
+                // controls
+                autoPlay
+                loop
+              />
+              {this.state.sound === false ? 
+                <img src="/sound.png" width="35px" height="35px"/>
+                :
+                <img src="/mute.png"  width="35px" height="35px"/>
+              }
 
-          {winner.length < 2 ? (
-            <div id="endBody">
-              <div id="endMsgHead">And the winner is ...</div>
-              <div id="winnerName">{winner[0][0]} </div>
             </div>
-          ) : (
-            <div id="endBody">
-              <div id="endMsgHead">We have a tie between ...</div>
-              <br />
-              <div id="winnerName">{message} </div>
-            </div>
-          )}
-          <div>
-            <a href="/" id="playAgain">
-              Play again
-            </a>
-          </div>
 
+            {winner.length < 2 ? (
+              <div id="endBody">
+                <div id="winnerName">{winner[0].toUpperCase()}</div>
+                <div id="endMsgHead">IS THE KING OF THE JUNGLE</div>
+              </div>
+            ) : (
+              <div id="endBody">
+                <div id="winnerName">{message} </div>
+                <div id="endMsgHead">ARE KINGS OF THE JUNGLE</div>
+              </div>
+            )}
+            <div id="playAgain">
+              <a href="/">
+                Play again?
+              </a>
+            </div>
+
+          </div>
+         
           <div className="stumps">
             {playScrs.map(player => {
+              console.log('player',player)
+              console.log('playerProps',this.props.players)
               return (
                 <div id="playScrs" key={player[0]}>
                   <div>
                     {player[0]}: {player[1]}
                   </div>
+                  <div id="winIcon" className={this.getClass(
+                      this.props.players.find(propPlayer => propPlayer.name === player[0]).animal
+                    )}>
+                    <img src={`animals/images/${this.props.players.find(propPlayer => propPlayer.name === player[0]).animal}.png`} height="80px" width="80px"/>
+                  </div>
                   <div>
                     <img
+                      className="stumpImg"
                       src="/images/stump.png"
                       alt="Stump"
-                      height={175 + player[1] * 10}
-                      width={200 + player[1] * 7.5}
+                      height={25 + player[1] * 4}
+                      // width={200 + player[1] * 7.5}
+                      width={"100%"}
                     />
                   </div>
                 </div>

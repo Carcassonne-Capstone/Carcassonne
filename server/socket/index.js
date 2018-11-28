@@ -82,7 +82,7 @@ module.exports = io => {
     socket.on('startGame', (roomId) => {
       if (rooms[roomId].players.length !== (5 - rooms[roomId].meeple.length)) {
         socket.emit('startGameErr', 'The game can only be started when everyone has selected an animal')
-      } else if (rooms[roomId].players.length > 0) {
+      } else if (rooms[roomId].players.length > 1) {
         rooms[roomId].deck = initializeDeckPlayers(rooms[roomId].players)
         rooms[roomId].gameState = 'playing'
         const startTile = new Tile([new Region('road', [1, 3], false, [0.5, 0.5]),new Region('city', [0], false, [0.5, 0.1])],0);
