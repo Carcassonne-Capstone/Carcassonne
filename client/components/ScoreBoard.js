@@ -15,12 +15,14 @@ const ScoreBoard = props => {
         </tr>
         
           {props.players.map(player => {
-            let color = player.color
+            // let color = getColor(player.animal);
             // style={{color: color}}
+            console.log("player in score", player)
             return (
               <tr key={player.name} >
                 <td id="playerImage">
-                  <img src="favicon.png" alt="" height="40px" width="40px" />
+                {/* favicon.png */}
+                <img src={`/animals/images/${player.animal}.png`} alt="" height="40px" width="40px" />
                 </td>
                 <td id="meepleRemaining" >{`x${player.meeple}`}</td>
                 <td id="playerNameSB" >{player.name}</td>

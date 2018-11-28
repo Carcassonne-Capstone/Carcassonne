@@ -29,6 +29,20 @@ class JoinRoom extends Component {
         socket.emit('selectMeeple', this.state.roomCode, meeple, this.props.player)
         this.setState({meepleSelected: true})
     }
+    getClass(animal) {
+        switch (animal) {
+             case 'tiger':
+               return 'meeple-selection-orange'
+            case 'gorilla':
+                return 'meeple-selection-blue' 
+             case 'elephant':
+                 return 'meeple-selection-purple'
+             case 'monkey':
+                 return 'meeple-selection-red'
+             case 'lion':
+                return 'meeple-selection-yellow' 
+        }       
+     }
 
     render(){
         return(
@@ -61,7 +75,12 @@ class JoinRoom extends Component {
                 ?
                 <div className="meeple-selection">
                     {this.props.meeple.map(meeple => {
-                        return <img key={meeple} onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.jpg`}/>
+                        const meepleClass = this.getClass(meeple);
+                        return (
+                        <div key={meeple} className={meepleClass}>
+                            <img onClick={() => this.selectMeeple(meeple)} src={`/animals/images/${meeple}.png`}/>
+                        </div>   
+                        ) 
                     })}
                 </div>
                 :
