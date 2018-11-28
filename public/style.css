@@ -971,9 +971,20 @@ input:focus {
   padding: 2%;
 }
 
-#meep2 {
-  padding: 2%;
-  /* margin-left: 10%; */
+#meep2{
+    padding: 2%;
+    /* margin-left:10% */
+}
+
+.characterContainer{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+
+.pick{
+    font-size: 2vw;
 }
 
 .meeple-selection img:hover {
