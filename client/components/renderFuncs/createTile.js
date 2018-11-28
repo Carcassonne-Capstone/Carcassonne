@@ -15,7 +15,7 @@ export const createCube = (tileNode, x, y, addEmptyMeeples) => {
     tileNode.tile.regions.forEach((region, idx) => {
       if (validMeepleRegion(region, tileNode)) {
         if (region.meeplePosition) {
-          const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube);
+          const emptyMeeple = createEmptyMeeple(region.meeplePosition[0], region.meeplePosition[1], idx, cube, region.type);
           cube.add(emptyMeeple);
         }
       }
