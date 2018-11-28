@@ -30,7 +30,9 @@ class Board extends Component {
   onWindowResize() {
     //this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+    if(this.mount!==null){
+      this.renderer.setSize(this.mount.clientWidth, this.mount.clientHeight);
+    }
   }
 
   componentDidMount() {

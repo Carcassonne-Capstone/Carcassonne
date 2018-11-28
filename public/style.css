@@ -304,6 +304,7 @@ input:focus {
   text-align: center;
   margin-top: 1%;
   color: white;
+  overflow: scroll
 }
 
 .scoreBoard tr {
@@ -763,7 +764,8 @@ input:focus {
 }
 
 .endGameContainer {
-  background-image: url("/Background2.gif");
+  /* background-image: url("/Background2.gif"); */
+  background-image: url("/backgroun7.gif");
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0;
@@ -771,7 +773,28 @@ input:focus {
   top: 0;
   height: 100%;
   width: 100%;
-  display: inherit;
+  display: flex;
+  flex-flow: column;
+}
+
+.muteUnmute :hover{
+    cursor: pointer;
+    opacity: .7
+}
+
+.muteUnmute{
+    margin-left: 1%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+}
+
+.endTop{
+    height: 40%;
+    display:flex;
+    flex-direction: column;
+    align-items: center
 }
 
 #endBody {
@@ -779,46 +802,98 @@ input:focus {
   flex-direction: column;
   align-items: center;
   justify-items: center;
-  font-family: "Bungee", cursive;
-  font-size: 3em;
-  color: green;
-  padding: 3%;
-  background-color: antiquewhite;
-  opacity: 0.5;
+  /* font-family: "Bungee", cursive; */
+  font-size: 3vw;
+  color: rgb(0, 128, 0);
+  padding: 1%;
+  background-color: rgb(250, 235, 215, .5);
+  height: 50%;
+  margin-top: 5%;
+  width:fit-content;
+  border-radius: 20px;
+  justify-content: center;
+  -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    
+}
+
+@-webkit-keyframes spaceboots {
+	0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+	10% { -webkit-transform: translate(-1px, -2px) rotate(-1deg); }
+	20% { -webkit-transform: translate(-3px, 0px) rotate(1deg); }
+	30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+	40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+	50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+	60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+	70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+	80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+	90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+	100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+#endMsgHead{
+    height: 40%
 }
 
 #winnerName {
-  font-size: 1.5em;
+  font-size: 5vw;
+  height: 60%;
 }
 
 #playAgain {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Bungee", cursive;
-  color: white;
-  text-decoration: none;
-  font-size: 1.8em;
+  width: auto;
   margin: 2%;
 }
 
-#playAgain:hover {
+#playAgain a{
+    /* font-family: "Bungee", cursive; */
+    color: white;
+    text-decoration: none;
+    font-size: 2.5vw;
+}
+
+#playAgain a:hover {
   color: yellow;
+  transform: scale(1.1);
+}
+
+.stumpImg{
+    -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+
+#winIcon{
+    -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }
 
 .stumps {
   display: flex;
   justify-content: center;
   align-content: center;
+  align-items: flex-end;
   /* align-self: flex-end; */
   flex-direction: row;
-  font-family: "Bungee", cursive;
+  /* font-family: "Bungee", cursive; */
   color: white;
   font-size: 1.5em;
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  margin: 3%;
+  /* margin: 3%; */
   width: 100%;
+  height: 60%
 }
 
 #playScrs {
@@ -826,7 +901,14 @@ input:focus {
   flex-direction: column;
   align-content: center;
   align-items: center;
+  width:20%;
 }
+
+/* .stumpImg{
+    position: absolute;
+    bottom: 0;
+    margin:0
+} */
 
 .meeple-selection img {
   height: 7em;
@@ -869,7 +951,18 @@ input:focus {
 
 #meep2{
     padding: 2%;
-    margin-left:10%
+    /* margin-left:10% */
+}
+
+.characterContainer{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+
+.pick{
+    font-size: 2vw;
 }
 
 .meeple-selection img:hover{

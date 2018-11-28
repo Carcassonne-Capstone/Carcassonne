@@ -86,7 +86,9 @@ class JoinRoom extends Component {
                 :
                 !this.state.meepleSelected
                 ?
-                <div className="meeple-selection" id="meep2">
+                <div className='characterContainer'>
+                    <div className='pick'>Pick your character.</div>
+                    <div className="meeple-selection" id="meep2">
                     {this.props.meeple.map(meeple => {
                         const meepleClass = this.getClass(meeple);
                         return (
@@ -95,6 +97,7 @@ class JoinRoom extends Component {
                         </div>   
                         ) 
                     })}
+                </div>
                 </div>
                 :
                 <div className="waitingRoomJoin">
