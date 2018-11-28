@@ -101,12 +101,7 @@ module.exports = io => {
       if (rooms.hasOwnProperty(roomId)) {
         const newPlayer = getNextPlayer(allPlayers, curPlayer)
         const tile = rooms[roomId].deck.getCard();
-        if (tile) {
-          broadcastToAll(socket, roomId, 'newPlayer', newPlayer, tile, rooms[roomId].deck.tiles.length)
-        } else {
-          broadcastToAll(socket, roomId, 'gameOver')
-          delete rooms[roomId]
-        }
+        broadcastToAll(socket, roomId, 'newPlayer', newPlayer, tile, rooms[roomId].deck.tiles.length)
       }
     });
 
@@ -135,7 +130,14 @@ module.exports = io => {
       broadcastToAll(socket, roomId, 'botsPlay')
     });
 
+    socket.on('removeAndScore', (roomId) => {
+      broadcastToAll(socket, roomId, 'removeMeepleScore')
+    })
+
+    socket.on('gameOverNoMeeples', (roomId) => {
+      broadcastToAll(socket, roomId, 'changeGameState', 'gameOver')
+      delete rooms[roomId]
+    })
+
   }
 )}
-   
-
