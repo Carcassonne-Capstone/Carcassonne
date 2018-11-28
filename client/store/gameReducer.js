@@ -38,6 +38,7 @@ const SET_MEEPLE = 'SET_MEEPLE';
 const GAME_OVER = 'GAME_OVER';
 const SELECT_MEEPLE = 'SELECT_MEEPLE';
 const NEW_HOST = 'NEW_HOST'
+const CHANGE_GAME_STATE = 'CHANGE_GAME_STATE'
 
 //action creators
 export const createRoom = (roomId, player) => ({type: CREATE_ROOM, roomId, player});
@@ -51,6 +52,7 @@ export const setMeeple = (meeple) => ({ type: SET_MEEPLE, meeple});
 export const gameOver = () => ({ type: GAME_OVER });
 export const selectMeeple = (meeple, newMeeple, player) => ({type: SELECT_MEEPLE, meeple, newMeeple, player})
 export const newHost = (players) => ({type: NEW_HOST, players})
+export const changeGameState = (state) => ({type: CHANGE_GAME_STATE, state})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`,`${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`]
@@ -308,9 +310,9 @@ const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlay
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PLAYER:
-      return { ...state, player: action.player, meepleSelection: action.meeple };
+      return { ...initialState, player: action.player, meepleSelection: action.meeple };
     case CREATE_ROOM:
-      return {...state, roomId: action.roomId, players: [action.player], player: action.player};
+      return {...initialState, roomId: action.roomId, players: [action.player], player: action.player};
     case JOIN_ROOM:
       return { ...state, players: [...state.players, action.player] };
     case ROTATE_TILE:
@@ -375,6 +377,8 @@ const reducer = (state = initialState, action) => {
       } 
     case NEW_HOST:
       return {...state, player: action.players.find(curPlayer => curPlayer.name === state.player.name)}
+    case CHANGE_GAME_STATE:
+      return {...state, gameState: action.state}
     default:
       return state;
   }
