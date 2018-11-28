@@ -101,7 +101,7 @@ class Board extends Component {
       this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
     }
     if (prevProps.meeple.coords !== this.props.meeple.coords) {
-      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.player.animal)
+      changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentPlayer.animal)
     }
     if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
       this.checkPlayerBotTurn()
