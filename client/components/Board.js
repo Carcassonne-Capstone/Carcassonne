@@ -12,6 +12,16 @@ import {changeCurTile, updateValidTiles} from './renderFuncs/tileFuncs'
 import ScoreBoard from "./ScoreBoard";
 import Chat from "./Chat"
 
+const throttle = (func, num) => {
+  let lastCall = Date.now()
+  return function(...args) {
+    if (Date.now() - lastCall >= num) {
+      lastCall = Date.now()
+      func(...args)
+    }
+  }
+}
+
 class Board extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +32,7 @@ class Board extends Component {
     this.threeDcamera = this.threeDcamera.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.noTilesLeft = this.noTilesLeft.bind(this);
+    this.onDocMouseDown = this.onDocMouseDown.bind(this);
     this.state = {
       directionsToggle:false,
       currentHover: {}
@@ -37,6 +48,8 @@ class Board extends Component {
   componentDidMount() {
     const width = this.mount.clientWidth;
     const height = this.mount.clientHeight;
+
+    this.throttledMouseDwn = throttle(this.onDocMouseDown, 1000)
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
@@ -269,7 +282,7 @@ class Board extends Component {
           </div>
 
           <div
-            onClick={e => this.onDocMouseDown(e, this.validTiles)}
+            onClick={e => this.throttledMouseDwn(e, this.validTiles)}
             id="boardCanvas"
             //style={{ width: "80vw", height: "40vw" }}
             ref={mount => {
