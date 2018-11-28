@@ -47,48 +47,48 @@ const getModelData = (animal) => {
     switch(animal) {
         case 'tiger':
             return {
-                posZ: .25,
-                scaleX:.003,
-                scaleY:.003,
-                scaleZ:.003,
+                posZ: .05,
+                scaleX:.03,
+                scaleY:.03,
+                scaleZ:.03,
                 rotX: Math.PI/2,
-                rotY: Math.PI/2
+                rotY: Math.PI
             }
         case 'gorilla':
             return {
-                posZ: .05,
-                scaleX:.003,
-                scaleY:.003,
-                scaleZ:.003,
-                rotX: Math.PI,
+                posZ: .15,
+                scaleX:.0023,
+                scaleY:.0023,
+                scaleZ:.0023,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }   
         case 'elephant':
             return {
                 posZ: .05,
-                scaleX:.0015,
-                scaleY:.0015,
-                scaleZ:.0015,
-                rotX: Math.PI,
+                scaleX:.0014,
+                scaleY:.0014,
+                scaleZ:.0014,
+                rotX: Math.PI / 2,
                 rotY: Math.PI
             } 
         case 'monkey':
             return {
                 posZ: .05,
-                scaleX:.006,
-                scaleY:.006,
-                scaleZ:.006,
-                rotX: Math.PI,
+                scaleX:.1,
+                scaleY:.07,
+                scaleZ:.07,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }      
        
         case 'lion':
             return {
                 posZ: .05,
-                scaleX:.004,
-                scaleY:.004,
-                scaleZ:.004,
-                rotX: Math.PI,
+                scaleX:.06,
+                scaleY:.04,
+                scaleZ:.04,
+                rotX: Math.PI/2,
                 rotY: Math.PI
             }     
         }
