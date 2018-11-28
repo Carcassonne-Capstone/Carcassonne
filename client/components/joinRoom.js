@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import socket from '../socket'
 import {connect} from 'react-redux'
-import {selectMeeple} from '../store'
+import {selectMeeple, hostLeft} from '../store'
 
 class JoinRoom extends Component {
     constructor(props){
@@ -14,6 +14,7 @@ class JoinRoom extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.selectMeeple = this.selectMeeple.bind(this)
+        this.handleHostLeft = this.handleHostLeft.bind(this)
     }
 
     handleChange(event){
@@ -44,8 +45,20 @@ class JoinRoom extends Component {
         }       
      }
 
+    handleHostLeft() {
+        this.props.updateHostLeft(false);
+        this.props.backButton()
+    }
+
     render(){
         return(
+            this.props.hostHasLeft ?
+            <div>
+                <div className="waitingRoomJoin">
+                    Oh No! You're host has left the game.
+                </div>
+                <div id="backButton" onClick={this.handleHostLeft}>Back to Main Page</div>
+            </div> :
             <div>
                 {!this.props.player.name
                 ?
@@ -98,12 +111,14 @@ const mapStateToProps = state => {
         roomId: state.game.roomId,
         joinRoomErr: state.messages.joinRoomErr,
         player: state.game.player,
-        meeple: state.game.meepleSelection
+        meeple: state.game.meepleSelection,
+        hostHasLeft: state.messages.hostLeft
     }
 }
 const mapDispatchToProps = dispatch => { 
     return {
-      selectMeeple: (meeple) => dispatch(selectMeeple(meeple))
+      selectMeeple: (meeple) => dispatch(selectMeeple(meeple)),
+      updateHostLeft: (newVal) => dispatch(hostLeft(newVal))
     }
 }
 
