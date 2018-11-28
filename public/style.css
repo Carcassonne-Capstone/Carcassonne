@@ -3,7 +3,7 @@ html {
   height: 100vw !important;
   overflow: hidden;
   margin: 0;
-  font-family: "MedievalSharp", cursive;
+  font-family: 'Sofadi One', cursive;
 }
 
 .modal {
@@ -135,7 +135,7 @@ html {
 }
 
 .title {
-  font-size: 3.5vw;
+  font-size: 3vw;
   font-weight: bold;
   padding: 5%;
   /* margin-top: 5% */
@@ -208,7 +208,7 @@ html {
   font-weight: bold;
   padding: 0;
   margin: 0;
-  width: 80%;
+  width: 87%;
   margin: 10%;
   margin-top: 2%;
 }
@@ -255,6 +255,10 @@ html {
   padding: 10%;
   padding-top: 3%;
   font-weight: bold;
+}
+
+#roomId{
+    padding-bottom:4%
 }
 
 button:focus {
@@ -536,6 +540,13 @@ input:focus {
 
 .helpButton {
   margin-right: 2%;
+}
+
+.buttonMenu{
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    align-content: center;
 }
 
 .helpButton img:hover {
@@ -856,6 +867,31 @@ input:focus {
 .meeple-selection {
   display: flex;
   flex-direction: row;
-  flex-wrap: none;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
+  width:75%;
+  padding: 2%;
+}
+
+.meeple-selection-2{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width:75%;
+    padding: 2%;
+    margin-left:10%
+}
+
+.meeple-selection img:hover{
+    opacity:.6;
+    cursor: pointer;
+    transform: scale(1.1);
+    border: 6px
+}
+
+.meeple-selection-2 img:hover{
+    opacity:.6;
+    cursor: pointer;
+    transform: scale(1.1);
 }

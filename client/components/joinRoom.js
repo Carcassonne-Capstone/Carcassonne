@@ -65,15 +65,15 @@ class JoinRoom extends Component {
                 <div>
                     <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
                         <div className="form-group">
-                            <label htmlFor="name" >Name*</label>
+                            {/* <label htmlFor="name" >Name*</label> */}
                             <div className="form-control">
-                                <input name="name" type="text" className="input" maxLength="10" required/>
+                                <input name="name" type="text" className="input" maxLength="10" required autoComplete="off" placeholder="Name*"/>
                             </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="roomCode" >Room Code*</label>
+                            {/* <label htmlFor="roomCode" >Room Code*</label> */}
                             <div className="form-control">
-                                <input name="roomCode" type="text" className="roomCode" required/>
+                                <input name="roomCode" type="text" className="roomCode" required autoComplete="off" placeholder="Room Code*"/>
                             </div>
                         </div>
                         <div className="form-group">
@@ -86,7 +86,7 @@ class JoinRoom extends Component {
                 :
                 !this.state.meepleSelected
                 ?
-                <div className="meeple-selection">
+                <div className="meeple-selection-2">
                     {this.props.meeple.map(meeple => {
                         const meepleClass = this.getClass(meeple);
                         return (

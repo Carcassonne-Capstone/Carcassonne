@@ -30,7 +30,7 @@ class StartPage extends Component {
       <div className="startPage">
         <div className="startMenu">
           {this.state.join === false && this.state.create === false ? (
-            <div>
+            <div className="buttonMenu">
               <div className="title">KING OF THE JUNGLE</div>
               <div className="buttons">
                 <button
@@ -45,7 +45,7 @@ class StartPage extends Component {
               </div>
             </div>
           ) : (
-            <div>
+            <div className="buttonMenu">
               <div className="title">KING OF THE JUNGLE</div>
               <div className="buttons">
                 {this.state.join && <JoinRoom backButton={this.goToMainPage} />}

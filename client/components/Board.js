@@ -211,7 +211,7 @@ class Board extends Component {
             //style={{ width: "80vw", height: "5vw" }}
           > 
           <div className="instructions">
-            <div className='drag'>Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out</div>
+            <div className='drag'>{`Drag mouse to move board, right click and drag to rotate, scroll to zoom in/out\n`}</div>
               <div id="cameraButtons">
                 <div >Change Camera View:</div>
                 <button type="button" onClick={this.resetCamera}>
