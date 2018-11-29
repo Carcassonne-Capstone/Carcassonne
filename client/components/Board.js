@@ -251,7 +251,8 @@ class Board extends Component {
       const current = this.state.currentHover;
       const currentMeeple = this.state.currentHoverMeeple;
       let intersectsMeeple = false;
-
+      
+      if (this.props.player.name === this.props.currentPlayer.name) {
         if (this.props.curLocation) {
           const tile = this.scene.getObjectByName(`tile-${this.props.curLocation[0]},${this.props.curLocation[1]}`)
           const filteredChildren = tile.children.filter(child => child.name.split('-')[0] === 'emptyMeeple')
@@ -281,6 +282,7 @@ class Board extends Component {
         else {
           current.object && current.object.material.color.setHex(0x3a3636);
         }
+      }
       }
   
   render() {
