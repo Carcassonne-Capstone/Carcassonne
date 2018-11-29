@@ -9,7 +9,8 @@ class StartPage extends Component {
     super();
     this.state = {
       join: false,
-      create: false
+      create: false,
+      sound: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.goToMainPage = this.goToMainPage.bind(this);
@@ -28,6 +29,21 @@ class StartPage extends Component {
       <Redirect to="/game" />
     ) : (
       <div className="startPage">
+        <div className='muteUnmute' onClick={()=>{this.setState({sound: !this.state.sound}); console.log('mute', document.getElementById('start-audio').muted);document.getElementById('start-audio').muted = !document.getElementById('start-audio').muted }}>
+              <audio
+                id='start-audio'
+                ref="audio_tag2"
+                src="/Sounds/lionSleeps.mp3"
+                // controls
+                autoPlay
+                loop
+              />
+              {this.state.sound === false ? 
+                <img src="/sound.png" width="35px" height="35px"/>
+                :
+                <img src="/mute.png"  width="35px" height="35px"/>
+              }
+        </div>
         <div className="startMenu">
           {this.state.join === false && this.state.create === false ? (
             <div className="buttonMenu">

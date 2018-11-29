@@ -3,7 +3,7 @@ html {
   height: 100vw !important;
   overflow: hidden;
   margin: 0;
-  font-family: 'Sofadi One', cursive;
+  font-family: "Sofadi One", cursive;
 }
 
 .modal {
@@ -55,34 +55,57 @@ html {
 
 .directionsModal {
   display: block; /* Hidden by default */
-  position: fixed; /* Stay in place */
   z-index: 5; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 50vw;
+  height: 40vw;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0, 0); /* Fallback color */
-  font-size: 2.5vw;
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  overflow-y: auto;
+  /* color: rgba(0, 0, 0, 0.5); */
 }
 
 .directions-modal-content {
-  background-color: rgba(0, 0, 0);
+  background-color: grey;
   border: 4px double white;
   margin: 10% auto; /* 15% from the top and centered */
-  padding: 20px;
-  width: 80%; /* Could be more or less, depending on screen size */
+  padding: 30px;
+  width: 75%; /* Could be more or less, depending on screen size */
   text-align: center;
   border-radius: 20px;
   color: white;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-top: 60px;
+  text-align: left;
+}
+
+#ruleHeader {
+  font-weight: bold;
+  font-size: 18px;
+  color: blue;
+}
+
+#mergingEx {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  /* height: 180px;
+  width: 150px; */
 }
 
 .directionsModal button {
-  color: red;
   border: none;
   background-color: rgba(0, 0, 0, 0);
-  font-size: 3vw;
-  font-weight: bold;
+  color: red;
+  position: fixed;
+  top: 15%;
+  right: 37%;
+  text-decoration: bold;
+  font-size: 26px;
 }
 
 .directionsModal button:hover {
@@ -257,8 +280,8 @@ html {
   font-weight: bold;
 }
 
-#roomId{
-    padding-bottom:4%
+#roomId {
+  padding-bottom: 4%;
 }
 
 button:focus {
@@ -304,6 +327,7 @@ input:focus {
   text-align: center;
   margin-top: 1%;
   color: white;
+  overflow: scroll
 }
 
 .scoreBoard tr {
@@ -330,13 +354,13 @@ input:focus {
   /* text-align: left; */
 }
 
-#placeHolder{
-    color:black
+#placeHolder {
+  color: black;
 }
 
 #playerImage {
   width: 15%;
-  padding-left:4%
+  padding-left: 4%;
 }
 
 #meepleRemaining {
@@ -547,11 +571,11 @@ input:focus {
   margin-right: 2%;
 }
 
-.buttonMenu{
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    align-content: center;
+.buttonMenu {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  align-content: center;
 }
 
 .helpButton img:hover {
@@ -661,7 +685,6 @@ input:focus {
   transform: scale(1.1);
 }
 
-
 #cameraButtons {
   width: 90%;
   display: flex;
@@ -709,7 +732,7 @@ input:focus {
   margin: 0.3em;
   overflow-wrap: break-word;
   hyphens: auto;
-  margin-left:4%;
+  margin-left: 4%;
 }
 
 .speech-bubble:after {
@@ -726,22 +749,22 @@ input:focus {
 }
 
 #red {
-  background-color: rgb(255, 0, 0, .6);
+  background-color: rgb(255, 0, 0, 0.6);
 }
 #red:after {
-  border-right-color: rgb(255, 0, 0, .6);
+  border-right-color: rgb(255, 0, 0, 0.6);
 }
 #blue {
-  background-color: rgb(0, 0, 255, .6);
+  background-color: rgb(0, 0, 255, 0.6);
 }
 #blue:after {
-  border-right-color: rgb(0, 0, 255, .6);
+  border-right-color: rgb(0, 0, 255, 0.6);
 }
 #purple {
-  background-color: rgb(128, 0, 128, .6);
+  background-color: rgb(128, 0, 128, 0.6);
 }
 #purple:after {
-  border-right-color: rgb(128, 0, 128, .6);
+  border-right-color: rgb(128, 0, 128, 0.6);
 }
 #yellow {
   background-color: rgb(255, 255, 0, 0.6);
@@ -763,7 +786,8 @@ input:focus {
 }
 
 .endGameContainer {
-  background-image: url("/Background2.gif");
+  /* background-image: url("/Background2.gif"); */
+  background-image: url("/backgroun7.gif");
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0;
@@ -771,7 +795,28 @@ input:focus {
   top: 0;
   height: 100%;
   width: 100%;
-  display: inherit;
+  display: flex;
+  flex-flow: column;
+}
+
+.muteUnmute :hover{
+    cursor: pointer;
+    opacity: .7
+}
+
+.muteUnmute{
+    margin-left: 1%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+}
+
+.endTop{
+    height: 40%;
+    display:flex;
+    flex-direction: column;
+    align-items: center
 }
 
 #endBody {
@@ -779,46 +824,98 @@ input:focus {
   flex-direction: column;
   align-items: center;
   justify-items: center;
-  font-family: "Bungee", cursive;
-  font-size: 3em;
-  color: green;
-  padding: 3%;
-  background-color: antiquewhite;
-  opacity: 0.5;
+  /* font-family: "Bungee", cursive; */
+  font-size: 3vw;
+  color: rgb(0, 128, 0);
+  padding: 1%;
+  background-color: rgb(250, 235, 215, .5);
+  height: 50%;
+  margin-top: 5%;
+  width:fit-content;
+  border-radius: 20px;
+  justify-content: center;
+  -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    
+}
+
+@-webkit-keyframes spaceboots {
+	0% { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+	10% { -webkit-transform: translate(-1px, -2px) rotate(-1deg); }
+	20% { -webkit-transform: translate(-3px, 0px) rotate(1deg); }
+	30% { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+	40% { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+	50% { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+	60% { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+	70% { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+	80% { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+	90% { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+	100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+#endMsgHead{
+    height: 40%
 }
 
 #winnerName {
-  font-size: 1.5em;
+  font-size: 5vw;
+  height: 60%;
 }
 
 #playAgain {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Bungee", cursive;
-  color: white;
-  text-decoration: none;
-  font-size: 1.8em;
+  width: auto;
   margin: 2%;
 }
 
-#playAgain:hover {
+#playAgain a{
+    /* font-family: "Bungee", cursive; */
+    color: white;
+    text-decoration: none;
+    font-size: 2.5vw;
+}
+
+#playAgain a:hover {
   color: yellow;
+  transform: scale(1.1);
+}
+
+.stumpImg{
+    -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+
+#winIcon{
+    -webkit-animation-name: spaceboots;
+	-webkit-animation-duration: 0.8s;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }
 
 .stumps {
   display: flex;
   justify-content: center;
   align-content: center;
+  align-items: flex-end;
   /* align-self: flex-end; */
   flex-direction: row;
-  font-family: "Bungee", cursive;
+  /* font-family: "Bungee", cursive; */
   color: white;
   font-size: 1.5em;
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  margin: 3%;
+  /* margin: 3%; */
   width: 100%;
+  height: 60%
 }
 
 #playScrs {
@@ -826,7 +923,14 @@ input:focus {
   flex-direction: column;
   align-content: center;
   align-items: center;
+  width:20%;
 }
+
+/* .stumpImg{
+    position: absolute;
+    bottom: 0;
+    margin:0
+} */
 
 .meeple-selection img {
   height: 7em;
@@ -863,24 +967,35 @@ input:focus {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  width:75%;
+  width: 75%;
   padding: 2%;
 }
 
 #meep2{
     padding: 2%;
-    margin-left:10%
+    /* margin-left:10% */
 }
 
-.meeple-selection img:hover{
-    opacity:.6;
-    cursor: pointer;
-    transform: scale(1.1);
-    border: 6px
+.characterContainer{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
 }
 
-.meeple-selection-2 img:hover{
-    opacity:.6;
-    cursor: pointer;
-    transform: scale(1.1);
+.pick{
+    font-size: 2vw;
+}
+
+.meeple-selection img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
+  border: 6px;
+}
+
+.meeple-selection-2 img:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transform: scale(1.1);
 }
