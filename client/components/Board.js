@@ -396,7 +396,7 @@ class Board extends Component {
       );
       intersectsMeeple = raycaster.intersectObjects(filteredChildren);
     }
-
+    if (this.props.player.name === this.props.currentPlayer.name) {
     if (intersectsMeeple.length) {
       const hex = getHex(this.props.player.animal);
       this.setState({ currentHoverMeeple: intersectsMeeple[0] });
@@ -417,8 +417,8 @@ class Board extends Component {
     } else {
       current.object && current.object.material.color.setHex(0x3a3636);
     }
-  }
-
+  } 
+}
   render() {
     return this.props.gameState === "gameOver" ? (
       <Redirect to="/gameOver" />
