@@ -6,6 +6,7 @@ const makeid = require('../helperFuncs/roomFuncs')
 const colorArr = ['red', 'blue', 'purple', 'yellow', 'orange'];
 
 const rooms = {};
+// const disconnecting = {}
 
 const broadcastToAll = ( socket, roomId, message, ...props) => {
   socket.broadcast.to(roomId).emit(message, ...props)
@@ -14,6 +15,14 @@ const broadcastToAll = ( socket, roomId, message, ...props) => {
 
 module.exports = io => {
   io.on('connection', socket => {
+
+    socket.on('rejoinRoom', (roomId, playerName) => {
+      socket.join(roomId)
+      if (rooms.hasOwnProperty(roomId)) {
+        let player = rooms[roomId].players.find(curPlayer => curPlayer.name === playerName)
+        player.socketId = socket.id
+      }
+    })
 
     socket.on('endGame', (roomId) => {
       broadcastToAll(socket, roomId, 'changeGameState', 'gameOver')
@@ -25,32 +34,37 @@ module.exports = io => {
       const [socketId, roomId] = Object.keys(socket.rooms);
       if (roomId && rooms.hasOwnProperty(roomId)) {
         let player = rooms[roomId].players.find(curPlayer => curPlayer.socketId === socketId)
-        if (rooms[roomId].gameState === 'playing') {
-          rooms[roomId].disconnected.push(player)
-          if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
-            delete rooms[roomId]
-          } else {
-            if (player.host) {
-              player.setHost(false)
-              let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
-              while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
-                newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+        setTimeout(() => {
+          player = rooms[roomId].players.find(curPlayer => curPlayer.name === player.name)
+          if (player.socketId === socketId) {
+            if (rooms[roomId].gameState === 'playing') {
+              rooms[roomId].disconnected.push(player)
+              if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+                delete rooms[roomId]
+              } else {
+                if (player.host) {
+                  player.setHost(false)
+                  let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+                  while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
+                    newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+                  }
+                  newHost.setHost(true)
+                  broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+                }
+                socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
               }
-              newHost.setHost(true)
-              broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+            } else if (player.host) {
+              socket.broadcast.to(roomId).emit('hostLeft')
+              delete rooms[roomId]
+            } else {
+              rooms[roomId].players = rooms[roomId].players.filter(curPlayer => player.name !== curPlayer.name)
+              if (player.animal !== '') {
+                rooms[roomId].meeple.push(player.animal)
+              }
+              socket.broadcast.to(roomId).emit('playerLeft', rooms[roomId].meeple, rooms[roomId].players)
             }
-            socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
           }
-        } else if (player.host) {
-          socket.broadcast.to(roomId).emit('hostLeft')
-          delete rooms[roomId]
-        } else {
-          rooms[roomId].players = rooms[roomId].players.filter(curPlayer => player.name !== curPlayer.name)
-          if (player.animal !== '') {
-            rooms[roomId].meeple.push(player.animal)
-          }
-          socket.broadcast.to(roomId).emit('playerLeft', rooms[roomId].meeple, rooms[roomId].players)
-        }
+        }, 5000)
       }
     })
 
@@ -73,7 +87,7 @@ module.exports = io => {
         const player = new Player(playerName, roomId, socket.id, colorArr[rooms[roomId].players.length]);
         rooms[roomId].players.push(player)
         socket.broadcast.to(roomId).emit('playerJoined', player);
-        socket.emit('me', player, rooms[roomId].meeple);
+        socket.emit('me', player, rooms[roomId].meeple, roomId);
       } else {
         socket.emit('joinRoomErr', 'This room is full, please try a different room')
       }

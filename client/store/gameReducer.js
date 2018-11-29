@@ -54,7 +54,7 @@ export const initGame = (players, roomId, startTile, curTile, currentPlayer) => 
 export const rotate = () => ({ type: ROTATE_TILE });
 export const nextTurn = (player, tile, numTiles) => ({ type: NEXT_TURN, player, tile, numTiles });
 export const addToBoard = coords => ({ type: ADD_TO_BOARD, coords });
-export const setPlayer = (player, meeple) => ({type: SET_PLAYER, player, meeple});
+export const setPlayer = (player, meeple, roomId) => ({type: SET_PLAYER, player, meeple, roomId});
 export const setMeeple = meeple => ({ type: SET_MEEPLE, meeple });
 export const selectMeeple = (meeple, newMeeple, player) => ({type: SELECT_MEEPLE, meeple, newMeeple, player})
 export const newHost = (players) => ({type: NEW_HOST, players})
@@ -332,7 +332,7 @@ const nextTurnUpdates = (board, curLocation, curTile, curMeeple, scores, newPlay
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PLAYER:
-      return { ...initialState, player: action.player, meepleSelection: action.meeple };
+      return { ...initialState, roomId: action.roomId, player: action.player, meepleSelection: action.meeple };
     case CREATE_ROOM:
       return {...initialState, roomId: action.roomId, players: [action.player], player: action.player};
     case JOIN_ROOM:

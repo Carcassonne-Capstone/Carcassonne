@@ -6,7 +6,10 @@ import store, {createRoom, joinRoom, initGame, nextTurn, addToBoard, rotate, set
 const socket = io(window.location.origin);
 
 socket.on('connect', () => {
-  console.log('I am connected');
+  const gameState = store.getState().game
+  if (gameState.roomId !== '') {
+    socket.emit('rejoinRoom', gameState.roomId, gameState.player.name)
+  }
 });
 
 socket.on('disconnectedPlayer', player => {
@@ -45,8 +48,8 @@ socket.on('newPlayer', (player, newTile, numTiles) => {
   store.dispatch(nextTurn(player, newTile, numTiles));
 });
 
-socket.on('me', (player, meeple) => {
-  store.dispatch(setPlayer(player, meeple));
+socket.on('me', (player, meeple, roomId) => {
+  store.dispatch(setPlayer(player, meeple, roomId));
 });
 
 socket.on('meepleOn', meeple => {
