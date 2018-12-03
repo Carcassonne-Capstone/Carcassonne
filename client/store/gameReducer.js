@@ -1,5 +1,6 @@
 import TileNode from "../components/BoardComponents/TileNode";
-import { findRegion } from "../components/renderFuncs/checkValid";
+import checkValid, { findRegion } from "../components/renderFuncs/checkValid";
+import socket from '../socket'
 
 const top = 0;
 const right = 1;
@@ -42,6 +43,7 @@ const CHANGE_GAME_STATE = 'CHANGE_GAME_STATE'
 const PLAYER_LEFT = 'PLAYER_LEFT'
 const RESET_STATE = 'RESET_STATE'
 const REMOVE_AND_SCORE = 'REMOVE_AND_SCORE'
+const SET_NEW_TILE = 'SET_NEW_TILE'
 
 //action creators
 export const createRoom = (roomId, player) => ({
@@ -62,6 +64,7 @@ export const changeGameState = (state) => ({type: CHANGE_GAME_STATE, state})
 export const playerLeft = (meeples, players) => ({type: PLAYER_LEFT, meeples, players})
 export const resetState = () => ({type: RESET_STATE})
 export const removeAndScore = (meeple) => ({type: REMOVE_AND_SCORE, meeple})
+export const setNewTile = (tile, numTiles) => ({type: SET_NEW_TILE, tile, numTiles})
 
 const getNeighbors = (x, y) => {
   return [`${x},${y + 1}`, `${x + 1},${y}`, `${x},${y - 1}`, `${x - 1},${y}`];
@@ -89,6 +92,19 @@ const initScores = players => {
   });
   return scores;
 };
+
+const checkTileValid = (unfilled, tile, roomId) => {
+  const tempTile = new TileNode(tile);
+  let valid = false;
+  for (let i = 0; i < 4; i++) {
+    const tempValids = checkValid({...unfilled}, tempTile)
+    if (Object.keys(tempValids).length > 0) {
+      valid = true;
+    }
+    tempTile.rotate()
+  }
+  if (!valid) socket.emit('swapTile', tile, roomId)
+}
 
 const rotateTileCopy = tile => {
   const newTile = Object.assign(Object.create(Object.getPrototypeOf(tile)), tile);
@@ -216,13 +232,14 @@ const updateMonasteryScores = (monasteryTiles, board, updateNotClosed, curScores
 
 const updateScores = (tileNodePlaced, curScores) => {
   let meeplesToRemove = [];
+  let regionsToSkip = []
   // eslint-disable-next-line complexity
   tileNodePlaced.tile.regions.forEach(region => {
-    if (region.type !== "monastery" && region.type !== "field") {
+    if (region.type !== "monastery" && region.type !== "field" && !regionsToSkip.includes("" + region.meeplePosition)) {
       let maxMeeples = 0, meeplePlayers = {}, numTilesInRegion = 1, meeples = [];
       const visitedTiles = new Set(), blocksToCheck = [];
       visitedTiles.add("" + tileNodePlaced.coords + "" + region.meeplePosition);
-      if (region.meeple.length) {
+      if (region.meeple && region.meeple.length) {
         meeplePlayers[region.meeple[0].player.name] = 1;
         meeples.push(region.meeple[0]);
         maxMeeples = 1;
@@ -232,11 +249,14 @@ const updateScores = (tileNodePlaced, curScores) => {
       while (blocksToCheck.length && regionClosed) {
         const block = blocksToCheck.shift();
         const curRegion = findRegion(block.tileNode.tile, block.edge);
+        if ("" + block.tileNode.coords === "" + tileNodePlaced.coords) {
+          regionsToSkip.push("" + curRegion.meeplePosition)
+        }
         if (!visitedTiles.has("" + block.tileNode.coords + "" + curRegion.meeplePosition)) {
           numTilesInRegion++;
           visitedTiles.add("" + block.tileNode.coords + "" + curRegion.meeplePosition);
           if (curRegion.hasShield) extraPoints += 2;
-          if (curRegion.meeple.length) {
+          if (curRegion.meeple && curRegion.meeple.length) {
             maxMeeples = updateMeeplePlayers(meeplePlayers, curRegion, maxMeeples);
             meeples.push(curRegion.meeple[0]);
           }
@@ -363,16 +383,13 @@ const reducer = (state = initialState, action) => {
     case NEXT_TURN:
       const {board, meeplesToRemove, curScores, newPlayersState, meeplesOnBoard, newMonasteries} 
         = nextTurnUpdates({ ...state.board }, state.curLocation, state.curTile, state.curMeeple, { ...state.scores }, [...state.players], [...state.meeplesOnBoard], [...state.monasteryTiles]);
+      const newUnfilled = createNewUnfilled(state.unfilledTiles, state.curLocation[0], state.curLocation[1], board)
+      if (action.tile && state.player.host) checkTileValid(newUnfilled, {...action.tile}, state.roomId)
       return {
         ...state,
         currentPlayer: action.player,
         curTile: new TileNode(action.tile),
-        unfilledTiles: createNewUnfilled(
-          state.unfilledTiles,
-          state.curLocation[0],
-          state.curLocation[1],
-          board
-        ),
+        unfilledTiles: newUnfilled,
         board: board,
         curLocation: null,
         curMeeple: {},
@@ -382,7 +399,7 @@ const reducer = (state = initialState, action) => {
         meeplesOnBoard: meeplesOnBoard,
         monasteryTiles: newMonasteries,
         numTiles: action.numTiles
-      };
+      }
     case INIT_GAME:
       const { startNode, unfilled } = initStartNode(action.startTile);
       return {
@@ -411,6 +428,8 @@ const reducer = (state = initialState, action) => {
       return {...state, players: action.players, meepleSelection: action.meeples}
     case RESET_STATE:
       return initialState
+    case SET_NEW_TILE:
+      return {...state, curTile: new TileNode(action.tile), numTiles: action.numTiles}
     case REMOVE_AND_SCORE:
       const {newMeeplesOnBoard, newMeeplesToRemove, newScores} = regionScore([...state.meeplesOnBoard], {...state.scores}, state.board)
       return {...state, meeplesOnBoard: newMeeplesOnBoard, removeMeeples: newMeeplesToRemove, scores: newScores}

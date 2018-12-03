@@ -74,9 +74,6 @@ class Chat extends React.Component {
 }
 
   render() {
-    // const chatScroll = document.getElementById('chat-messages');
-    // console.log("chatscroll", chatScroll)
-    // chatScroll.scrollTop = chatScroll.scrollHeight;
     const getTime = date => {
       return `${date.getHours()}:${("0" + date.getMinutes()).slice(-2)}`;
     };
@@ -87,14 +84,12 @@ class Chat extends React.Component {
           <div className="chatTitle">Chat</div>
           {this.props.messages.map((message, i) => {
             const chatColor = this.getColorClass(message[0].animal);
-            //console.log(message[0])
             return (
              <div id='chat-scroll' key={i}> 
               <div className="chat-icon">
                 <img  src={`/animals/images/${message[0].animal}.png`} />
               </div>  
               <div id={chatColor} className="speech-bubble" >
-                {/* {getTime(new Date(Date.now()))} {message[0].name}: {message[1]} */}
                 {message[1]}
               </div>
              </div> 

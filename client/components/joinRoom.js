@@ -9,7 +9,6 @@ class JoinRoom extends Component {
         this.state = {
             name:'',
             roomCode: '',
-            meepleSelected: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -28,7 +27,6 @@ class JoinRoom extends Component {
 
     selectMeeple(meeple) {
         socket.emit('selectMeeple', this.state.roomCode, meeple, this.props.player)
-        this.setState({meepleSelected: true})
     }
     getClass(animal) {
         switch (animal) {
@@ -84,7 +82,7 @@ class JoinRoom extends Component {
                     <div id="backButton" onClick={this.props.backButton}>Back to Main Page</div>
                 </div>
                 :
-                !this.state.meepleSelected
+                this.props.player.animal === ''
                 ?
                 <div className='characterContainer'>
                     <div className='pick'>Pick your character.</div>

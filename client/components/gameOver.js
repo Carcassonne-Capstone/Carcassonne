@@ -49,14 +49,6 @@ class gameOver extends Component {
       return b[1] - a[1];
     });
 
-    // for (let i = 0; i < playScrs.length; i++) {
-    //   console.log('playScrs', playScrs)
-    //   if (playScrs[i][1] >= max) {
-    //     winner.push(playScrs[i]);
-    //     max=playScrs[i][1]
-    //   }
-    // }
-
     if (winner.length > 1) {
       winner.map(name => {
         message += name + " and ";
@@ -106,8 +98,6 @@ class gameOver extends Component {
          
           <div className="stumps">
             {playScrs.map(player => {
-              console.log('player',player)
-              console.log('playerProps',this.props.players)
               return (
                 <div id="playScrs" key={player[0]}>
                   <div>

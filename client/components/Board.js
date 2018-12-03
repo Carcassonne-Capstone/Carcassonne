@@ -116,11 +116,13 @@ class Board extends Component {
     if (!this.props.currentTile.tile) {
       this.validTiles.forEach(tile => this.scene.remove(tile));
       this.validTiles = [];
-      [...this.curTile.children].forEach(meeple => {
-        if (meeple.name.split("-")[0] === "emptyMeeple") {
-          this.curTile.remove(meeple);
-        }
-      });
+      if (this.curTile) {
+        [...this.curTile.children].forEach(meeple => {
+          if (meeple.name.split("-")[0] === "emptyMeeple") {
+            this.curTile.remove(meeple);
+          }
+        });
+      }
 
       if (this.props.meeplesOnBoard.length > 0) {
         this.noTilesLeft();
@@ -129,50 +131,26 @@ class Board extends Component {
       }
     } else {
       if (prevProps.currentTile.tile !== this.props.currentTile.tile) {
-        [...this.curTile.children].forEach(meeple => {
-          if (meeple.name.split("-")[0] === "emptyMeeple") {
-            this.curTile.remove(meeple);
-          }
-        });
+        if (this.curTile) {
+          [...this.curTile.children].forEach(meeple => {
+            if (meeple.name.split("-")[0] === "emptyMeeple") {
+              this.curTile.remove(meeple);
+            }
+          });
+        }
         this.curTile = null;
       }
       if (prevProps.curLocation !== this.props.curLocation) {
-        const currPlayer = this.props.players.find(
-          player => player.name === this.props.currentPlayer.name
-        );
-        this.curTile = changeCurTile(
-          this.scene,
-          this.curTile,
-          this.props.curLocation,
-          this.props.currentTile,
-          this.props.meeple,
-          currPlayer
-        );
+        const currPlayer = this.props.players.find(player => player.name === this.props.currentPlayer.name);
+        this.curTile = changeCurTile(this.scene, this.curTile, this.props.curLocation, this.props.currentTile, this.props.meeple, currPlayer);
       }
-      if (
-        prevProps.unfilledTiles !== this.props.unfilledTiles ||
-        prevProps.currentTile.rotation !== this.props.currentTile.rotation
-      ) {
-        this.validTiles = updateValidTiles(
-          this.validTiles,
-          this.scene,
-          this.props.unfilledTiles,
-          this.props.currentTile
-        );
+      if (prevProps.currentTile.tile !== this.props.currentTile.tile || prevProps.unfilledTiles !== this.props.unfilledTiles || prevProps.currentTile.rotation !== this.props.currentTile.rotation) {
+        this.validTiles = updateValidTiles(this.validTiles, this.scene, this.props.unfilledTiles, this.props.currentTile);
       }
       if (prevProps.meeple.coords !== this.props.meeple.coords) {
-        changeMeeple(
-          this.props.meeple,
-          prevProps.meeple,
-          this.curTile,
-          this.props.currentPlayer.animal,
-          this.props.currentTile
-        );
+        changeMeeple(this.props.meeple, prevProps.meeple, this.curTile, this.props.currentPlayer.animal,this.props.currentTile);
       }
-      if (
-        this.props.playingWithBots ||
-        prevProps.currentPlayer.name !== this.props.currentPlayer.name
-      ) {
+      if (this.props.playingWithBots || prevProps.currentPlayer.name !== this.props.currentPlayer.name) {
         this.checkPlayerBotTurn();
       }
     }

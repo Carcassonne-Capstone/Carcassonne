@@ -6,7 +6,6 @@ const makeid = require('../helperFuncs/roomFuncs')
 const colorArr = ['red', 'blue', 'purple', 'yellow', 'orange'];
 
 const rooms = {};
-// const disconnecting = {}
 
 const broadcastToAll = ( socket, roomId, message, ...props) => {
   socket.broadcast.to(roomId).emit(message, ...props)
@@ -34,37 +33,40 @@ module.exports = io => {
       const [socketId, roomId] = Object.keys(socket.rooms);
       if (roomId && rooms.hasOwnProperty(roomId)) {
         let player = rooms[roomId].players.find(curPlayer => curPlayer.socketId === socketId)
-        setTimeout(() => {
-          player = rooms[roomId].players.find(curPlayer => curPlayer.name === player.name)
-          if (player.socketId === socketId) {
-            if (rooms[roomId].gameState === 'playing') {
-              rooms[roomId].disconnected.push(player)
-              if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+        if (player) {
+          // eslint-disable-next-line complexity
+          setTimeout(() => {
+            player = rooms[roomId].players.find(curPlayer => curPlayer.name === player.name)
+            if (player.socketId === socketId) {
+              if (rooms[roomId].gameState === 'playing') {
+                rooms[roomId].disconnected.push(player)
+                if (rooms[roomId].disconnected.length === rooms[roomId].players.length) {
+                  delete rooms[roomId]
+                } else {
+                  if (player.host) {
+                    player.setHost(false)
+                    let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+                    while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
+                      newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
+                    }
+                    newHost.setHost(true)
+                    broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+                  }
+                  socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+                }
+              } else if (player.host) {
+                socket.broadcast.to(roomId).emit('hostLeft')
                 delete rooms[roomId]
               } else {
-                if (player.host) {
-                  player.setHost(false)
-                  let newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
-                  while (rooms[roomId].disconnected.find(player => player.name === newHost.name)) {
-                    newHost = rooms[roomId].players[Math.floor(Math.random()*rooms[roomId].players.length)]
-                  }
-                  newHost.setHost(true)
-                  broadcastToAll(socket, roomId, 'newHost', rooms[roomId].players)
+                rooms[roomId].players = rooms[roomId].players.filter(curPlayer => player.name !== curPlayer.name)
+                if (player.animal !== '' && !rooms[roomId].meeple.includes(player.animal)) {
+                  rooms[roomId].meeple.push(player.animal)
                 }
-                socket.broadcast.to(roomId).emit('disconnectedPlayer', player.name)
+                socket.broadcast.to(roomId).emit('playerLeft', rooms[roomId].meeple, rooms[roomId].players)
               }
-            } else if (player.host) {
-              socket.broadcast.to(roomId).emit('hostLeft')
-              delete rooms[roomId]
-            } else {
-              rooms[roomId].players = rooms[roomId].players.filter(curPlayer => player.name !== curPlayer.name)
-              if (player.animal !== '') {
-                rooms[roomId].meeple.push(player.animal)
-              }
-              socket.broadcast.to(roomId).emit('playerLeft', rooms[roomId].meeple, rooms[roomId].players)
             }
-          }
-        }, 5000)
+          }, 5000)
+        }
       }
     })
 
@@ -133,11 +135,13 @@ module.exports = io => {
 
     socket.on('selectMeeple', (roomId, meeple, player) => {
       const meepleArr = rooms[roomId].meeple;
-      const filtered = meepleArr.filter(curMeeple => curMeeple !== meeple);
-      rooms[roomId] = {...rooms[roomId], meeple: filtered};
-      let curPlayer = rooms[roomId].players.find(play => play.name === player.name)
-      curPlayer.setAnimal(meeple)
-      broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, curPlayer)
+      if (meepleArr.includes(meeple)) {
+        const filtered = meepleArr.filter(curMeeple => curMeeple !== meeple);
+        rooms[roomId] = {...rooms[roomId], meeple: filtered};
+        let curPlayer = rooms[roomId].players.find(play => play.name === player.name)
+        curPlayer.setAnimal(meeple)
+        broadcastToAll(socket, roomId, 'pickedMeeple', meeple, filtered, curPlayer)
+      }
     });
 
     socket.on('playingWithBots', (roomId) => {
@@ -151,6 +155,14 @@ module.exports = io => {
     socket.on('gameOverNoMeeples', (roomId) => {
       broadcastToAll(socket, roomId, 'changeGameState', 'gameOver')
       delete rooms[roomId]
+    })
+
+    socket.on('swapTile', (tile, roomId) => {
+      if (rooms.hasOwnProperty(roomId)) {
+        const newTile = rooms[roomId].deck.getCard()
+        broadcastToAll(socket, roomId, 'sendNewTile', newTile, rooms[roomId].deck.tiles.length)
+        rooms[roomId].deck.tiles.push(tile)
+      }
     })
 
   }
