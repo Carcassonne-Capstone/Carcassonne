@@ -29,7 +29,7 @@ class StartPage extends Component {
       <Redirect to="/game" />
     ) : (
       <div className="startPage">
-        <div className='muteUnmute' onClick={()=>{this.setState({sound: !this.state.sound}); console.log('mute', document.getElementById('start-audio').muted);document.getElementById('start-audio').muted = !document.getElementById('start-audio').muted }}>
+        <div className='muteUnmute' onClick={()=>{this.setState({sound: !this.state.sound});document.getElementById('start-audio').muted = !document.getElementById('start-audio').muted }}>
               <audio
                 id='start-audio'
                 ref="audio_tag2"
